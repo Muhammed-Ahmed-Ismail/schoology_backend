@@ -1,6 +1,29 @@
 {
+  "name": "scoolix_backend",
+  "version": "0.1.0",
+  "description": "nodejs backend for scoolix using express and sequilize",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Muhammed-Ahmed-Ismail/scoolix_backend.git"
+  },
+  "keywords": [
+    "nodejs",
+    "express",
+    "sequelize"
+  ],
+  "author": "saleh, ismail, radwa, emad, adham",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Muhammed-Ahmed-Ismail/scoolix_backend/issues"
+  },
+  "homepage": "https://github.com/Muhammed-Ahmed-Ismail/scoolix_backend#readme",
   "dependencies": {
-    "pg": "^8.7.3",
-    "pg-hstore": "^2.3.4"
+    "express": "^4.18.1",
+    "joi": "^17.6.0",
+    "sequelize": "^6.21.1"
   }
 }
