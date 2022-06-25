@@ -1,0 +1,11 @@
+
+this folder specify force roles to the database
+
+ex
+
+const signupValidationSchema = Joi.object({
+  email: Joi.string().min(7).required().email(),
+  password: Joi.string().required(),
+});
+
+joi is an npm package (installed) - see docs
