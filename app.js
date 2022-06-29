@@ -2,15 +2,17 @@ let express = require('express');
 let cors = require('cors')
 let app = express();
 
+//***********Routes Import*************************//
 const meetingRouter = require("./routes/meeting.js")
+const testdbRoutes = require("./routes/testdb")
+
+
 app.use(cors({
     origin: '*'
 }))
 app.use(express.json());
-app.get("/",(req,res)=>{
-    res.send({message:"done"})
-})
 app.use("/meeting",meetingRouter)
+app.use("/dptest",testdbRoutes)
 
 
 module.exports = app;
