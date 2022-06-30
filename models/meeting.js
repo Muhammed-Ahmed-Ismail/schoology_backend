@@ -21,8 +21,12 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
-    date_time: {
-      type: DataTypes.DATE,
+    period: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    date:{
+      type: DataTypes.DATEONLY,
       allowNull: false
     },
     teacherId: {

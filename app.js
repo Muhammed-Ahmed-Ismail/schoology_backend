@@ -3,7 +3,7 @@ let cors = require('cors')
 let app = express();
 
 //***********Routes Import*************************//
-const meetingRouter = require("./routes/meeting.js")
+const meetingRouter = require("./routes/meeting")
 const testdbRoutes = require("./routes/testdb")
 
 

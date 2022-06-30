@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   Student.init({
     gender: {
       type: DataTypes.ENUM,
-      values:['male','fmale'],
+      values:['male','female'],
       allowNull: false
     },
     birth_date: {
@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     userId: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false
     }
   }, {
