@@ -15,12 +15,14 @@ const validateCreateMeetingRequest = async (req, res, next) => {
 
     try {
         await createMeetingSchema.validateAsync(req.body, {
-            abortEarly: false  })
+            abortEarly: false
+        })
         next()
     } catch (error) {
         error.status = 400
-       next(error)
+        next(error)
     }
 }
+
 
 module.exports = {validateCreateMeetingRequest}

@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Student.belongsTo(models.User,{foreignKey:'userId' , as :'user'})
+      Student.belongsTo(models.Class,{foreignKey:'classId' , as :'class'})
     }
   }
   Student.init({
@@ -24,6 +25,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    classId: {
       type: DataTypes.INTEGER,
       allowNull: false
     }
