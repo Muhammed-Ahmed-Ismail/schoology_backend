@@ -15,16 +15,11 @@ const validateCreateMeetingRequest = async (req, res, next) => {
 
     try {
         await createMeetingSchema.validateAsync(req.body, {
-            abortEarly: false,  // abort after the last validation error
-
-        })
-        // console.log("from middleware try")
-
+            abortEarly: false  })
         next()
     } catch (error) {
-        console.log("from middleware catch")
-
-        res.status(400).json(error)
+        error.status = 400
+       next(error)
     }
 }
 
