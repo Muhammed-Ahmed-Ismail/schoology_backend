@@ -5,6 +5,7 @@ let app = express();
 //***********Routes Import*************************//
 const meetingRouter = require("./routes/meeting")
 const testdbRoutes = require("./routes/testdb")
+const userRouter = require('./routes/authRoutes');
 
 
 app.use(cors({
@@ -15,7 +16,6 @@ app.use("/meeting",meetingRouter)
 app.use("/dptest",testdbRoutes)
 
 
-const userRouter = require('./routes/authRoutes');
-app.use('/api/auth',userRouter);
+app.use('/auth',userRouter);
 
 module.exports = app;

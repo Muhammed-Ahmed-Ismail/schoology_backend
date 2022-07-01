@@ -1,71 +1,86 @@
-const User = require("../models/user");
-const config = require("../config/auth.config");
+const { User, Teacher, Student } = require("../models");
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
+require("dotenv").config();
+const {
+  signupValidationSchema,
+  loginValidationSchema,
+} = require("../schemas/authSchemas");
 
 exports.signup = async (req, res) => {
   // Save User to Database
   try {
     // Validate user input
-    if (!(req.body.username && req.body.phone)) {
-      res.status(400).send("All input is required");
-    }
+    const { error } = signupValidationSchema.validate(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
 
-    // check if user exist in our database
-    const isUserExists = await User.findOne({ phone: req.body.phone });
+    // // check if user exist in our database
+    const isUserExists = await User.findOne({ where: { phone: req.body.phone } });
     if (isUserExists) return res.status(400).send("User already exists");
 
-    // Create user in our database
-    const user = await User.create({
-      username: req.body.username,
-      phone: req.body.phone,
-    });
+    // generate salt to hash password
+    const salt = await bcrypt.genSalt(10);
+    // now we set user password to hashed password
+    const encryptedPassword = await bcrypt.hash(req.body.password, salt);
 
-    if (user) return res.status(200).send({ message: "User registered successfully!" });
+    // Create user in our database
+    const user = new User({
+      name: req.body.name,
+      phone: req.body.phone,
+      password: encryptedPassword,
+      roleId: req.body.roleId,
+    });
+    await user.save();
+
+    if (req.body.roleId == 1) {
+      const student = await Student.create({
+        userId: user.id,
+        gender: req.body.gender,
+        birth_date: req.body.birth_date,
+      });
+    }
+    if (req.body.roleId == 2) {
+      const teacher = await Teacher.create({
+        userId: user.id,
+        courseId: req.body.courseId,
+      });
+    }
+    if (user) return res.status(200).send(user);
+
   }
   catch (error) {
     res.status(500).send({ message: error.message });
   }
 };
 
-
 exports.signin = async (req, res) => {
   try {
     // Validate user input
-    if (!(req.body.username && req.body.phone)) {
-      res.status(400).send("All input is required");
+    const { error } = loginValidationSchema.validate(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
+    // check if user exist in our database
+    const user = await User.findOne({ where: { phone: req.body.phone } });
+    if (!user) return res.status(404).send("User not found");
+
+    // check user password with hashed password stored in the database
+    const validPassword = await bcrypt.compare(req.body.password, user.password);
+    if (!validPassword) return res.status(400).send("Invalid password");
+
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    let data = {
+      time: Date(),
+      userId: user._id,
     }
-    const user = await User.findOne({
-      where: {
-        phone: req.body.phone,
-      },
-    });
-    if (!user) {
-      return res.status(404).send({ message: "User Not found." });
-    }
 
-    // const token = jwt.sign({ id: user.id }, config.secret, {
-    //   expiresIn: 86400, // 24 hours
-    // });
-    // Generate token
-    const token = sign(
-      { userID: user._id, email: user.email },
-      process.env.JWT_SECRET
-    );
+    const token = jwt.sign(data, jwtSecretKey);
 
-    req.session.token = token;
-
-    return res.status(200).send({
-      id: user.id,
-      username: user.username,
-      phone: user.phone,
-    });
-  } catch (error) {
+    res.status(200).json({ user: { name: user.name, phone: user.phone }, token });
+  }
+  catch (error) {
     return res.status(500).send({ message: error.message });
   }
 };
-
-
 
 exports.signout = async (req, res) => {
   try {
