@@ -7,10 +7,11 @@ const signupValidationSchema = Joi.object({
   password: Joi.string().required(),
   confirmPassword: Joi.string().required().valid(Joi.ref('password')),
   roleId: Joi.number().required(),
-  userId: Joi.number().required(),
+  // userId: Joi.number().required(),
   courseId: Joi.number(),
   gender: Joi.valid('male', 'female'),
-  birth_date: Joi.date()
+  birth_date: Joi.date(),
+  studentId:Joi.number(),
 });
 
 // Login validation

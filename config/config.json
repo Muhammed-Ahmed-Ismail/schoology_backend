@@ -1,8 +1,8 @@
 {
   "development": {
-    "username": "admin",
-    "password": "iti",
-    "database": "finalproject",
+    "username": "root",
+    "password": "muhammedahmed",
+    "database": "schooldb",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
