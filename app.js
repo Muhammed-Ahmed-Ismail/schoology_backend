@@ -2,15 +2,19 @@ let express = require('express');
 let cors = require('cors')
 let app = express();
 
-const meetingRouter = require("./routes/meeting.js")
+//***********Routes Import*************************//
+// const meetingRouter = require("./routes/meeting")
+// const testdbRoutes = require("./routes/testdb")
+const routes = require("./routes/routes")
+const errorHandeler = require("./middleware/errorHandelers/errorHandeler")
+
 app.use(cors({
     origin: '*'
 }))
 app.use(express.json());
-app.get("/",(req,res)=>{
-    res.send({message:"done"})
-})
-app.use("/meeting",meetingRouter)
+app.use("/",routes)
+app.use(errorHandeler)
+// app.use("/dptest",testdbRoutes)
 
 
 module.exports = app;
