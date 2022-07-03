@@ -83,16 +83,24 @@ const createMeetingService = async (data) => {
 }
 
 const getMeetingByTeacherId = async (teacherId, date) => {
-    let teacher = await Teacher.findByPk(teacherId)
-    let meetings = await teacher.getMeetings({where: {date}})
-    return meetings
+    try {
+        let teacher = await Teacher.findByPk(teacherId)
+        let meetings = await teacher.getMeetings({where: {date}})
+        return meetings
+    }catch (e) {
+        throw e
+    }
 }
 
 const getMeetingByStudentId = async (studentId, date) => {
-    let student = await Student.findByPk(studentId)
-    let studentClass = await student.getClass()
-    let meetings = await studentClass.getMeetings()
-    return meetings
+    try {
+        let student = await Student.findByPk(studentId)
+        let studentClass = await student.getClass()
+        let meetings = await studentClass.getMeetings()
+        return meetings
+    }catch (e) {
+        throw e;
+    }
 }
 
 module.exports = {
