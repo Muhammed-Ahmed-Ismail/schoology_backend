@@ -25,7 +25,15 @@ module.exports = {
           model:"users",
           key:"id"
         }
-
+// 
+      },
+      classId: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references:{
+          model:"classes",
+          key:"id"
+        }
       },
       createdAt: {
         allowNull: false,

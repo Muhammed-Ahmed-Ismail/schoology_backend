@@ -10,9 +10,10 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Exam.belongsTo(models.Course , {foreignKey:'courseId' , as :'course'})
+      Exam.belongsTo(models.Course) //{ , foreignKey:'courseId' , as :'course'}
       // Exam.belongsToMany(models.Student, { through: 'StudentExam' , foreignKey:'examId'}); //automatic many to many 
-      Exam.belongsTo(models.StudentExam, {foreignKey:'examId' , as :'exam'}); //manual many to many
+      // Exam.belongsTo(models.StudentExam, ); //manual many to many //{foreignKey:'examId' , as :'exam'} ##removed
+      Exam.belongsTo(models.Class); //{ , foreignKey:'examId'}
       
     }
   }
@@ -20,10 +21,15 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     link: DataTypes.STRING,
     date: DataTypes.DATE,
-    courseId: DataTypes.INTEGER
+    courseId: DataTypes.INTEGER,
+    classId: DataTypes.INTEGER
+    //ClassId
+    //StudentExamId
   }, {
     sequelize,
     modelName: 'Exam',
+    tableName:'exams'
+
   });
   return Exam;
 };
