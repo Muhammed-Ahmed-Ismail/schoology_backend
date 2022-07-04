@@ -6,7 +6,7 @@ const {
 } = require("../services/bulkSaveResultsToDB")
 
 
-let {Exam} = require("../models")
+let {Exam , StudentExam , Student , User} = require("../models")
 // const {User, Student, Role, Class, Meeting, Teacher} = require("../models/exam")
 
 const create = async (req, res) => {
@@ -52,7 +52,22 @@ const listByclassId = async (req, res) => {
     }
 }
 
+const listStudentExamByExamId = async (req, res) => {
+    try {
+        let allStudentsScore = await StudentExam.findAll({where: { examId: req.params.id }}) //get all scores for certain exam
+        let nameAndScore = [];
+        for (const studentScore of allStudentsScore) {
+            let student = await Student.findOne({where: { id: studentScore.studentId}})   
+            let user = await User.findOne({where: { id: student.id}})
+            nameAndScore.push({name : user.name , score : studentScore.score});      
+        } //get name of student along with score
+        return res.json(nameAndScore)
+    } 
+    catch (error) {
+        res.send(error)
+    }
 
+}
 const save = async (req, res) => {
     link = req.body.link //teacher sends link in post body
     parts = link.split("/")
@@ -72,4 +87,4 @@ const save = async (req, res) => {
     // }
 }
 
-module.exports = {create , list , save , listBycourseId , listByclassId}
+module.exports = {create , list , save , listBycourseId , listByclassId , listStudentExamByExamId}
