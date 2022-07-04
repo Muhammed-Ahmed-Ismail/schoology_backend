@@ -1,6 +1,7 @@
 const {
     createMeetingService,
     getMeetingByTeacherId,
+    getAllMeetingsByTeacherId,
     getMeetingByStudentId
 } = require("../services/meetingServices")
 
@@ -33,4 +34,14 @@ const getMyMeetings = async (req, res, next) => {
 
 }
 
-module.exports = {createMeeting, getMyMeetings}
+const getAllTeacherMeetings = async (req, res, next) => {
+    try {
+        let meetings = await getAllMeetingsByTeacherId(req.params.id)
+        res.json(meetings)
+    }catch (e) {
+        e.status = 500
+        next(e)
+    }
+}
+
+module.exports = {createMeeting, getMyMeetings, getAllTeacherMeetings}

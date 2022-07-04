@@ -103,8 +103,19 @@ const getMeetingByStudentId = async (studentId, date) => {
     }
 }
 
+const getAllMeetingsByTeacherId = async (teacherId) => {
+    try {
+        let teacher = await Teacher.findByPk(teacherId)
+        let meetings = await teacher.getMeetings()
+        return meetings
+    }catch (e) {
+        throw e
+    }
+}
+
 module.exports = {
     createMeetingService,
     getMeetingByTeacherId,
+    getAllMeetingsByTeacherId,
     getMeetingByStudentId
 }
