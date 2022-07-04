@@ -10,13 +10,20 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      StudentExam.belongsTo(models.Student)
-      StudentExam.belongsTo(models.Exam)
+      StudentExam.belongsTo(models.Student , { foreignKey:'studentId' , as :'student'})
+      StudentExam.belongsTo(models.Exam , { foreignKey:'examId' , as :'exam'})
     }
   }
   StudentExam.init({
-    studentId: DataTypes.INTEGER,
-    examId: DataTypes.INTEGER,
+    studentId: {
+      type:DataTypes.INTEGER,
+      primaryKey:true
+
+    },
+    examId:{
+      type:DataTypes.INTEGER,
+      primaryKey:true
+    },
     score: DataTypes.INTEGER
   }, {
     sequelize,
