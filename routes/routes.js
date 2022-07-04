@@ -9,4 +9,8 @@ router.use("/meeting",meetingRouter)
 router.use("/dptest",testdbRoutes)
 router.use("/auth",authRoutes)
 
+const examRouter = require("./examRouter")
+router.use("/exam",examRouter)
+
+
 module.exports = router
