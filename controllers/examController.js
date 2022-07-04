@@ -33,6 +33,26 @@ const list = async (req, res) => {
     }
 }
 
+
+const listBycourseId = async (req, res) => {
+    try {
+        let exams = await Exam.findAll({where: { courseId: req.params.id },})
+        return res.json(exams)
+    } catch (error) {
+        res.send(error)
+    }
+}
+
+const listByclassId = async (req, res) => {
+    try {
+        let exams = await Exam.findAll({where: { classId: req.params.id },})
+        return res.json(exams)
+    } catch (error) {
+        res.send(error)
+    }
+}
+
+
 const save = async (req, res) => {
     link = req.body.link //teacher sends link in post body
     parts = link.split("/")
@@ -52,4 +72,4 @@ const save = async (req, res) => {
     // }
 }
 
-module.exports = {create , list , save}
+module.exports = {create , list , save , listBycourseId , listByclassId}
