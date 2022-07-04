@@ -5,9 +5,9 @@ const router = express.Router();
 
 router.post("/create" , create)
 router.get("/list" , list)
-router.get("/list/course/:id" , listBycourseId)
-router.get("/list/class/:id" , listByclassId)
-router.get("/list/scores/:id" , listStudentExamByExamId)
-router.post("/save" , save)
+router.get("/list/course/:id" , listBycourseId) //list all exams for one course
+router.get("/list/class/:id" , listByclassId) // list all exams for one class
+router.get("/list/scores/:id" , listStudentExamByExamId) //lists students with scores for certian exam
+router.post("/save" , save) // saves students score to the database given body -> { "link" : "google form url here" }
 
 module.exports = router
