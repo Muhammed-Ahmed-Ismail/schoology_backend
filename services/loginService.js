@@ -1,12 +1,11 @@
-const { response } = require("express");
-const res = require("express/lib/response");
+
 const jwt = require("jsonwebtoken");
+const teacherDto = require("../dtos/teacherDto")
 require("dotenv").config();
 
 const getjwtToken = (user)=>{
 
     let jwtSecretKey = process.env.JWT_SECRET_KEY;
-    console.log(process.env.JWT_SECRET_KEY)
     let data = {
       time: Date(),
       userId: user.id,
@@ -26,9 +25,7 @@ const logInTeacher = async (teacher)=>{
         classes,
         token
     }
-    console.log(response)
-
-    return response
+    return teacherDto.picTeacherResource(response)
 
 }
 
