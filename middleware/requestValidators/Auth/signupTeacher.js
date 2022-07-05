@@ -8,11 +8,8 @@ const signupTeacherValidationSchema = Joi.object({
     confirmPassword: Joi.string().required().valid(Joi.ref('password')),
     roleId: Joi.number().required(),
     courseId: Joi.number().required(),
-    email:Joi.string().email().required()
-    // classId:Joi.number().required(),
-    // gender: Joi.valid('male', 'female'),
-    // birth_date: Joi.date(),
-    // studentId:Joi.number(),
+    email:Joi.string().email().required(),
+    classes:Joi.array().items(Joi.number()).required()
 });
 
 module.exports= signupTeacherValidationSchema

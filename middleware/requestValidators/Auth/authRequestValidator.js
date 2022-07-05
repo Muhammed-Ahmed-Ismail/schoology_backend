@@ -1,6 +1,7 @@
 const signupStudentValidationSchema = require("./signupStudent")
 const signupTeacherValidationSchema = require("./signupTeacher")
 const signupParentValidationSchema = require("./signupParent")
+const loginValidationSchema = require("./login")
 
 
 const validateSignupStudentRequest = async (req, res, next) => {
@@ -40,8 +41,22 @@ const validateSignupTeacherRequest = async (req, res, next) => {
     }
 }
 
+const validateLoginRequest = async (req,res,next)=>{
+    try {
+        await loginValidationSchema.validateAsync(req.body, {
+            abortEarly: false
+        })
+        next()
+    } catch (error) {
+        error.status = 400
+        next(error)
+    }
+
+}
+
 module.exports = {
     validateSignupTeacherRequest,
     validateSignupStudentRequest,
-    validateSignupParentRequest
+    validateSignupParentRequest,
+    validateLoginRequest
 }
