@@ -18,7 +18,7 @@ const periods = {
 
 
 const generateMeetingLink = async (eventData, code) => {
-    console.log("from create getlink")
+
 
     const oAuthClient = new google.auth.OAuth2(
         GOOGLE_CLIENT_ID,
@@ -43,7 +43,7 @@ const createMeetingService = async (data) => {
     const teacher = await Teacher.findByPk(data.teacherId)
 
     if (!(await teacher.isThatValidMeeting(data.date_time, data.period) && await classroom.isThatValidMeeting(data.date_time, data.period))) {
-
+        console.log("from create getlink")
         throw new Error("invalid meeting timing")
     }
 
@@ -83,20 +83,39 @@ const createMeetingService = async (data) => {
 }
 
 const getMeetingByTeacherId = async (teacherId, date) => {
-    let teacher = await Teacher.findByPk(teacherId)
-    let meetings = await teacher.getMeetings({where: {date}})
-    return meetings
+    try {
+        let teacher = await Teacher.findByPk(teacherId)
+        let meetings = await teacher.getMeetings({where: {date}})
+        return meetings
+    }catch (e) {
+        throw e
+    }
 }
 
 const getMeetingByStudentId = async (studentId, date) => {
-    let student = await Student.findByPk(studentId)
-    let studentClass = await student.getClass()
-    let meetings = await studentClass.getMeetings()
-    return meetings
+    try {
+        let student = await Student.findByPk(studentId)
+        let studentClass = await student.getClass()
+        let meetings = await studentClass.getMeetings()
+        return meetings
+    }catch (e) {
+        throw e;
+    }
+}
+
+const getAllMeetingsByTeacherId = async (teacherId) => {
+    try {
+        let teacher = await Teacher.findByPk(teacherId)
+        let meetings = await teacher.getMeetings()
+        return meetings
+    }catch (e) {
+        throw e
+    }
 }
 
 module.exports = {
     createMeetingService,
     getMeetingByTeacherId,
+    getAllMeetingsByTeacherId,
     getMeetingByStudentId
 }
