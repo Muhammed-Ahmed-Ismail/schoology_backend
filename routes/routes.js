@@ -4,14 +4,14 @@ const router = express.Router();
 const meetingRouter = require("./meeting")
 const testdbRoutes = require("./testdb")
 const authRoutes = require("./authRoutes")
-const passport = require('passport')
+const filesRoutes = require("./files")
 
 router.use("/meeting",meetingRouter)
 router.use("/dptest",testdbRoutes)
 router.use("/auth",authRoutes)
+router.use("/files", filesRoutes)
 
 const examRouter = require("./examRouter")
 router.use("/exam",examRouter)
-
 
 module.exports = router

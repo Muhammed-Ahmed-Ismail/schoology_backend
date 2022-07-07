@@ -168,3 +168,5 @@ config
 
 /config/
 /.idea/
+
+resources/static/uploads/*
