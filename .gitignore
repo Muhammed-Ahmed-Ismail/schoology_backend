@@ -166,3 +166,5 @@ dist
 
 /config/
 /.idea/
+
+resources/static/uploads/*
