@@ -11,4 +11,7 @@ router.use("/dptest",testdbRoutes)
 router.use("/auth",authRoutes)
 router.use("/files", filesRoutes)
 
+const examRouter = require("./examRouter")
+router.use("/exam",examRouter)
+
 module.exports = router
