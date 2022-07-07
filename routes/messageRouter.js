@@ -1,4 +1,4 @@
-const {create,list,save,listBySenderAndReciever
+const {create,listBySenderAndReciever
 } = require("../controllers/messageController.js")
 const express = require("express");
 const router = express.Router();
