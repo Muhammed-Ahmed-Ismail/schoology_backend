@@ -9,8 +9,10 @@ const signupStudentValidationSchema = Joi.object({
     roleId: Joi.number().required(),
     // courseId: Joi.number().required(),
     classId:Joi.number().required(),
-    gender: Joi.valid('male', 'female'),
+    gender: Joi.valid('male', 'female').required(),
     birth_date: Joi.date(),
+    email:Joi.string().email().required()
+
     // studentId:Joi.number(),
 });
 

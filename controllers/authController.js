@@ -1,13 +1,16 @@
-const { User, Teacher, Student, Parent } = require("../models");
+const { User, Teacher, Student, Parent,Class } = require("../models");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+
+const {Op} = require("sequelize")
 require("dotenv").config();
 const {
   signupValidationSchema,
   loginValidationSchema,
 } = require("../schemas/authSchemas");
+const { logInTeacher } = require("../services/loginService");
 
 exports.signup = async (req, res) => {
+  console.log(req.body)
   // Save User to Database
   try {
     // Validate user input
@@ -15,7 +18,15 @@ exports.signup = async (req, res) => {
     // if (error) return res.status(400).send(error.details[0].message);
 
     // // check if user exist in our database
-    const isUserExists = await User.findOne({ where: { phone: req.body.phone } });
+    const isUserExists = await User.findOne({ 
+      where:{ 
+        [Op.or]: [
+         {phone: req.body.phone},
+          {email:req.body.email}
+        ]
+      }
+    });
+    console.log(isUserExists)
     if (isUserExists) return res.status(400).send("User already exists");
 
     // generate salt to hash password
@@ -24,11 +35,14 @@ exports.signup = async (req, res) => {
     const encryptedPassword = await bcrypt.hash(req.body.password, salt);
 
     // Create user in our database
+    console.log(req.body)
+
     const user = new User({
       name: req.body.name,
       phone: req.body.phone,
       password: encryptedPassword,
       roleId: req.body.roleId,
+      email:req.body.email
     });
     await user.save();
 
@@ -45,6 +59,11 @@ exports.signup = async (req, res) => {
       const teacher = await Teacher.create({
         userId: user.id,
         courseId: req.body.courseId,
+      });
+      req.body.classes.forEach(async element => {
+        let classRoom = await Class.findByPk(element)
+        console.log(classRoom)
+        teacher.addClass(classRoom)
       });
       if(teacher) res.json({user,teacher})
 
@@ -69,10 +88,8 @@ exports.signupTeacher = async (req,res)=>{
 }
 exports.signin = async (req, res) => {
   try {
-    // Validate user input
-    const { error } = loginValidationSchema.validate(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
-
+  
+    
     // check if user exist in our database
     const user = await User.findOne({ where: { phone: req.body.phone } });
     if (!user) return res.status(404).send("User not found");
@@ -81,16 +98,13 @@ exports.signin = async (req, res) => {
     const validPassword = await bcrypt.compare(req.body.password, user.password);
     if (!validPassword) return res.status(400).send("Invalid password");
 
-    let jwtSecretKey = process.env.JWT_SECRET_KEY;
-    console.log(process.env.JWT_SECRET_KEY)
-    let data = {
-      time: Date(),
-      userId: user.id,
+    if(user.roleId === 1)
+    {
+      let data = await logInTeacher(await user.getTeacher())
+      res.status(200).json(data);
     }
 
-    const token = jwt.sign(data, jwtSecretKey);
-
-    res.status(200).json({ user: { name: user.name, phone: user.phone }, token });
+    
   }
   catch (error) {
     return res.status(500).send({ message: error.message });

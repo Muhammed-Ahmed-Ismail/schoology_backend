@@ -6,7 +6,7 @@ const authRequestValidator = require("../middleware/requestValidators/Auth/authR
 router.post("/signup/teacher",authRequestValidator.validateSignupTeacherRequest, controller.signup);
 router.post("/signup/student",authRequestValidator.validateSignupStudentRequest, controller.signup);
 router.post("/signup/parent",authRequestValidator.validateSignupParentRequest, controller.signup);
-router.post("/signin", controller.signin);
+router.post("/signin", authRequestValidator.validateLoginRequest,controller.signin);
 router.post("/signout", controller.signout);
 
 module.exports = router;

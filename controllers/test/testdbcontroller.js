@@ -6,18 +6,18 @@ const createUser = async (req, res, next) => {
     //     userId:1,
     //     roleId:1
     // })
-    let user = await User.create({
-        name:"ahmed",
-        roleId:1,
-        phone:"123456",
-        password:"rororo"
-    })
+    // let user = await User.create({
+    //     name:"ahmed",
+    //     roleId:1,
+    //     phone:"123456",
+    //     password:"rororo"
+    // })
 
     // let teacher = await Teacher.create({
     //     userId:user.id,
     //     courseId:1
     // })
-    let teacher = await Teacher.findByPk( 1)
+    // let teacher = await Teacher.findByPk( 1)
 
     // let meeting = await Meeting.create({
     //     link: "link1",
@@ -30,12 +30,13 @@ const createUser = async (req, res, next) => {
     // })
     // res.json(meeting)
     // eclass.addMeeting()
-    let date = "2022-01-01"
-    let meetings = await teacher.isThatValidMeeting(date,2)
-    console.log(meetings)
-    res.json({meetings})
+    // let date = "2022-01-01"
+    // let meetings = await teacher.isThatValidMeeting(date,2)
+    // console.log(meetings)
+    // res.json({meetings})
     // console.log(classroom)
     // res.json(classroom)
+    res.json(req.user)
 }
 
 module.exports = {createUser}

@@ -18,7 +18,7 @@ const periods = {
 
 
 const generateMeetingLink = async (eventData, code) => {
-    console.log("from create getlink")
+
 
     const oAuthClient = new google.auth.OAuth2(
         GOOGLE_CLIENT_ID,
@@ -43,7 +43,7 @@ const createMeetingService = async (data) => {
     const teacher = await Teacher.findByPk(data.teacherId)
 
     if (!(await teacher.isThatValidMeeting(data.date_time, data.period) && await classroom.isThatValidMeeting(data.date_time, data.period))) {
-
+        console.log("from create getlink")
         throw new Error("invalid meeting timing")
     }
 
