@@ -1,9 +1,10 @@
-const {upload, download, getListFiles} = require("../controllers/filesController");
+const {upload, getListFiles, getTeacherFiles, getOne} = require("../controllers/filesController");
 const express = require("express");
 const router = express.Router();
 
-router.post('/upload', upload);
-router.get('/allFiles', getListFiles)
-router.get('/:name', download)
+router.post('/:id/upload', upload);
+router.get('/:id/allFiles', getListFiles)
+router.get('/:id/myFiles', getTeacherFiles)
+router.get('/:id/download/:name', getOne)
 
 module.exports = router

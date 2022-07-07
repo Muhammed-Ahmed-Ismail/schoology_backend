@@ -1,4 +1,4 @@
-const uploadFile = require('../services/filesService')
+const {uploadService, getFilesById, getFileByName} = require('../services/filesService')
 const fs = require('fs');
 const path = require('path');
 const PORT = process.env.PORT || 3000;
@@ -8,7 +8,7 @@ const filesPath = path.join(__dirname, '..', 'resources', 'static', 'uploads')
 
 const upload = async (req, res, next) => {
     try {
-        await uploadFile(req, res);
+        await uploadService(req, res);
         if (req.file === undefined){
             return res.status(400).send({message: 'bad request, no file received'})
         }
@@ -40,6 +40,16 @@ const getListFiles = (req, res, next) => {
     });
 };
 
+const getTeacherFiles = async (req, res, next) => {
+    try {
+        let files = await getFilesById(req.params.id)
+        res.json(files)
+    }catch (e) {
+        e.status = 500
+        next(e)
+    }
+}
+
 const download = (req, res) => {
     const fileName = req.params.name;
     res.download(path.join(filesPath, fileName), (err) => {
@@ -51,8 +61,19 @@ const download = (req, res) => {
     });
 }
 
+const getOne = async (req, res) => {
+    let file = await getFileByName(req.params.name)
+    if (file.uploaderId == req.params.id){
+        res.json(file)
+    }else{
+        res.status(401).send({message: 'not authorized'})
+    }
+}
+
 module.exports = {
     upload,
     getListFiles,
     download,
+    getTeacherFiles,
+    getOne,
 }
