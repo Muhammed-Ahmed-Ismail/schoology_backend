@@ -3,11 +3,11 @@ const { messages } = require("../middleware/requestValidators/Auth/signupStudent
 
 const create = async (req, res) => {
 
-    let sender = req.user // check ismail jwt
+    let senderId = req.user // check ismail jwt
     try {
         let messagex = await Message.create({
             message: req.body.message,
-            senderId: sender, // check
+            senderId: senderId, // check
             recieverId: req.body.reciever,
         })
         return res.json(messagex)
@@ -19,11 +19,17 @@ const create = async (req, res) => {
 
 const listBySenderAndReciever = async (req, res) => {
 
-    let sender = req.user // check ismail jwt
+    let senderId = req.user // check ismail jwt ( how to get sender id from request)
 
     try {
-       let messages = await Message.findAll({where: { senderId: sender , recieverId: req.params.id}}) 
-       return res.json(messages)
+        let messages = await Message.findAll({
+                where: { senderId: senderId , recieverId: req.params.id}
+                ,
+                order: [
+                    ['createdAt', 'ASC'],
+                ],
+            }) 
+        return res.json(messages)
         } 
 
     catch (error) {
