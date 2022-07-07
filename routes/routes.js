@@ -10,7 +10,9 @@ router.use("/dptest",testdbRoutes)
 router.use("/auth",authRoutes)
 
 const examRouter = require("./examRouter")
+const messageRouter = require("./messageRouter")
 router.use("/exam",examRouter)
+router.use("/message",messageRouter)
 
 
 module.exports = router
