@@ -60,11 +60,10 @@ exports.signup = async (req, res) => {
         userId: user.id,
         courseId: req.body.courseId,
       });
-      req.body.classes.forEach(async element => {
+      for (const element of req.body.classes) {
         let classRoom = await Class.findByPk(element)
-        console.log(classRoom)
         teacher.addClass(classRoom)
-      });
+      }
       if(teacher) res.json({user,teacher})
 
     }
