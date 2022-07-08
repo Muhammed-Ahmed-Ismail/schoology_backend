@@ -12,6 +12,8 @@ router.use("/auth",authRoutes)
 router.use("/files", filesRoutes)
 
 const examRouter = require("./examRouter")
+const messageRouter = require("./messageRouter")
 router.use("/exam",examRouter)
+router.use("/message",messageRouter)
 
 module.exports = router

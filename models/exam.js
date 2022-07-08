@@ -21,6 +21,10 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     link: DataTypes.STRING,
     date: DataTypes.DATE,
+    submitted: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
     courseId: DataTypes.INTEGER,
     classId: DataTypes.INTEGER
     //ClassId
