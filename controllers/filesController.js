@@ -72,11 +72,12 @@ const download = (req, res) => {
 }
 
 const getOne = async (req, res) => {
-    let file = await getFileByName(req.params.name)
-    if (file.uploaderId == req.params.id){
-        res.json(file)
-    }else{
-        res.status(401).send({message: 'not authorized'})
+    try {
+        let file = await getFileByName(req.params.name)
+        res.json(_BASEURL+file.name)
+    }catch (e) {
+        e.status = 404
+        res.json(e)
     }
 }
 
@@ -85,5 +86,6 @@ module.exports = {
     getListFiles,
     download,
     getTeacherFiles,
+    getListFilesFromStorage,
     getOne,
 }
