@@ -74,17 +74,17 @@ const save = async (req, res) => {
     formID = parts[5]
     console.log(res);
     let exam = await Exam.findOne({ where: { link: link } });
-    let examId = exam.id
     
-    // try {
+    try {
         result = await getResFromApiService(formID);
-        statusx = await BulkSaveResultsToDB(result , examId);
+        statusx = await BulkSaveResultsToDB(result , exam.id);
+        exam.submitted = true;
         res.send(statusx)
-    // } 
-    // catch (error) {
-    //     res.send(error)
-    //     console.log("error");
-    // }
+    } 
+    catch (error) {
+        res.send(error)
+        console.log("error in examController");
+    }
 }
 
 module.exports = {create , list , save , listBycourseId , listByclassId , listStudentExamByExamId}
