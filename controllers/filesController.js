@@ -1,4 +1,4 @@
-const {uploadService, getFilesById, getFileByName} = require('../services/filesService')
+const {uploadService, getFilesById, getFileByName, getAllFiles} = require('../services/filesService')
 const fs = require('fs');
 const path = require('path');
 const PORT = process.env.PORT || 3000;
@@ -18,7 +18,7 @@ const upload = async (req, res, next) => {
     }
 }
 
-const getListFiles = (req, res, next) => {
+const getListFilesFromStorage = (req, res, next) => {
     fs.readdir(filesPath, function (err, files) {
         if (err) {
             res.status(500).send({
@@ -39,6 +39,16 @@ const getListFiles = (req, res, next) => {
         }
     });
 };
+
+const getListFiles = async (req, res, next) => {
+    try {
+        let files = await getAllFiles()
+        res.json(files)
+    }catch (e) {
+        e.status = 500
+        next(e)
+    }
+}
 
 const getTeacherFiles = async (req, res, next) => {
     try {
