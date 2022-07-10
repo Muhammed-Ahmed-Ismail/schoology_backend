@@ -20,7 +20,11 @@ module.exports = (sequelize, DataTypes) => {
   Exam.init({
     name: DataTypes.STRING,
     link: DataTypes.STRING,
-    date: DataTypes.DATEONLY,
+    date: DataTypes.DATE,
+    submitted: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
     courseId: DataTypes.INTEGER,
     classId: DataTypes.INTEGER
     //ClassId
