@@ -80,6 +80,7 @@ const save = async (req, res) => {
         result = await getResFromApiService(formID);
         statusx = await BulkSaveResultsToDB(result , exam.id);
         exam.submitted = true;
+        await exam.save()
         res.send(statusx)
     } 
     catch (error) {
