@@ -96,7 +96,7 @@ const save = async (req, res) => {
         res.send(statusx)
     } 
     catch (error) {
-        res.send({"error":error.errors[0].message})
+        res.send({"error": "Error occured"})
         console.log("error in examController");
         console.log(error.errors[0].message);
 
@@ -105,11 +105,14 @@ const save = async (req, res) => {
 
 
 const listStudentExams = async (req,res)=>{
-
+    let userId = req.user.id;
+    student = await Student.findOne({ where: { userId: userId}})
     let exams = await StudentExam.findAll({
         where: {
-          studentId: req.user.id,
-        }
+          studentId: student.id,
+          
+        },
+        include: { model: Exam, as: 'exam' }
       })
     return res.json(exams)
 
