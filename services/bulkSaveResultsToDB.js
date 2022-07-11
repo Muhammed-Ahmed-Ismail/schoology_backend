@@ -9,22 +9,23 @@ const { use } = require('../routes/meeting');
     //     { username: 'foo', isAdmin: true },
     //     { username: 'bar', isAdmin: false }
     //   ])
+     console.log(data)
     let emails = []
     let scores = []
     data['responses'].forEach(reponse => {
-        let email = Object.values(reponse['answers'])[0]['textAnswers']['answers'][0]['value']
+        let email = reponse['respondentEmail']
         let score = reponse['totalScore']
         emails.push(email)
         scores.push(score)
     });
-
+     console.log(emails)
     for (let i = 0; i < emails.length; i++) {
         let user =  await User.findOne({ where: { email: emails[i] } })
         if(user){
             let student = await Student.findOne({ where: { userId: user.id } })
 
         if(student != undefined && student != null && scores[i] != null){
-            StudentExam.create({studentId: student.id,examId : examId,score: scores[i]});
+            await StudentExam.create({studentId: student.id, examId: examId, score: scores[i]});
         }
         }
     }
