@@ -8,7 +8,7 @@ const startServer = async () => {
 	// await connectDB(...);
 	app.listen(PORT, async function () {
  		console.log(`listening on port ${PORT}!`);
-		 // await sequelize.sync({alter:true})
+		//  await sequelize.sync({alter:true})
 	});
      } catch (error) {
 	console.log(error)
@@ -16,3 +16,6 @@ const startServer = async () => {
 };
 
 startServer();
+/////
+/////DELETE ME
+// check if create exam route works while logged in as student 

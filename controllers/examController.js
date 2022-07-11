@@ -10,18 +10,23 @@ let {Exam , StudentExam , Student , User,Class,Course,Teacher} = require("../mod
 // const {User, Student, Role, Class, Meeting, Teacher} = require("../models/exam")
 
 const create = async (req, res) => {
+// if(req.user.roleId === 1){ //teacher
     try {
         let examx = await Exam.create({
             name: req.body.name,
             link: req.body.link,
             date: req.body.date,
             courseId: req.body.courseId,
+            teacherId: req.body.teacherId,
             classId: req.body.classId,
         })
         return res.json(examx)
     } catch (error) {
         res.send(error)
     }
+// }else{
+//     return '{"only teachers can create exam"}' //admin will be added later
+// }
 }
 
 const list = async (req, res) => {
@@ -91,8 +96,10 @@ const save = async (req, res) => {
         res.send(statusx)
     } 
     catch (error) {
-        res.send(error)
+        res.send({"error":error.errors[0].message})
         console.log("error in examController");
+        console.log(error.errors[0].message);
+
     }
 }
 
