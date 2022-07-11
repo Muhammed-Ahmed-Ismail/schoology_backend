@@ -1,9 +1,10 @@
 const {create,list,save,listBycourseId,listByclassId , listStudentExamByExamId
 } = require("../controllers/examController")
+const  {validateCreateExamRequest} = require("../middleware/requestValidators/exams/createExamRequest")
 const express = require("express");
 const router = express.Router();
 
-router.post("/create" , create)
+router.post("/create" , validateCreateExamRequest , create)
 router.get("/list" , list)
 router.get("/list/course/:id" , listBycourseId) //list all exams for one course
 router.get("/list/class/:id" , listByclassId) // list all exams for one class
