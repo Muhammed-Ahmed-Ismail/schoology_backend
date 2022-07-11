@@ -72,8 +72,8 @@ const save = async (req, res) => {
     link = req.body.link //teacher sends link in post body
     parts = link.split("/")
     formID = parts[5]
-    console.log(req);
     console.log(parts)
+
     let exam = await Exam.findOne({ where: { link: link } });
     let examId = exam.id
     

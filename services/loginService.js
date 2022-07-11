@@ -21,12 +21,12 @@ const logInTeacher = async (teacher)=>{
     const user = await teacher.getUser()
     const token = getjwtToken(user)
     const classes = await teacher.getClasses()
-    console.log(classes)
     const course = await teacher.getCourse()
     const response = {
         userId:teacher.id,
         userName:user.name,
         userType: "teacher",
+        courseId:teacher.courseId,
         course,
         classes,
         token
@@ -35,6 +35,23 @@ const logInTeacher = async (teacher)=>{
 
 }
 
+const logInStudent = async (student)=>{
+    const user = await student.getUser()
+    const token = getjwtToken(user)
+    const classRoom= await student.getClass()
+    const response = {
+        userId:student.id,
+        userName:user.name,
+        userType: "student",
+        classId:classRoom.id,
+        className:classRoom.name,
+        token
+    }
+    return response
+
+}
+
 module.exports = {
-    logInTeacher
+    logInTeacher,
+    logInStudent
 }
