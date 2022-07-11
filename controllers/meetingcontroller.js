@@ -2,7 +2,8 @@ const {
     createMeetingService,
     getMeetingByTeacherId,
     getAllMeetingsByTeacherId,
-    getMeetingByStudentId
+    getMeetingByStudentId,
+    getAllMeetingsByStudentId
 } = require("../services/meetingServices")
 
 const createMeeting = async (req, res,next) => {
@@ -23,7 +24,7 @@ const getMyMeetings = async (req, res, next) => {
             let meetings = await getMeetingByTeacherId(req.params.id, req.query.date)
             res.json(meetings)
         }
-        if (req.query.role === "student") {
+        else if (req.query.role === "student") {
             let meetings = await getMeetingByStudentId(req.params.id, req.query.date)
             res.json(meetings)
         }
@@ -35,14 +36,21 @@ const getMyMeetings = async (req, res, next) => {
 
 }
 
-const getAllTeacherMeetings = async (req, res, next) => {
+const getAllMeetings = async (req, res, next) => {
     try {
-        let meetings = await getAllMeetingsByTeacherId(req.params.id)
-        res.json(meetings)
+        if (req.query.role === "teacher") {
+            let meetings = await getAllMeetingsByTeacherId(req.params.id)
+            res.json(meetings)
+        }
+        if (req.query.role === "student") {
+            let meetings = await getAllMeetingsByStudentId(req.params.id)
+            res.json(meetings)
+        }
+
     }catch (e) {
         e.status = 500
         next(e)
     }
 }
 
-module.exports = {createMeeting, getMyMeetings, getAllTeacherMeetings}
+module.exports = {createMeeting, getMyMeetings, getAllMeetings}

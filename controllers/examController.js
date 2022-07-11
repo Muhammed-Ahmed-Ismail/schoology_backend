@@ -6,7 +6,7 @@ const {
 } = require("../services/bulkSaveResultsToDB")
 
 
-let {Exam , StudentExam , Student , User} = require("../models")
+let {Exam , StudentExam , Student , User,Class,Course,Teacher} = require("../models")
 // const {User, Student, Role, Class, Meeting, Teacher} = require("../models/exam")
 
 const create = async (req, res) => {
@@ -26,7 +26,7 @@ const create = async (req, res) => {
 
 const list = async (req, res) => {
     try {
-        let exams = await Exam.findAll()
+        let exams = await Exam.findAll({where:{submitted:false}})
         return res.json(exams)
     } catch (error) {
         res.send(error)
@@ -36,7 +36,7 @@ const list = async (req, res) => {
 
 const listBycourseId = async (req, res) => {
     try {
-        let exams = await Exam.findAll({where: { courseId: req.params.id },})
+        let exams = await Exam.findAll({where: { courseId: req.params.id,submitted:false},include:[{model:Course,as:'course',attributes:['name','id']},{model:Class,as:'class',attributes:['name','id']}],attributes:['name','id','date','link']})
         return res.json(exams)
     } catch (error) {
         res.send(error)
@@ -45,7 +45,7 @@ const listBycourseId = async (req, res) => {
 
 const listByclassId = async (req, res) => {
     try {
-        let exams = await Exam.findAll({where: { classId: req.params.id },})
+        let exams = await Exam.findAll({where: { classId: req.params.id ,submitted:false},})
         return res.json(exams)
     } catch (error) {
         res.send(error)
@@ -68,17 +68,26 @@ const listStudentExamByExamId = async (req, res) => {
     }
 
 }
+const listByTeacherId = async (req,res)=>{
+    const teacher = await Teacher.findByPk(req.params.id)
+    console.log(teacher)
+    let exams = await teacher.getExams({where:{submitted:false},include:[{model:Course,as:'course',attributes:['name','id']},{model:Class,as:'class',attributes:['name','id']}],attributes:['name','id','date','link']})
+    return res.json(exams)
+
+}
 const save = async (req, res) => {
     link = req.body.link //teacher sends link in post body
     parts = link.split("/")
     formID = parts[5]
-    console.log(res);
+    console.log(parts)
+
     let exam = await Exam.findOne({ where: { link: link } });
     
     try {
         result = await getResFromApiService(formID);
         statusx = await BulkSaveResultsToDB(result , exam.id);
         exam.submitted = true;
+        await exam.save()
         res.send(statusx)
     } 
     catch (error) {
@@ -87,4 +96,4 @@ const save = async (req, res) => {
     }
 }
 
-module.exports = {create , list , save , listBycourseId , listByclassId , listStudentExamByExamId}
+module.exports = {create , list , save , listBycourseId , listByclassId , listStudentExamByExamId,listByTeacherId}
