@@ -1,6 +1,6 @@
 const _ = require("lodash")
 
-const picTeacherResource = (dbResponse)=>{
+const pickTeacherResource = (dbResponse)=>{
     // console.log("pre",dbResponse.classes.dataValues)
     let classes = dbResponse.classes.map(element => {
         return _.pick(element['dataValues'],['id','name'])
@@ -13,4 +13,4 @@ const picTeacherResource = (dbResponse)=>{
     }
 }
 
-module.exports={picTeacherResource}
+module.exports={picTeacherResource: pickTeacherResource}

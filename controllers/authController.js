@@ -7,7 +7,7 @@ const {
   signupValidationSchema,
   loginValidationSchema,
 } = require("../schemas/authSchemas");
-const { logInTeacher } = require("../services/loginService");
+const { logInTeacher ,logInStudent} = require("../services/loginService");
 
 exports.signup = async (req, res) => {
   console.log(req.body)
@@ -46,7 +46,7 @@ exports.signup = async (req, res) => {
     });
     await user.save();
 
-    if (req.body.roleId == 2) {
+    if (req.body.roleId === 2) {
       const student = await Student.create({
         userId: user.id,
         gender: req.body.gender,
@@ -55,7 +55,7 @@ exports.signup = async (req, res) => {
       });
       if(student) res.json({user,student})
     }
-    if (req.body.roleId == 1) {
+    if (req.body.roleId === 1) {
       const teacher = await Teacher.create({
         userId: user.id,
         courseId: req.body.courseId,
@@ -67,7 +67,7 @@ exports.signup = async (req, res) => {
       if(teacher) res.json({user,teacher})
 
     }
-    if (req.body.roleId == 3) {
+    if (req.body.roleId === 3) {
       const parent = await Parent.create({
         userId: user.id,
         studentId: req.body.studentId,
@@ -87,8 +87,6 @@ exports.signupTeacher = async (req,res)=>{
 }
 exports.signin = async (req, res) => {
   try {
-  
-    
     // check if user exist in our database
     const user = await User.findOne({ where: { phone: req.body.phone } });
     if (!user) return res.status(404).send("User not found");
@@ -96,14 +94,17 @@ exports.signin = async (req, res) => {
     // check user password with hashed password stored in the database
     const validPassword = await bcrypt.compare(req.body.password, user.password);
     if (!validPassword) return res.status(400).send("Invalid password");
-
+    let data ={}
     if(user.roleId === 1)
     {
-      let data = await logInTeacher(await user.getTeacher())
-      res.status(200).json(data);
+       data = await logInTeacher(await user.getTeacher())
+    }
+    else if (user.roleId === 2)
+    {
+       data = await logInStudent(await user.getStudent())
     }
 
-    
+    res.status(200).json(data);
   }
   catch (error) {
     return res.status(500).send({ message: error.message });
