@@ -84,8 +84,10 @@ const save = async (req, res) => {
         res.send(statusx)
     } 
     catch (error) {
-        res.send(error)
+        res.send({"error":error.errors[0].message})
         console.log("error in examController");
+        console.log(error.errors[0].message);
+
     }
 }
 
