@@ -10,6 +10,7 @@ let {Exam , StudentExam , Student , User,Class,Course,Teacher} = require("../mod
 // const {User, Student, Role, Class, Meeting, Teacher} = require("../models/exam")
 
 const create = async (req, res) => {
+// if(req.user.roleId === 1){ //teacher
     try {
         let examx = await Exam.create({
             name: req.body.name,
@@ -23,6 +24,9 @@ const create = async (req, res) => {
     } catch (error) {
         res.send(error)
     }
+// }else{
+//     return '{"only teachers can create exam"}' //admin will be added later
+// }
 }
 
 const list = async (req, res) => {
