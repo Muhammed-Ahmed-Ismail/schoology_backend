@@ -7,10 +7,7 @@ const signupParentValidationSchema = Joi.object({
     password: Joi.string().required(),
     confirmPassword: Joi.string().required().valid(Joi.ref('password')),
     roleId: Joi.number().required(),
-    // courseId: Joi.number().required(),
-    // classId:Joi.number().required(),
-    // gender: Joi.valid('male', 'female'),
-    // birth_date: Joi.date(),
+    email:Joi.string().email().required(),
     studentId:Joi.number(),
 });
 

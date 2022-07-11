@@ -18,7 +18,7 @@ const periods = {
 
 
 const generateMeetingLink = async (eventData, code) => {
-    console.log("from create getlink")
+
 
     const oAuthClient = new google.auth.OAuth2(
         GOOGLE_CLIENT_ID,
@@ -43,7 +43,7 @@ const createMeetingService = async (data) => {
     const teacher = await Teacher.findByPk(data.teacherId)
 
     if (!(await teacher.isThatValidMeeting(data.date_time, data.period) && await classroom.isThatValidMeeting(data.date_time, data.period))) {
-
+        console.log("from create getlink")
         throw new Error("invalid meeting timing")
     }
 
@@ -83,20 +83,52 @@ const createMeetingService = async (data) => {
 }
 
 const getMeetingByTeacherId = async (teacherId, date) => {
-    let teacher = await Teacher.findByPk(teacherId)
-    let meetings = await teacher.getMeetings({where: {date}})
-    return meetings
+
+    try {
+        let meetings = null
+        let teacher = await Teacher.findByPk(teacherId)
+        if (date) {
+            meetings = await teacher.getMeetings({where: {date}})
+        } else {
+            meetings = await teacher.getMeetings()
+        }
+        return meetings
+    } catch (e) {
+        throw e
+    }
 }
 
 const getMeetingByStudentId = async (studentId, date) => {
-    let student = await Student.findByPk(studentId)
-    let studentClass = await student.getClass()
-    let meetings = await studentClass.getMeetings()
+
+    try {
+        let student = await Student.findByPk(studentId)
+        let studentClass = await student.getClass()
+        let meetings = null
+        if (date) {
+            meetings = await studentClass.getMeetings({where: {date}})
+        } else{
+            meetings = await studentClass.getMeetings()
+        }
+            return meetings
+    } catch (e) {
+        throw e;
+    }
+}
+
+const getAllMeetingsByTeacherId = async (teacherId) => {
+    let meetings = await getMeetingByTeacherId(teacherId)
+    return meetings
+}
+
+const getAllMeetingsByStudentId = async (studentId) => {
+   let meetings = await  getMeetingByStudentId(studentId)
     return meetings
 }
 
 module.exports = {
     createMeetingService,
     getMeetingByTeacherId,
-    getMeetingByStudentId
+    getAllMeetingsByTeacherId,
+    getMeetingByStudentId,
+    getAllMeetingsByStudentId
 }

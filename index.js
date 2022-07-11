@@ -16,3 +16,6 @@ const startServer = async () => {
 };
 
 startServer();
+/////
+/////DELETE ME
+// check if create exam route works while logged in as student 

@@ -12,6 +12,8 @@ module.exports = (sequelize, DataTypes) => {
         static associate(models) {
             // define association here
             Class.hasMany(models.Meeting, {foreignKey: "classId"})
+            Class.hasMany(models.Exam, {foreignKey: "classId"})
+            Class.belongsToMany(models.Teacher,{through:"teachers_classes"})
         }
 
         async isThatValidMeeting(date, period) {
@@ -26,6 +28,8 @@ module.exports = (sequelize, DataTypes) => {
     }, {
         sequelize,
         modelName: 'Class',
+        tableName: 'classes',
+
     });
     return Class;
 };
