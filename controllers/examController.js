@@ -16,6 +16,7 @@ const create = async (req, res) => {
             link: req.body.link,
             date: req.body.date,
             courseId: req.body.courseId,
+            teacherId: req.body.teacherId,
             classId: req.body.classId,
         })
         return res.json(examx)

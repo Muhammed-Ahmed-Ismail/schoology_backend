@@ -3,8 +3,8 @@ const Joi = require('joi')
 const createExamSchema = Joi.object().keys({
     name: Joi.string().required(),
     link: Joi.string().required(),
-    date_time: Joi.date().iso().required(),
-    // teacherId: Joi.number().required(),
+    date: Joi.date().iso().required(),
+    teacherId: Joi.number().required(),
     classId: Joi.number().required(),
     courseId: Joi.number().required(),
 
