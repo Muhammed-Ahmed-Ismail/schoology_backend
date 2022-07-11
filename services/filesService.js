@@ -49,10 +49,20 @@ const getFileByName = async (name) => {
     }
 }
 
+const getAllFiles = async () => {
+    try {
+        let files = await File.findAll()
+        return files
+    }catch (e) {
+        throw e
+    }
+}
+
 let uploadService = util.promisify(upload)
 
 module.exports = {
     uploadService,
     getFilesById,
     getFileByName,
+    getAllFiles
 }
