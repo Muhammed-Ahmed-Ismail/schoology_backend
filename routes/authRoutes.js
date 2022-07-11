@@ -7,6 +7,6 @@ router.post("/signup/teacher",authRequestValidator.validateSignupTeacherRequest,
 router.post("/signup/student",authRequestValidator.validateSignupStudentRequest, controller.signup);
 router.post("/signup/parent",authRequestValidator.validateSignupParentRequest, controller.signup);
 router.post("/signin", controller.signin);
-router.post("/signout", controller.signout);
+router.get("/signout", controller.signout);
 
 module.exports = router;
