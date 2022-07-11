@@ -12,8 +12,3 @@ router.get("/reciever/:id" , listBySenderAndReciever) // get all messages betwee
 module.exports = router
 
 
-//To Do
-//header -> authorization : bearer {token from login here } // use req.user  
-////notice this ^^ will be put in message router to extract sender ID , it will also be added before any router that need authorization
-
-//route to get certain student all exams scores
