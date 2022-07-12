@@ -12,7 +12,7 @@ const createExamSchema = Joi.object().keys({
 
 });
 
-const validateCreateExamRequest = async (req, res, next) => {
+const validateExamRequest = async (req, res, next) => {
 
     try {
         await createExamSchema.validateAsync(req.body, {
@@ -26,4 +26,4 @@ const validateCreateExamRequest = async (req, res, next) => {
 }
 
 
-module.exports = {validateCreateExamRequest}
+module.exports = {validateExamRequest}
