@@ -12,7 +12,8 @@ for (const student of studentsInClass) {
     recordsToInsert.push({
         studentId : student.id,
         examId : examId,
-    }) 
+    })
+    console.log("create exam student",student.id)
 }
 let studentsexams = await StudentExam.bulkCreate(recordsToInsert)
 return studentsexams
