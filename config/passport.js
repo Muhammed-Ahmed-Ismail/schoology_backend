@@ -27,7 +27,7 @@ const options = {
         User.findByPk( jwt_payload.userId).then( (user)=> {
             
             if (user) {
-                console.log(user);
+                // console.log(user);
                 return done(null, user);
             } else {
                 return done(null, false);

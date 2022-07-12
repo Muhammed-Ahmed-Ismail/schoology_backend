@@ -80,14 +80,14 @@ const listByTeacherId = async (req,res)=>{
     return res.json(exams)
 
 }
-const save = async (req, res) => {
+const save = async (req, res,next) => {
     link = req.body.link //teacher sends link in post body
     parts = link.split("/")
     formID = parts[5]
     console.log(parts)
 
-    let exam = await Exam.findOne({ where: { link: link } });
-    
+    let exam = await Exam.findOne({ where: { link: link,submitted:false } });
+    console.log('exam',exam)
     try {
         result = await getResFromApiService(formID);
         statusx = await BulkSaveResultsToDB(result , exam.id);
@@ -96,9 +96,11 @@ const save = async (req, res) => {
         res.send(statusx)
     } 
     catch (error) {
-        res.send({"error":error.errors[0].message})
         console.log("error in examController");
-        console.log(error.errors[0].message);
+        console.log(error);
+        // error.status = 400
+        res.json({error:error.toString()})
+        // next(error)
 
     }
 }
