@@ -14,7 +14,7 @@ const { use } = require('../routes/meeting');
     let scores = []
     if(data['responses']) {
         data['responses'].forEach(reponse => {
-            let email = reponse['respondentEmail']
+            let email = reponse['respondentEmail']|| Object.values(reponse['answers'])[0]['textAnswers']['answers'][0]['value']
             let score = reponse['totalScore']
             emails.push(email)
             scores.push(score)
