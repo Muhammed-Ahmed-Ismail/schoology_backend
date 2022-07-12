@@ -131,22 +131,16 @@ const deleteExam = async (req,res)=>{
 }
 
 const updateExam = async (req,res)=>{
-    let status ={"status":"Exam not found"}
-    let result = await Exam.update(
-            {
-            name: req.body.name,
-            link: req.body.link,
-            date: req.body.date,
-            courseId: req.body.courseId,
-            teacherId: req.body.teacherId,
-            classId: req.body.classId,
-            },
-            {
-            where: { id: req.params.id },
-            }
-    )
-    if(result){status = {"status":"successfully updated "}}
-    return res.json(status)
-
+    let exam = await Exam.findByPk(req.params.id)
+    if(exam){
+        exam.name = req.body.name,
+        exam.link = req.body.link,
+        exam.date = req.body.date,
+        exam.courseId = req.body.courseId,
+        exam.teacherId = req.body.teacherId,
+        exam.classId = req.body.classId,
+        await exam.save()
+    }else{exam = {"status":"Exam not found"}}
+    return res.json(exam)
 }
 module.exports = {create , list , save , listBycourseId , listByclassId , listStudentExamByExamId,listByTeacherId , listStudentExams , deleteExam , updateExam}
