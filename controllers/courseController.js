@@ -41,7 +41,7 @@ exports.updateCourse = async (req, res) => {
         const updatedCourse = await Course.update({
             name: req.body.name,
         },
-            { where: { id: req.params.id } });
+        { where: { id: req.params.id } });
         return res.status(201).json(updatedCourse);
     }
     catch (error) {

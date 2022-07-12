@@ -1,13 +1,13 @@
-const { User, Teacher, Student, Parent,Class } = require("../models");
+const { User, Teacher, Student, Parent, Class } = require("../models");
 const bcrypt = require("bcrypt");
 
-const {Op} = require("sequelize")
+const { Op } = require("sequelize")
 require("dotenv").config();
 const {
   signupValidationSchema,
   loginValidationSchema,
 } = require("../schemas/authSchemas");
-const { logInTeacher ,logInStudent} = require("../services/loginService");
+const { logInTeacher, logInStudent } = require("../services/loginService");
 
 exports.signup = async (req, res) => {
   console.log(req.body)
@@ -18,11 +18,11 @@ exports.signup = async (req, res) => {
     // if (error) return res.status(400).send(error.details[0].message);
 
     // // check if user exist in our database
-    const isUserExists = await User.findOne({ 
-      where:{ 
+    const isUserExists = await User.findOne({
+      where: {
         [Op.or]: [
-         {phone: req.body.phone},
-          {email:req.body.email}
+          { phone: req.body.phone },
+          { email: req.body.email }
         ]
       }
     });
@@ -42,7 +42,7 @@ exports.signup = async (req, res) => {
       phone: req.body.phone,
       password: encryptedPassword,
       roleId: req.body.roleId,
-      email:req.body.email
+      email: req.body.email
     });
     await user.save();
 
@@ -51,9 +51,9 @@ exports.signup = async (req, res) => {
         userId: user.id,
         gender: req.body.gender,
         birth_date: req.body.birth_date,
-        classId:req.body.classId
+        classId: req.body.classId
       });
-      if(student) res.json({user,student})
+      if (student) res.json({ user, student })
     }
     if (req.body.roleId === 1) {
       const teacher = await Teacher.create({
@@ -64,7 +64,7 @@ exports.signup = async (req, res) => {
         let classRoom = await Class.findByPk(element)
         teacher.addClass(classRoom)
       }
-      if(teacher) res.json({user,teacher})
+      if (teacher) res.json({ user, teacher })
 
     }
     if (req.body.roleId === 3) {
@@ -72,19 +72,20 @@ exports.signup = async (req, res) => {
         userId: user.id,
         studentId: req.body.studentId,
       });
-      if(parent) res.json({user,parent})
+      if (parent) res.json({ user, parent })
     }
     // if (user) return res.status(200).send(user);
-
   }
   catch (error) {
     res.status(500).send({ message: error.message });
   }
 };
 
-exports.signupTeacher = async (req,res)=>{
+exports.signupTeacher = async (req, res) => {
 
 }
+
+
 exports.signin = async (req, res) => {
   try {
     // check if user exist in our database
@@ -94,14 +95,12 @@ exports.signin = async (req, res) => {
     // check user password with hashed password stored in the database
     const validPassword = await bcrypt.compare(req.body.password, user.password);
     if (!validPassword) return res.status(400).send("Invalid password");
-    let data ={}
-    if(user.roleId === 1)
-    {
-       data = await logInTeacher(await user.getTeacher())
+    let data = {}
+    if (user.roleId === 1) {
+      data = await logInTeacher(await user.getTeacher())
     }
-    else if (user.roleId === 2)
-    {
-       data = await logInStudent(await user.getStudent())
+    else if (user.roleId === 2) {
+      data = await logInStudent(await user.getStudent())
     }
 
     res.status(200).json(data);
@@ -119,5 +118,24 @@ exports.signout = async (req, res) => {
     });
   } catch (err) {
     this.next(err);
+  }
+};
+
+
+exports.deactivateUser = async (req, res) => {
+  try {
+    const user = await User.findByPk(req.params.id);
+    if (user.active) {
+      await User.update({
+        active: false,
+      },
+        { where: { id: user.id } });
+      return res.status(200).send({ message: "user is deactivated!" });
+    }
+    else return res.send({ message: "user aleady deactivated!" });
+
+  }
+  catch (error) {
+    return res.status(500).json(error.message);
   }
 };
