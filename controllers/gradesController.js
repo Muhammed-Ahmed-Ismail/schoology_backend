@@ -1,38 +1,51 @@
-const {Exam , StudentExam , Student , User,Class,Course,Teacher} = require("../models")
+const {Exam, StudentExam, Student, User, Class, Course, Teacher} = require("../models")
+const {getGradesStatistics} = require("../services/gradesService");
 
-const listAvailableGradesByTeacherId = async (req,res)=>{
+const listAvailableGradesByTeacherId = async (req, res) => {
     const teacher = await req.user.getTeacher();
-    const students = []
-    let submittedExams = await teacher.getExams({where:{submitted:true},include:[{model:Class,as:'class',attributes:['name','id']}]});
-    // for (const exam of availableGrades) {
-    //     let studentsExams = await exam.getStudentExams()
-    //     exam.students = await studentsExams.map(async (exam)=>{
-    //         let students = await exam.getStudent()
-    //         return students
-    //     })
-    //     console.log("students",exam)
-    // }
-    for (let exam of submittedExams) {
-       exam =  { ...exam,students: Object.values(await getStudents(await exam.getStudentExams()))}
-        // console.log(exam)
-        // exam.students =
-
+    const submittedExams = await teacher.getExams({
+        where: {submitted: true},
+        include: [{model: Class, as: 'class', attributes: ['name', 'id']}],
+        attributes: ['id', 'name','date']
+    });
+    if (submittedExams) {
+        let data = await getGradesStatistics(submittedExams)
+        res.json(data)
     }
-    console.log(submittedExams)
-    res.json({submittedExams,students})
+
 }
 
 
-const getStudents = async (studentExams)=>{
-    const students = []
-    for(const studentExam of studentExams)
-    {
-        students.push(await studentExam.getStudent())
-    }
-    console.log("students ",students)
-    return students
-
+const getStudentsGrades = async (req, res) => {
+    let exam = await Exam.findByPk(req.params.id)
+    let grades = await exam.getStudentExams({
+        include: [{
+            model: Student,
+            as:'student',
+            attributes: ['id'],
+            include:[{
+                model:User,
+                as:'user',
+                attributes:['name']
+            }]
+        },
+        ],
+        attributes: ['score']
+    })
+    res.json(grades)
+}
+const getStudentGrades = async (req,res)=>
+{
+    const student = await req.user.getStudent()
+    const grades = await student.getStudentExams({include:[{
+        model:Exam,
+            as:'exam',
+            attributes:['id','name']
+        }]})
+    res.json(grades)
 }
 module.exports = {
-    listAvailableGradesByTeacherId
+    listAvailableGradesByTeacherId,
+    getStudentsGrades,
+    getStudentGrades
 }

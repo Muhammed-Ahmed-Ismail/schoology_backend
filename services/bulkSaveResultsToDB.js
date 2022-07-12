@@ -23,13 +23,15 @@ const { use } = require('../routes/meeting');
         throw new Error("no submissions yet")
     }
      console.log(emails)
+     console.log(scores)
     for (let i = 0; i < emails.length; i++) {
         let user =  await User.findOne({ where: { email: emails[i] } })
         if(user){
             let student = await Student.findOne({ where: { userId: user.id } })
-
+            console.log(student)
         if(student != undefined && student != null && scores[i] != null){
-            await StudentExam.create({studentId: student.id, examId: examId, score: scores[i]});
+           let studetExam = await StudentExam.update({score: scores[i]},{where:{studentId: student.id, examId: examId}});
+            console.log("sid",studetExam.studentId,"score",studetExam.score)
         }
         }
     }

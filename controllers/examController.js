@@ -1,4 +1,3 @@
-
 const {getResFromApiService} = require("../services/getResFromApiService")
 
 const {
@@ -10,7 +9,7 @@ const {
 } = require("../services/fillStudentExam")
 
 
-let {Exam , StudentExam , Student , User,Class,Course,Teacher} = require("../models")
+let {Exam, StudentExam, Student, User, Class, Course, Teacher} = require("../models")
 // const {User, Student, Role, Class, Meeting, Teacher} = require("../models/exam")
 
 const create = async (req, res) => {
@@ -24,7 +23,7 @@ const create = async (req, res) => {
             teacherId: req.body.teacherId,
             classId: req.body.classId,
         })
-        await fillStudentExam(examx.id , examx.classId)
+        await fillStudentExam(examx.id, examx.classId)
         return res.json(examx)
     } catch (error) {
         res.send(error)
@@ -36,7 +35,7 @@ const create = async (req, res) => {
 
 const list = async (req, res) => {
     try {
-        let exams = await Exam.findAll({where:{submitted:false}})
+        let exams = await Exam.findAll({where: {submitted: false}})
         return res.json(exams)
     } catch (error) {
         res.send(error)
@@ -46,7 +45,15 @@ const list = async (req, res) => {
 
 const listBycourseId = async (req, res) => {
     try {
-        let exams = await Exam.findAll({where: { courseId: req.params.id,submitted:false},include:[{model:Course,as:'course',attributes:['name','id']},{model:Class,as:'class',attributes:['name','id']}],attributes:['name','id','date','link']})
+        let exams = await Exam.findAll({
+            where: {courseId: req.params.id, submitted: false},
+            include: [{model: Course, as: 'course', attributes: ['name', 'id']}, {
+                model: Class,
+                as: 'class',
+                attributes: ['name', 'id']
+            }],
+            attributes: ['name', 'id', 'date', 'link']
+        })
         return res.json(exams)
     } catch (error) {
         res.send(error)
@@ -55,7 +62,7 @@ const listBycourseId = async (req, res) => {
 
 const listByclassId = async (req, res) => {
     try {
-        let exams = await Exam.findAll({where: { classId: req.params.id ,submitted:false},})
+        let exams = await Exam.findAll({where: {classId: req.params.id, submitted: false},})
         return res.json(exams)
     } catch (error) {
         res.send(error)
@@ -64,24 +71,31 @@ const listByclassId = async (req, res) => {
 
 const listStudentExamByExamId = async (req, res) => {
     try {
-        let allStudentsScore = await StudentExam.findAll({where: { examId: req.params.id }}) //get all scores for certain exam
+        let allStudentsScore = await StudentExam.findAll({where: {examId: req.params.id}}) //get all scores for certain exam
         let nameAndScore = [];
         for (const studentScore of allStudentsScore) {
-            let student = await Student.findOne({where: { id: studentScore.studentId}})   
-            let user = await User.findOne({where: { id: student.id}})
-            nameAndScore.push({name : user.name , score : studentScore.score});      
+            let student = await Student.findOne({where: {id: studentScore.studentId}})
+            let user = await User.findOne({where: {id: student.id}})
+            nameAndScore.push({name: user.name, score: studentScore.score});
         } //get name of student along with score
         return res.json(nameAndScore)
-    } 
-    catch (error) {
+    } catch (error) {
         res.send(error)
     }
 
 }
-const listByTeacherId = async (req,res)=>{
+const listByTeacherId = async (req, res) => {
     const teacher = await Teacher.findByPk(req.params.id)
     console.log(teacher)
-    let exams = await teacher.getExams({where:{submitted:false},include:[{model:Course,as:'course',attributes:['name','id']},{model:Class,as:'class',attributes:['name','id']}],attributes:['name','id','date','link']})
+    let exams = await teacher.getExams({
+        where: {submitted: false},
+        include: [{model: Course, as: 'course', attributes: ['name', 'id']}, {
+            model: Class,
+            as: 'class',
+            attributes: ['name', 'id']
+        }],
+        attributes: ['name', 'id', 'date', 'link']
+    })
     return res.json(exams)
 
 }
@@ -91,39 +105,47 @@ const save = async (req, res) => {
     formID = parts[5]
     console.log(parts)
 
-    let exam = await Exam.findOne({ where: { link: link,submitted:false } });
-    console.log('exam',exam)
+    let exam = await Exam.findOne({where: {link: link, submitted: false}});
+    console.log('exam', exam)
     try {
         result = await getResFromApiService(formID);
-        statusx = await BulkSaveResultsToDB(result , exam.id);
+        statusx = await BulkSaveResultsToDB(result, exam.id);
         exam.submitted = true;
         await exam.save()
         res.send(statusx)
-    } 
-    catch (error) {
+    } catch (error) {
         console.log("error in examController");
         console.log(error);
         // error.status = 400
-        res.json({error:error.toString()})
+        res.json({error: error.toString()})
         // next(error)
 
     }
 }
 
 
-const listStudentExams = async (req,res)=>{
+const listStudentExams = async (req, res) => {
     let userId = req.user.id;
-    student = await Student.findOne({ where: { userId: userId}})
+    student = await Student.findOne({where: {userId: userId}})
     let exams = await StudentExam.findAll({
         where: {
-          studentId: student.id,
+            studentId: student.id,
 
         },
-        include: { model: Exam, as: 'exam' }
-      })
+        include: {model: Exam, as: 'exam'}
+    })
     return res.json(exams)
 
 }
-module.exports = {create , list , save , listBycourseId , listByclassId , listStudentExamByExamId,listByTeacherId , listStudentExams}
+module.exports = {
+    create,
+    list,
+    save,
+    listBycourseId,
+    listByclassId,
+    listStudentExamByExamId,
+    listByTeacherId,
+    listStudentExams
+}
 //To Do
 //route to get certain student all exams scores
