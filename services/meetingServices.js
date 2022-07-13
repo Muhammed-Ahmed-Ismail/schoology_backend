@@ -1,6 +1,6 @@
 const {google} = require('googleapis')
 
-const {User, Student, Role, Class, Meeting, Teacher} = require("../models")
+const {User, Student, Role, Class, Meeting, Teacher,Parent} = require("../models")
 
 const GOOGLE_CLIENT_ID = "43384519615-haoarcj3935ckm6s0t0cfh77ed2gd72k.apps.googleusercontent.com"
 const GOOGLE_CLIENT_SECRET = "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"
@@ -15,7 +15,6 @@ const periods = {
     7: "T14:00:00-02:00",
     8: "T14:00:00-02:00",
 }
-
 
 const generateMeetingLink = async (eventData, code) => {
 
@@ -115,6 +114,23 @@ const getMeetingByStudentId = async (studentId, date) => {
     }
 }
 
+const getMeetingByParentId = async (parentId,date)=>{
+    try {
+        let parent = await Parent.findByPk(parentId)
+        let student = await parent.getStudent()
+        let studentClass = await student.getClass()
+        let meetings = null
+        if (date) {
+            meetings = await studentClass.getMeetings({where: {date}})
+        } else{
+            meetings = await studentClass.getMeetings()
+        }
+        return meetings
+    } catch (e) {
+        throw e;
+    }
+}
+
 const getAllMeetingsByTeacherId = async (teacherId) => {
     let meetings = await getMeetingByTeacherId(teacherId)
     return meetings
@@ -124,11 +140,16 @@ const getAllMeetingsByStudentId = async (studentId) => {
    let meetings = await  getMeetingByStudentId(studentId)
     return meetings
 }
-
+const getAllMeetingsByParentId = async (parentId) => {
+    let meetings = await  getMeetingByParentId(parentId)
+    return meetings
+}
 module.exports = {
     createMeetingService,
     getMeetingByTeacherId,
     getAllMeetingsByTeacherId,
     getMeetingByStudentId,
-    getAllMeetingsByStudentId
+    getAllMeetingsByStudentId,
+    getMeetingByParentId,
+    getAllMeetingsByParentId,
 }

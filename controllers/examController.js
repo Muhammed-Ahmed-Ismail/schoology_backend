@@ -99,6 +99,37 @@ const listByTeacherId = async (req, res) => {
     return res.json(exams)
 
 }
+const getStudentExams = async (req, res) => {
+    const student = await req.user.getStudent()
+    let exams = await getStudentExamsByStudentId(student)
+    res.json(exams)
+}
+
+
+const getMyChildExams = async (req,res)=>{
+    const parent = await req.user.getParent()
+    const student = await parent.getStudent()
+    const exams = await getStudentExamsByStudentId(student)
+    res.json(exams)
+}
+
+
+const listStudentExams = async (req, res) => {
+    let userId = req.user.id;
+    student = await Student.findOne({where: {userId: userId}})
+    let exams = await StudentExam.findAll({
+        where: {
+            studentId: student.id,
+        },
+        include: {
+            model: Exam, as: 'exam'
+
+        }
+    })
+    return res.json(exams)
+
+}
+
 const save = async (req, res) => {
     link = req.body.link //teacher sends link in post body
     parts = link.split("/")
@@ -122,20 +153,19 @@ const save = async (req, res) => {
 
     }
 }
-
-
-const listStudentExams = async (req, res) => {
-    let userId = req.user.id;
-    student = await Student.findOne({where: {userId: userId}})
-    let exams = await StudentExam.findAll({
-        where: {
-            studentId: student.id,
-
-        },
-        include: {model: Exam, as: 'exam'}
+// ########################## helper methods ################################## //
+const getStudentExamsByStudentId = async (student)=>{
+    const classRoom = await student.getClass()
+    const exams = await classRoom.getExams({
+        where: {submitted: false},
+        include: [{
+            model: Course,
+            as: 'course',
+            attributes: ['name', 'id']
+        }],
+        attributes: ['name', 'id', 'date', 'link']
     })
-    return res.json(exams)
-
+    return exams
 }
 module.exports = {
     create,
@@ -145,7 +175,9 @@ module.exports = {
     listByclassId,
     listStudentExamByExamId,
     listByTeacherId,
-    listStudentExams
+    listStudentExams,
+    getStudentExams,
+    getMyChildExams
 }
 //To Do
 //route to get certain student all exams scores
