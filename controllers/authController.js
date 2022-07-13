@@ -7,7 +7,7 @@ const {
   signupValidationSchema,
   loginValidationSchema,
 } = require("../schemas/authSchemas");
-const { logInTeacher ,logInStudent} = require("../services/loginService");
+const { logInTeacher ,logInStudent, logInParent} = require("../services/loginService");
 
 exports.signup = async (req, res) => {
   console.log(req.body)
@@ -102,6 +102,10 @@ exports.signin = async (req, res) => {
     else if (user.roleId === 2)
     {
        data = await logInStudent(await user.getStudent())
+    }
+    else if (user.roleId === 3)
+    {
+       data = await logInParent(await user.getParent())
     }
 
     res.status(200).json(data);

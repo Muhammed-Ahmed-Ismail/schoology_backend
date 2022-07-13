@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
             User.belongsTo(models.Role, {foreignKey: 'roleId', as: 'role'})
             User.hasOne(models.Student,{foreignKey:'userId' })
             User.hasOne(models.Teacher,{foreignKey:'userId' })
+            User.hasOne(models.Parent,{foreignKey:'userId' })
         }
     }
 
