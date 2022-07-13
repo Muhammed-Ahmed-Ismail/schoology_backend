@@ -1,4 +1,3 @@
-
 const {getResFromApiService} = require("../services/getResFromApiService")
 
 const {
@@ -75,9 +74,9 @@ const listStudentExamByExamId = async (req, res) => {
         let allStudentsScore = await StudentExam.findAll({where: {examId: req.params.id}}) //get all scores for certain exam
         let nameAndScore = [];
         for (const studentScore of allStudentsScore) {
-            let student = await Student.findOne({where: { id: studentScore.studentId}})   
-            let user = await User.findOne({where: { id: student.id}})
-            nameAndScore.push({name : user.name , score : studentScore.score});      
+            let student = await Student.findOne({where: {id: studentScore.studentId}})
+            let user = await User.findOne({where: {id: student.id}})
+            nameAndScore.push({name: user.name, score: studentScore.score});
         } //get name of student along with score
         return res.json(nameAndScore)
     } catch (error) {
@@ -100,28 +99,18 @@ const listByTeacherId = async (req, res) => {
     return res.json(exams)
 
 }
-const save = async (req, res) => {
-    link = req.body.link //teacher sends link in post body
-    parts = link.split("/")
-    formID = parts[5]
-    console.log(parts)
+const getStudentExams = async (req, res) => {
+    const student = await req.user.getStudent()
+    let exams = await getStudentExamsByStudentId(student)
+    res.json(exams)
+}
 
-    let exam = await Exam.findOne({ where: { link: link,submitted:false } });
-    console.log('exam',exam)
-    try {
-        result = await getResFromApiService(formID);
-        statusx = await BulkSaveResultsToDB(result , exam.id);
-        exam.submitted = true;
-        await exam.save()
-        res.send(statusx)
-    } catch (error) {
-        console.log("error in examController");
-        console.log(error);
-        // error.status = 400
-        res.json({error:error.toString()})
-        // next(error)
 
-    }
+const getMyChildExams = async (req,res)=>{
+    const parent = await req.user.getParent()
+    const student = await parent.getStudent()
+    const exams = await getStudentExamsByStudentId(student)
+    res.json(exams)
 }
 
 
@@ -131,12 +120,52 @@ const listStudentExams = async (req, res) => {
     let exams = await StudentExam.findAll({
         where: {
             studentId: student.id,
-
         },
-        include: {model: Exam, as: 'exam'}
+        include: {
+            model: Exam, as: 'exam'
+
+        }
     })
     return res.json(exams)
 
+}
+
+const save = async (req, res) => {
+    link = req.body.link //teacher sends link in post body
+    parts = link.split("/")
+    formID = parts[5]
+    console.log(parts)
+
+    let exam = await Exam.findOne({where: {link: link, submitted: false}});
+    console.log('exam', exam)
+    try {
+        result = await getResFromApiService(formID);
+        statusx = await BulkSaveResultsToDB(result, exam.id);
+        exam.submitted = true;
+        await exam.save()
+        res.send(statusx)
+    } catch (error) {
+        console.log("error in examController");
+        console.log(error);
+        // error.status = 400
+        res.json({error: error.toString()})
+        // next(error)
+
+    }
+}
+// ########################## helper methods ################################## //
+const getStudentExamsByStudentId = async (student)=>{
+    const classRoom = await student.getClass()
+    const exams = await classRoom.getExams({
+        where: {submitted: false},
+        include: [{
+            model: Course,
+            as: 'course',
+            attributes: ['name', 'id']
+        }],
+        attributes: ['name', 'id', 'date', 'link']
+    })
+    return exams
 }
 
 
@@ -164,4 +193,5 @@ const updateExam = async (req,res)=>{
     }else{exam = {"status":"Exam not found"}}
     return res.json(exam)
 }
-module.exports = {create , list , save , listBycourseId , listByclassId , listStudentExamByExamId,listByTeacherId , listStudentExams , deleteExam , updateExam}
+module.exports = {create , list , save , listBycourseId , listByclassId , listStudentExamByExamId,listByTeacherId , listStudentExams , deleteExam , updateExam, getStudentExams,
+    getMyChildExams}

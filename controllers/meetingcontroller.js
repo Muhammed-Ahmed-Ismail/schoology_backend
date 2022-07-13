@@ -4,9 +4,11 @@ const {
     getAllMeetingsByTeacherId,
     getMeetingByStudentId,
     getAllMeetingsByStudentId,
-    updateMeetingService
+    updateMeetingService,
+    getAllMeetingsByParentId
 } = require("../services/meetingServices")
 
+const createMeeting = async (req, res, next) => {
 const { Meeting, Teacher, Class } = require("../models")
 
 const createMeeting = async (req, res, next) => {
@@ -15,7 +17,7 @@ const createMeeting = async (req, res, next) => {
         let meeting = await createMeetingService(req.body)
         res.json(meeting)
     } catch (error) {
-        error.status = 400
+        error.status=400
         next(error)
     }
 }
@@ -30,8 +32,12 @@ const getMyMeetings = async (req, res, next) => {
         else if (req.query.role === "student") {
             let meetings = await getMeetingByStudentId(req.params.id, req.query.date)
             res.json(meetings)
+        } else if (req.query.role === "parent")
+        {
+            let meetings = await getAllMeetingsByParentId(req.params.id, req.query.date)
+            res.json(meetings)
         }
-    } catch (e) {
+    }catch (e) {
         e.status = 500
         e.body = 'server error'
         next(e)
@@ -51,6 +57,10 @@ const getAllMeetings = async (req, res, next) => {
         }
         if (req.query.role === "admin") {
             let meetings = Meeting.findAll();
+            res.json(meetings)
+        }
+        if (req.query.role === "parent") {
+            let meetings = await getAllMeetingsByParentId(req.params.id)
             res.json(meetings)
         }
     } catch (e) {

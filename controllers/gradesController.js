@@ -6,7 +6,7 @@ const listAvailableGradesByTeacherId = async (req, res) => {
     const submittedExams = await teacher.getExams({
         where: {submitted: true},
         include: [{model: Class, as: 'class', attributes: ['name', 'id']}],
-        attributes: ['id', 'name','date']
+        attributes: ['id', 'name', 'date']
     });
     if (submittedExams) {
         let data = await getGradesStatistics(submittedExams)
@@ -21,12 +21,12 @@ const getStudentsGrades = async (req, res) => {
     let grades = await exam.getStudentExams({
         include: [{
             model: Student,
-            as:'student',
+            as: 'student',
             attributes: ['id'],
-            include:[{
-                model:User,
-                as:'user',
-                attributes:['name']
+            include: [{
+                model: User,
+                as: 'user',
+                attributes: ['name']
             }]
         },
         ],
@@ -34,14 +34,20 @@ const getStudentsGrades = async (req, res) => {
     })
     res.json(grades)
 }
-const getStudentGrades = async (req,res)=>
-{
+const getStudentGrades = async (req, res) => {
     const student = await req.user.getStudent()
-    const grades = await student.getStudentExams({include:[{
-        model:Exam,
-            as:'exam',
-            attributes:['id','name']
-        }]})
+    const grades = await student.getStudentExams({
+        include: [{
+            model: Exam,
+            as: 'exam',
+            attributes: ['id', 'name'],
+            include: [{
+                model: Course,
+                as: "course",
+                attributes: ['name']
+            }]
+        }]
+    })
     res.json(grades)
 }
 module.exports = {
