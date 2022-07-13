@@ -1,5 +1,3 @@
-// const { Where } = require('sequelize/types/utils');
-// const { where } = require('sequelize/types');
 const {Student , StudentExam , User} = require('../models');
 const { use } = require('../routes/meeting');
  const BulkSaveResultsToDB = async  (data , examId)=> {
@@ -13,19 +11,19 @@ const { use } = require('../routes/meeting');
     let emails = []
     let scores = []
     data['responses'].forEach(reponse => {
-        let email = reponse['respondentEmail']
+        let email = reponse['respondentEmail'] || Object.values(reponse['answers'])[0]['textAnswers']['answers'][0]['value']
         let score = reponse['totalScore']
         emails.push(email)
         scores.push(score)
     });
-     console.log(emails)
     for (let i = 0; i < emails.length; i++) {
         let user =  await User.findOne({ where: { email: emails[i] } })
-        if(user){
+        if(user != undefined){
             let student = await Student.findOne({ where: { userId: user.id } })
 
-        if(student != undefined && student != null && scores[i] != null){
-            await StudentExam.create({studentId: student.id, examId: examId, score: scores[i]});
+        if(student != undefined && student != null ){
+            let studentexam =  await StudentExam.findOne({where: {studentId: student.id, examId: examId}});
+           if(studentexam != null){ studentexam.score = scores[i] ; studentexam.save()}
         }
         }
     }
