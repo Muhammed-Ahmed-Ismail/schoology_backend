@@ -18,7 +18,9 @@ router.use("/course", courseRoutes)
 
 const examRouter = require("./examRouter")
 const messageRouter = require("./messageRouter")
+const teacherRouter = require("./teacherRouter.js")
 router.use("/exam",examRouter)
 router.use("/message",messageRouter)
+router.use("/teacher",teacherRouter)
 
 module.exports = router
