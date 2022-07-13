@@ -11,20 +11,22 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
-            Class.hasMany(models.Meeting, {foreignKey: "classId"})
-            Class.hasMany(models.Exam, {foreignKey: "classId"})
-            Class.belongsToMany(models.Teacher,{through:"teachers_classes"})
+            Class.hasMany(models.Meeting, { foreignKey: "classId" })
+            Class.hasMany(models.Exam, { foreignKey: "classId" })
+            Class.belongsToMany(models.Teacher, { through: "teachers_classes" })
         }
 
         async isThatValidMeeting(date, period) {
-            let count = await this.countMeetings({where: {date, period}})
+            let count = await this.countMeetings({ where: { date, period } })
 
             return (count === 0)
         }
     }
-
     Class.init({
-        name: DataTypes.STRING
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false
+        }
     }, {
         sequelize,
         modelName: 'Class',

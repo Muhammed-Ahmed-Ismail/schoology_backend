@@ -11,9 +11,9 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
-            User.belongsTo(models.Role, {foreignKey: 'roleId', as: 'role'})
-            User.hasOne(models.Student,{foreignKey:'userId' })
-            User.hasOne(models.Teacher,{foreignKey:'userId' })
+            User.belongsTo(models.Role, { foreignKey: 'roleId', as: 'role' })
+            User.hasOne(models.Student, { foreignKey: 'userId' })
+            User.hasOne(models.Teacher, { foreignKey: 'userId' })
         }
     }
 
@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
         email: {
             type: DataTypes.STRING,
             allowNull: false,
-            unique:true
+            unique: true
         },
         password: {
             type: DataTypes.STRING,
@@ -38,6 +38,10 @@ module.exports = (sequelize, DataTypes) => {
         roleId: {
             type: DataTypes.INTEGER,
             allowNull: false,
+        },
+        active: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: true,
         }
     }, {
         sequelize,
