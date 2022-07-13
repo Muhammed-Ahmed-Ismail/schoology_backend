@@ -117,6 +117,30 @@ const listStudentExams = async (req,res)=>{
     return res.json(exams)
 
 }
-module.exports = {create , list , save , listBycourseId , listByclassId , listStudentExamByExamId,listByTeacherId , listStudentExams}
-//To Do
-//route to get certain student all exams scores
+
+
+const deleteExam = async (req,res)=>{
+    const exam = await Exam.findByPk(req.params.id)
+    let status ={"status":"Exam not found"}
+    if(exam){
+        let result = await exam.destroy()
+        if(result){status = {"status":"successfully deleted "}}
+    }
+    return res.json(status)
+
+}
+
+const updateExam = async (req,res)=>{
+    let exam = await Exam.findByPk(req.params.id)
+    if(exam){
+        exam.name = req.body.name,
+        exam.link = req.body.link,
+        exam.date = req.body.date,
+        exam.courseId = req.body.courseId,
+        exam.teacherId = req.body.teacherId,
+        exam.classId = req.body.classId,
+        await exam.save()
+    }else{exam = {"status":"Exam not found"}}
+    return res.json(exam)
+}
+module.exports = {create , list , save , listBycourseId , listByclassId , listStudentExamByExamId,listByTeacherId , listStudentExams , deleteExam , updateExam}
