@@ -5,12 +5,14 @@ const {
     BulkSaveResultsToDB,
 } = require("../services/bulkSaveResultsToDB")
 
+const {
+    fillStudentExam,
+} = require("../services/fillStudentExam")
+
 
 let {Exam , StudentExam , Student , User,Class,Course,Teacher} = require("../models")
-// const {User, Student, Role, Class, Meeting, Teacher} = require("../models/exam")
 
 const create = async (req, res) => {
-// if(req.user.roleId === 1){ //teacher
     try {
         let examx = await Exam.create({
             name: req.body.name,
@@ -20,13 +22,11 @@ const create = async (req, res) => {
             teacherId: req.body.teacherId,
             classId: req.body.classId,
         })
+        await fillStudentExam(examx.id , examx.classId)
         return res.json(examx)
     } catch (error) {
         res.send(error)
     }
-// }else{
-//     return '{"only teachers can create exam"}' //admin will be added later
-// }
 }
 
 const list = async (req, res) => {
@@ -96,11 +96,27 @@ const save = async (req, res) => {
         res.send(statusx)
     } 
     catch (error) {
-        res.send({"error":error.errors[0].message})
+        res.send({"error": "Error occured"})
         console.log("error in examController");
         console.log(error.errors[0].message);
 
     }
 }
 
-module.exports = {create , list , save , listBycourseId , listByclassId , listStudentExamByExamId,listByTeacherId}
+
+const listStudentExams = async (req,res)=>{
+    let userId = req.user.id;
+    student = await Student.findOne({ where: { userId: userId}})
+    let exams = await StudentExam.findAll({
+        where: {
+          studentId: student.id,
+          
+        },
+        include: { model: Exam, as: 'exam' }
+      })
+    return res.json(exams)
+
+}
+module.exports = {create , list , save , listBycourseId , listByclassId , listStudentExamByExamId,listByTeacherId , listStudentExams}
+//To Do
+//route to get certain student all exams scores
