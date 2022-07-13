@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Parent.belongsTo(models.User,{foreignKey:'userId' , as :'user'})
-      Parent.belongsTo(models.Student,{foreignKey:'studentId'})
+      Parent.belongsTo(models.Student,{foreignKey:'studentId' , as :'student'})
     }
   }
   Parent.init({
