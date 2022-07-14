@@ -1,4 +1,4 @@
-const {Notification, Student} = require('../models')
+const {Notification, Student, Teacher, User} = require('../models')
 
 /**
  * @description get userNotification
@@ -7,7 +7,15 @@ const {Notification, Student} = require('../models')
  */
 const getUserNotifications = async  (id) => {
     try {
-        let nots = await Notification.findAll({where: {receiverId: id}});
+        let nots = await Notification.findAll(
+            {
+                where: {receiverId: id},
+                include: {
+                    association: 'sender', //leave it sender
+                    attributes: ['name']
+                }
+            },
+        );
         return nots;
     }catch (e) {
         throw e;
