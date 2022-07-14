@@ -10,16 +10,17 @@ let storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, filesPath);
     },
-    filename: (req, file, cb) => {
+    filename:  async (req, file, cb) => {
         console.log(req.body)
-        File.create({
-
-            uploaderId: req.params.id,
-            name: file.originalname,
+        let teacher =   await req.user.getTeacher()
+        let classRoom = await Class.findByPk(req.body.classId)
+        await File.create({
+            uploaderId: teacher.id,
+            name: classRoom.name+': '+file.originalname,
             classId: req.body.classId
         })
         console.log('file name : ' + file.originalname);
-        cb(null, file.originalname);
+        cb(null, classRoom.name+': '+file.originalname);
     },
     //doesnt work
     onFileUploadData: (file, data, req, res) => {
