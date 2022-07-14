@@ -1,7 +1,7 @@
-const { User, Teacher, Student, Parent,Class } = require("../models");
+const { User, Teacher, Student, Parent, Class } = require("../models");
 const bcrypt = require("bcrypt");
 
-const {Op} = require("sequelize")
+const { Op } = require("sequelize")
 require("dotenv").config();
 const {
   signupValidationSchema,
@@ -123,5 +123,24 @@ exports.signout = async (req, res) => {
     });
   } catch (err) {
     this.next(err);
+  }
+};
+
+
+exports.deactivateUser = async (req, res) => {
+  try {
+    const user = await User.findByPk(req.params.id);
+    if (user.active) {
+      await User.update({
+        active: false,
+      },
+        { where: { id: user.id } });
+      return res.status(200).send({ message: "user is deactivated!" });
+    }
+    else return res.send({ message: "user aleady deactivated!" });
+
+  }
+  catch (error) {
+    return res.status(500).json(error.message);
   }
 };

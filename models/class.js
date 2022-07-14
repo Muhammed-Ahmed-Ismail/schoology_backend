@@ -18,14 +18,17 @@ module.exports = (sequelize, DataTypes) => {
         }
 
         async isThatValidMeeting(date, period) {
-            let count = await this.countMeetings({where: {date, period}})
+            let count = await this.countMeetings({ where: { date, period } })
 
             return (count === 0)
         }
     }
 
     Class.init({
-        name: DataTypes.STRING
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false
+        }
     }, {
         sequelize,
         modelName: 'Class',

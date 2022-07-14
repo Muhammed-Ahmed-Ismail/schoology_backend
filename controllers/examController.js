@@ -1,3 +1,4 @@
+
 const {getResFromApiService} = require("../services/getResFromApiService")
 
 const {
@@ -9,11 +10,9 @@ const {
 } = require("../services/fillStudentExam")
 
 
-let {Exam, StudentExam, Student, User, Class, Course, Teacher} = require("../models")
-// const {User, Student, Role, Class, Meeting, Teacher} = require("../models/exam")
+let {Exam , StudentExam , Student , User,Class,Course,Teacher} = require("../models")
 
 const create = async (req, res) => {
-// if(req.user.roleId === 1){ //teacher
     try {
         let examx = await Exam.create({
             name: req.body.name,
@@ -28,14 +27,11 @@ const create = async (req, res) => {
     } catch (error) {
         res.send(error)
     }
-// }else{
-//     return '{"only teachers can create exam"}' //admin will be added later
-// }
 }
 
 const list = async (req, res) => {
     try {
-        let exams = await Exam.findAll({where: {submitted: false}})
+        let exams = await Exam.findAll({where:{submitted:false}})
         return res.json(exams)
     } catch (error) {
         res.send(error)
@@ -129,55 +125,67 @@ const listStudentExams = async (req, res) => {
     return res.json(exams)
 
 }
-
 const save = async (req, res) => {
     link = req.body.link //teacher sends link in post body
     parts = link.split("/")
     formID = parts[5]
     console.log(parts)
 
-    let exam = await Exam.findOne({where: {link: link, submitted: false}});
-    console.log('exam', exam)
+    let exam = await Exam.findOne({ where: { link: link } });
+    
     try {
         result = await getResFromApiService(formID);
-        statusx = await BulkSaveResultsToDB(result, exam.id);
+        statusx = await BulkSaveResultsToDB(result , exam.id);
         exam.submitted = true;
         await exam.save()
         res.send(statusx)
-    } catch (error) {
+    } 
+    catch (error) {
+        res.send({"error": "Error occured"})
         console.log("error in examController");
-        console.log(error);
-        // error.status = 400
-        res.json({error: error.toString()})
-        // next(error)
+        console.log(error.errors[0].message);
 
     }
 }
-// ########################## helper methods ################################## //
-const getStudentExamsByStudentId = async (student)=>{
-    const classRoom = await student.getClass()
-    const exams = await classRoom.getExams({
-        where: {submitted: false},
-        include: [{
-            model: Course,
-            as: 'course',
-            attributes: ['name', 'id']
-        }],
-        attributes: ['name', 'id', 'date', 'link']
-    })
-    return exams
+
+
+const listStudentExams = async (req,res)=>{
+    let userId = req.user.id;
+    student = await Student.findOne({ where: { userId: userId}})
+    let exams = await StudentExam.findAll({
+        where: {
+          studentId: student.id,
+          
+        },
+        include: { model: Exam, as: 'exam' }
+      })
+    return res.json(exams)
+
 }
-module.exports = {
-    create,
-    list,
-    save,
-    listBycourseId,
-    listByclassId,
-    listStudentExamByExamId,
-    listByTeacherId,
-    listStudentExams,
-    getStudentExams,
-    getMyChildExams
+
+
+const deleteExam = async (req,res)=>{
+    const exam = await Exam.findByPk(req.params.id)
+    let status ={"status":"Exam not found"}
+    if(exam){
+        let result = await exam.destroy()
+        if(result){status = {"status":"successfully deleted "}}
+    }
+    return res.json(status)
+
 }
-//To Do
-//route to get certain student all exams scores
+
+const updateExam = async (req,res)=>{
+    let exam = await Exam.findByPk(req.params.id)
+    if(exam){
+        exam.name = req.body.name,
+        exam.link = req.body.link,
+        exam.date = req.body.date,
+        exam.courseId = req.body.courseId,
+        exam.teacherId = req.body.teacherId,
+        exam.classId = req.body.classId,
+        await exam.save()
+    }else{exam = {"status":"Exam not found"}}
+    return res.json(exam)
+}
+module.exports = {create , list , save , listBycourseId , listByclassId , listStudentExamByExamId,listByTeacherId , listStudentExams , deleteExam , updateExam}

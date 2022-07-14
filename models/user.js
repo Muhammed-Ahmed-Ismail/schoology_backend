@@ -39,6 +39,10 @@ module.exports = (sequelize, DataTypes) => {
         roleId: {
             type: DataTypes.INTEGER,
             allowNull: false,
+        },
+        active: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: true,
         }
     }, {
         sequelize,
