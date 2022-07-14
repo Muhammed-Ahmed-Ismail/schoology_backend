@@ -24,6 +24,7 @@
   "dependencies": {
     "@google-cloud/local-auth": "^2.1.0",
     "@googleapis/forms": "^1.1.1",
+    "@types/node": "^18.0.4",
     "bcrypt": "^5.0.1",
     "config": "^3.3.7",
     "cors": "^2.8.5",
