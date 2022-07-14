@@ -1,5 +1,5 @@
 const {Exam, StudentExam, Student, User, Class, Course, Teacher} = require("../models")
-const {getGradesStatistics} = require("../services/gradesService");
+const {getGradesStatistics,getStudentGradesByStudentId} = require("../services/gradesService");
 
 const listAvailableGradesByTeacherId = async (req, res) => {
     const teacher = await req.user.getTeacher();
@@ -36,22 +36,22 @@ const getStudentsGrades = async (req, res) => {
 }
 const getStudentGrades = async (req, res) => {
     const student = await req.user.getStudent()
-    const grades = await student.getStudentExams({
-        include: [{
-            model: Exam,
-            as: 'exam',
-            attributes: ['id', 'name'],
-            include: [{
-                model: Course,
-                as: "course",
-                attributes: ['name']
-            }]
-        }]
-    })
+    const grades = await getStudentGradesByStudentId(student)
     res.json(grades)
 }
+const getStudentGradesForParent = async (req,res)=>{
+    const parent = await req.user.getParent()
+    const student = await parent.getStudent()
+    const grades = await getStudentGradesByStudentId(student)
+    res.json(grades)
+}
+
+
+
+
 module.exports = {
     listAvailableGradesByTeacherId,
     getStudentsGrades,
-    getStudentGrades
+    getStudentGrades,
+    getStudentGradesForParent
 }

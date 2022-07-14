@@ -11,11 +11,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      File.belongsTo(models.Teacher,{foreignKey:'uploaderId',as:'teacher'})
+      File.belongsTo(models.Class,{foreignKey:'classId',as:'class'})
     }
   }
   File.init({
     uploaderId: DataTypes.INTEGER,
-    name: DataTypes.STRING
+    name: DataTypes.STRING,
+    classId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'File',

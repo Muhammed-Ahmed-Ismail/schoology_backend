@@ -1,6 +1,8 @@
 let express = require('express');
 let cors = require('cors')
 let app = express();
+const formData = require('express-form-data');
+
 
 const passport = require('passport')
 require('./config/passport')(passport)
@@ -12,6 +14,7 @@ require('./config/passport')(passport)
 // const testdbRoutes = require("./routes/testdb")
 const routes = require("./routes/routes")
 const errorHandeler = require("./middleware/errorHandelers/errorHandeler")
+// app.use(formData.parse())
 app.use(passport.initialize());
 app.use(cors({
     origin: '*'

@@ -1,6 +1,6 @@
 const {google} = require('googleapis')
 
-const {User, Student, Role, Class, Meeting, Teacher,Parent} = require("../models")
+const {User, Student, Role, Class, Meeting, Teacher, Parent, Course} = require("../models")
 
 const GOOGLE_CLIENT_ID = "43384519615-haoarcj3935ckm6s0t0cfh77ed2gd72k.apps.googleusercontent.com"
 const GOOGLE_CLIENT_SECRET = "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"
@@ -87,9 +87,22 @@ const getMeetingByTeacherId = async (teacherId, date) => {
         let meetings = null
         let teacher = await Teacher.findByPk(teacherId)
         if (date) {
-            meetings = await teacher.getMeetings({where: {date}})
+            meetings = await teacher.getMeetings({
+                where: {date},
+                include:[{
+                    model:Class,
+                    as:'class',
+                    attributes:['name']
+                }]
+            })
         } else {
-            meetings = await teacher.getMeetings()
+            meetings = await teacher.getMeetings({
+                include:[{
+                    model:Class,
+                    as:'class',
+                    attributes:['name']
+                }]
+            })
         }
         return meetings
     } catch (e) {
@@ -104,17 +117,56 @@ const getMeetingByStudentId = async (studentId, date) => {
         let studentClass = await student.getClass()
         let meetings = null
         if (date) {
-            meetings = await studentClass.getMeetings({where: {date}})
-        } else{
-            meetings = await studentClass.getMeetings()
+            meetings = await studentClass.getMeetings({
+                where: {date}, include: [
+                    {
+                        model: Teacher,
+                        as: 'teacher',
+                        include: [{
+                            model: User,
+                            as: 'user',
+                            attributes: ['name']
+                        }],
+                        attributes: ['id']
+                    },
+                    {
+                        model: Course,
+                        as: 'course',
+                        attributes: ['name']
+                    },
+
+                ]
+            })
+        } else {
+            meetings = await studentClass.getMeetings({
+                include: [
+                    {
+                        model: Teacher,
+                        as: 'teacher',
+                        include: [{
+                            model: User,
+                            as: 'user',
+                            attributes: ['name']
+                        }],
+                        attributes: ['id']
+
+                    },
+                    {
+                        model: Course,
+                        as: 'course',
+                        attributes: ['name']
+                    },
+
+                ]
+            })
         }
-            return meetings
+        return meetings
     } catch (e) {
-        throw e;
+        console.log(e)
     }
 }
 
-const getMeetingByParentId = async (parentId,date)=>{
+const getMeetingByParentId = async (parentId, date) => {
     try {
         let parent = await Parent.findByPk(parentId)
         let student = await parent.getStudent()
@@ -122,7 +174,7 @@ const getMeetingByParentId = async (parentId,date)=>{
         let meetings = null
         if (date) {
             meetings = await studentClass.getMeetings({where: {date}})
-        } else{
+        } else {
             meetings = await studentClass.getMeetings()
         }
         return meetings
@@ -137,11 +189,11 @@ const getAllMeetingsByTeacherId = async (teacherId) => {
 }
 
 const getAllMeetingsByStudentId = async (studentId) => {
-   let meetings = await  getMeetingByStudentId(studentId)
+    let meetings = await getMeetingByStudentId(studentId)
     return meetings
 }
 const getAllMeetingsByParentId = async (parentId) => {
-    let meetings = await  getMeetingByParentId(parentId)
+    let meetings = await getMeetingByParentId(parentId)
     return meetings
 }
 module.exports = {
