@@ -1,3 +1,4 @@
+
 const {getResFromApiService} = require("../services/getResFromApiService")
 
 const {
@@ -13,7 +14,6 @@ let {Exam, StudentExam, Student, User, Class, Course, Teacher} = require("../mod
 // const {User, Student, Role, Class, Meeting, Teacher} = require("../models/exam")
 
 const create = async (req, res) => {
-// if(req.user.roleId === 1){ //teacher
     try {
         let examx = await Exam.create({
             name: req.body.name,
@@ -28,14 +28,11 @@ const create = async (req, res) => {
     } catch (error) {
         res.send(error)
     }
-// }else{
-//     return '{"only teachers can create exam"}' //admin will be added later
-// }
 }
 
 const list = async (req, res) => {
     try {
-        let exams = await Exam.findAll({where: {submitted: false}})
+        let exams = await Exam.findAll({where:{submitted:false}})
         return res.json(exams)
     } catch (error) {
         res.send(error)
@@ -129,7 +126,6 @@ const listStudentExams = async (req, res) => {
     return res.json(exams)
 
 }
-
 const save = async (req, res) => {
     link = req.body.link //teacher sends link in post body
     parts = link.split("/")
@@ -137,19 +133,16 @@ const save = async (req, res) => {
     console.log(parts)
 
     let exam = await Exam.findOne({where: {link: link, submitted: false}});
-    console.log('exam', exam)
+console.log('exam', exam)
     try {
         result = await getResFromApiService(formID);
-        statusx = await BulkSaveResultsToDB(result, exam.id);
+        statusx = await BulkSaveResultsToDB(result , exam.id);
         exam.submitted = true;
         await exam.save()
         res.send(statusx)
     } catch (error) {
         console.log("error in examController");
-        console.log(error);
-        // error.status = 400
-        res.json({error: error.toString()})
-        // next(error)
+        console.log(error.errors[0].message);
 
     }
 }
@@ -193,5 +186,17 @@ const updateExam = async (req,res)=>{
     }else{exam = {"status":"Exam not found"}}
     return res.json(exam)
 }
-module.exports = {create , list , save , listBycourseId , listByclassId , listStudentExamByExamId,listByTeacherId , listStudentExams , deleteExam , updateExam, getStudentExams,
-    getMyChildExams}
+module.exports = {
+    create,
+    list,
+    save,
+    listBycourseId,
+    listByclassId,
+    listStudentExamByExamId,
+    getStudentExams,
+    getMyChildExams,
+    listByTeacherId,
+    listStudentExams,
+    deleteExam,
+    updateExam
+}
