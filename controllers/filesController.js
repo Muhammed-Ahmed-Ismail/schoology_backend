@@ -1,4 +1,4 @@
-const {uploadService, getFilesById, getFileByName, getAllFiles} = require('../services/filesService')
+const {uploadService, getFilesById, getFileByName, getAllFiles, getFilesByUploaderId,getFilesByClassId} = require('../services/filesService')
 const fs = require('fs');
 const path = require('path');
 const PORT = process.env.PORT || 3000;
@@ -7,6 +7,8 @@ const _BASEURL = `http://localhost:${PORT}/files/`
 const filesPath = path.join(__dirname, '..', 'resources', 'static', 'uploads')
 
 const upload = async (req, res, next) => {
+    // console.log('req222222',req)
+    // console.log('req file',req.files.file)
     try {
         await uploadService(req, res);
         if (req.file === undefined){
@@ -52,14 +54,41 @@ const getListFiles = async (req, res, next) => {
 
 const getTeacherFiles = async (req, res, next) => {
     try {
-        let files = await getFilesById(req.params.id)
+        const teacher = await req.user.getTeacher()
+        let files = await getFilesByUploaderId(teacher)
         res.json(files)
     }catch (e) {
         e.status = 500
+        console.log(e)
         next(e)
     }
 }
 
+const getStudentFiles = async (req,res,next)=>{
+    try {
+        const student = await req.user.getStudent()
+        const classRoom = await student.getClass()
+        let files = await getFilesByClassId(classRoom)
+        res.json(files)
+    }catch (e) {
+        e.status = 500
+        console.log(e)
+        next(e)
+    }
+}
+const getMyChildFiles = async (req,res,next)=>{
+    try {
+        const parent = await req.user.getParent()
+        const student = await parent.getStudent()
+        const classRoom = await student.getClass()
+        let files = await getFilesByClassId(classRoom)
+        res.json(files)
+    }catch (e) {
+        e.status = 500
+        console.log(e)
+        next(e)
+    }
+}
 const download = (req, res) => {
     const fileName = req.params.name;
     res.download(path.join(filesPath, fileName), (err) => {
@@ -86,6 +115,8 @@ module.exports = {
     getListFiles,
     download,
     getTeacherFiles,
+    getStudentFiles,
+    getMyChildFiles,
     getListFilesFromStorage,
     getOne,
 }

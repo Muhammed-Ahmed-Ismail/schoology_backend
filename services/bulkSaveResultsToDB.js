@@ -1,3 +1,5 @@
+// const { Where } = require('sequelize/types/utils');
+// const { where } = require('sequelize/types');
 const {Student , StudentExam , User} = require('../models');
 const { use } = require('../routes/meeting');
  const BulkSaveResultsToDB = async  (data , examId)=> {
@@ -10,20 +12,26 @@ const { use } = require('../routes/meeting');
      console.log(data)
     let emails = []
     let scores = []
-    data['responses'].forEach(reponse => {
-        let email = reponse['respondentEmail'] || Object.values(reponse['answers'])[0]['textAnswers']['answers'][0]['value']
-        let score = reponse['totalScore']
-        emails.push(email)
-        scores.push(score)
-    });
+    if(data['responses']) {
+        data['responses'].forEach(reponse => {
+            let email = reponse['respondentEmail']|| Object.values(reponse['answers'])[0]['textAnswers']['answers'][0]['value']
+            let score = reponse['totalScore']
+            emails.push(email)
+            scores.push(score)
+        });
+    } else {
+        throw new Error("no submissions yet")
+    }
+     console.log(emails)
+     console.log(scores)
     for (let i = 0; i < emails.length; i++) {
         let user =  await User.findOne({ where: { email: emails[i] } })
-        if(user != undefined){
+        if(user){
             let student = await Student.findOne({ where: { userId: user.id } })
-
-        if(student != undefined && student != null ){
-            let studentexam =  await StudentExam.findOne({where: {studentId: student.id, examId: examId}});
-           if(studentexam != null){ studentexam.score = scores[i] ; studentexam.save()}
+            console.log(student)
+        if(student != undefined && student != null && scores[i] != null){
+           let studetExam = await StudentExam.update({score: scores[i]},{where:{studentId: student.id, examId: examId}});
+            console.log("sid",studetExam.studentId,"score",studetExam.score)
         }
         }
     }

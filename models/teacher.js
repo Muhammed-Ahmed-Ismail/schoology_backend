@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
             Teacher.belongsTo(models.Course,{foreignKey:"courseId"})
             Teacher.hasMany(models.Meeting, {foreignKey: 'teacherId'})
             Teacher.hasMany(models.Exam, {foreignKey: 'teacherId'})
+            Teacher.hasMany(models.File, {foreignKey: 'uploaderId'})
             Teacher.belongsToMany(models.Class,{through:"teachers_classes"})
         }
 

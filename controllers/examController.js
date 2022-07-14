@@ -22,7 +22,7 @@ const create = async (req, res) => {
             teacherId: req.body.teacherId,
             classId: req.body.classId,
         })
-        await fillStudentExam(examx.id , examx.classId)
+        await fillStudentExam(examx.id, examx.classId)
         return res.json(examx)
     } catch (error) {
         res.send(error)
@@ -41,7 +41,15 @@ const list = async (req, res) => {
 
 const listBycourseId = async (req, res) => {
     try {
-        let exams = await Exam.findAll({where: { courseId: req.params.id,submitted:false},include:[{model:Course,as:'course',attributes:['name','id']},{model:Class,as:'class',attributes:['name','id']}],attributes:['name','id','date','link']})
+        let exams = await Exam.findAll({
+            where: {courseId: req.params.id, submitted: false},
+            include: [{model: Course, as: 'course', attributes: ['name', 'id']}, {
+                model: Class,
+                as: 'class',
+                attributes: ['name', 'id']
+            }],
+            attributes: ['name', 'id', 'date', 'link']
+        })
         return res.json(exams)
     } catch (error) {
         res.send(error)
@@ -50,7 +58,7 @@ const listBycourseId = async (req, res) => {
 
 const listByclassId = async (req, res) => {
     try {
-        let exams = await Exam.findAll({where: { classId: req.params.id ,submitted:false},})
+        let exams = await Exam.findAll({where: {classId: req.params.id, submitted: false},})
         return res.json(exams)
     } catch (error) {
         res.send(error)
@@ -59,24 +67,61 @@ const listByclassId = async (req, res) => {
 
 const listStudentExamByExamId = async (req, res) => {
     try {
-        let allStudentsScore = await StudentExam.findAll({where: { examId: req.params.id }}) //get all scores for certain exam
+        let allStudentsScore = await StudentExam.findAll({where: {examId: req.params.id}}) //get all scores for certain exam
         let nameAndScore = [];
         for (const studentScore of allStudentsScore) {
-            let student = await Student.findOne({where: { id: studentScore.studentId}})   
-            let user = await User.findOne({where: { id: student.id}})
-            nameAndScore.push({name : user.name , score : studentScore.score});      
+            let student = await Student.findOne({where: {id: studentScore.studentId}})
+            let user = await User.findOne({where: {id: student.id}})
+            nameAndScore.push({name: user.name, score: studentScore.score});
         } //get name of student along with score
         return res.json(nameAndScore)
-    } 
-    catch (error) {
+    } catch (error) {
         res.send(error)
     }
 
 }
-const listByTeacherId = async (req,res)=>{
+const listByTeacherId = async (req, res) => {
     const teacher = await Teacher.findByPk(req.params.id)
     console.log(teacher)
-    let exams = await teacher.getExams({where:{submitted:false},include:[{model:Course,as:'course',attributes:['name','id']},{model:Class,as:'class',attributes:['name','id']}],attributes:['name','id','date','link']})
+    let exams = await teacher.getExams({
+        where: {submitted: false},
+        include: [{model: Course, as: 'course', attributes: ['name', 'id']}, {
+            model: Class,
+            as: 'class',
+            attributes: ['name', 'id']
+        }],
+        attributes: ['name', 'id', 'date', 'link']
+    })
+    return res.json(exams)
+
+}
+const getStudentExams = async (req, res) => {
+    const student = await req.user.getStudent()
+    let exams = await getStudentExamsByStudentId(student)
+    res.json(exams)
+}
+
+
+const getMyChildExams = async (req,res)=>{
+    const parent = await req.user.getParent()
+    const student = await parent.getStudent()
+    const exams = await getStudentExamsByStudentId(student)
+    res.json(exams)
+}
+
+
+const listStudentExams = async (req, res) => {
+    let userId = req.user.id;
+    student = await Student.findOne({where: {userId: userId}})
+    let exams = await StudentExam.findAll({
+        where: {
+            studentId: student.id,
+        },
+        include: {
+            model: Exam, as: 'exam'
+
+        }
+    })
     return res.json(exams)
 
 }

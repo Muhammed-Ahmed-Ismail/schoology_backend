@@ -8,6 +8,8 @@ const filesRoutes = require("./files")
 const classRoutes = require("./classRouter")
 const courseRoutes = require("./courseRouter")
 
+
+const gradesRoutes = require("./gradesRoutes")
 router.use("/meeting",meetingRouter)
 router.use("/dptest",testdbRoutes)
 router.use("/auth",authRoutes)
@@ -22,5 +24,6 @@ const teacherRouter = require("./teacherRouter.js")
 router.use("/exam",examRouter)
 router.use("/message",messageRouter)
 router.use("/teacher",teacherRouter)
+router.use("/grades",gradesRoutes)
 
 module.exports = router
