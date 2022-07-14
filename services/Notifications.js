@@ -45,7 +45,7 @@ const sendNotificationToClass = async (sender, classId, content) => {
         let students = await Student.findAll({where:{classId: classId}});
         console.log('send notification to class', classId);
         if (students.length !== 0){
-            for (let student in students) {
+            for (let student of students) {
                 await createNotification(sender, student.id, content);
             }
             return {status: 201, message: "notifications created"};
