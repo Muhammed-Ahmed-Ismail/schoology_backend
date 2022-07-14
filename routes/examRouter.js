@@ -8,7 +8,7 @@ const passport= require('passport')
 const {isTeacher , isStudent , isParent} = require('../middleware/roleAuthorization/role')
 router.use(passport.authenticate('jwt', { session: false }))
 
-router.post("/create" , isTeacher , validateCreateExamRequest , create)
+router.post("/create" , isTeacher , validateExamRequest , create)
 router.get("/list" , list)
 router.get("/my-exams" ,isStudent , getStudentExams) //lists all exams for certain student
 router.get("/my-child-exams" ,isParent , getMyChildExams) //lists all exams for certain student
