@@ -10,7 +10,22 @@ const getGradesStatistics = async (submittedExams) => {
     }
     return data
 }
-
+const getStudentGradesByStudentId = async (student)=>{
+    const grades = await student.getStudentExams({
+        include: [{
+            model: Exam,
+            as: 'exam',
+            attributes: ['id', 'name'],
+            include: [{
+                model: Course,
+                as: "course",
+                attributes: ['name']
+            }]
+        }]
+    })
+    return grades
+}
 module.exports = {
-    getGradesStatistics
+    getGradesStatistics,
+    getStudentGradesByStudentId
 }

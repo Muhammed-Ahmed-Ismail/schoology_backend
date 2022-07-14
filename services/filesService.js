@@ -1,19 +1,22 @@
 const util = require('util');
 const multer = require('multer');
 const path = require('path');
-const {File} = require('../models')
+const {File,Teacher,Class,User,Course} = require('../models')
 const {where} = require("sequelize");
 
 const filesPath = path.join(__dirname, '..', 'resources', 'static', 'uploads')
 
 let storage = multer.diskStorage({
-   destination: (req, file, cb) => {
-       cb(null, filesPath);
-   },
+    destination: (req, file, cb) => {
+        cb(null, filesPath);
+    },
     filename: (req, file, cb) => {
+        console.log(req.body)
         File.create({
+
             uploaderId: req.params.id,
-            name:file.originalname
+            name: file.originalname,
+            classId: req.body.classId
         })
         console.log('file name : ' + file.originalname);
         cb(null, file.originalname);
@@ -29,22 +32,61 @@ let storage = multer.diskStorage({
 
 const upload = multer({
     storage: storage,
-}).single('file')
+}).array('files', 1)
 
 const getFilesById = async (id) => {
     try {
         let files = await File.findAll({where: {id}})
         return files
-    }catch (e) {
+    } catch (e) {
         throw e
     }
 }
+const getFilesByUploaderId = async (teacher) => {
+    try {
+        const files = await teacher.getFiles({
+            include:[{
+                model:Class,
+                as:"class",
+                attributes:['name']
+            }]
+        })
+        return files
+    } catch (e) {
+        throw e
+    }
 
+}
+const getFilesByClassId = async (classRoom) => {
+    try {
+        const files = await classRoom.getFiles({
+            include: [
+                {
+                    model: Teacher,
+                    as:'teacher',
+                    include:[{
+                        model:User,
+                        as:'user',
+                        attributes:['name']
+                    },{
+                        model: Course,
+
+                        attributes: ['name']
+                    }],
+                    attributes:['id']
+                }
+            ]
+        })
+        return files
+    } catch (e) {
+        throw e
+    }
+}
 const getFileByName = async (name) => {
     try {
         let file = await File.findOne({where: {name}})
         return file;
-    }catch (e){
+    } catch (e) {
         throw e;
     }
 }
@@ -53,7 +95,7 @@ const getAllFiles = async () => {
     try {
         let files = await File.findAll()
         return files
-    }catch (e) {
+    } catch (e) {
         throw e
     }
 }
@@ -64,5 +106,7 @@ module.exports = {
     uploadService,
     getFilesById,
     getFileByName,
-    getAllFiles
+    getAllFiles,
+    getFilesByUploaderId,
+    getFilesByClassId
 }
