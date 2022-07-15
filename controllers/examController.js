@@ -11,8 +11,10 @@ const {
 
 
 let {Exam , StudentExam , Student , User,Class,Course,Teacher} = require("../models")
+// const {User, Student, Role, Class, Meeting, Teacher} = require("../models/exam")
 
 const create = async (req, res) => {
+// if(req.user.roleId === 1){ //teacher
     try {
         let examx = await Exam.create({
             name: req.body.name,
@@ -27,6 +29,9 @@ const create = async (req, res) => {
     } catch (error) {
         res.send(error)
     }
+// }else{
+//     return '{"only teachers can create exam"}' //admin will be added later
+// }
 }
 
 const list = async (req, res) => {
@@ -80,14 +85,14 @@ const listByTeacherId = async (req,res)=>{
     return res.json(exams)
 
 }
-const save = async (req, res) => {
+const save = async (req, res,next) => {
     link = req.body.link //teacher sends link in post body
     parts = link.split("/")
     formID = parts[5]
     console.log(parts)
 
-    let exam = await Exam.findOne({ where: { link: link } });
-    
+    let exam = await Exam.findOne({ where: { link: link,submitted:false } });
+    console.log('exam',exam)
     try {
         result = await getResFromApiService(formID);
         statusx = await BulkSaveResultsToDB(result , exam.id);
@@ -98,7 +103,10 @@ const save = async (req, res) => {
     catch (error) {
         res.send({"error": "Error occured"})
         console.log("error in examController");
-        console.log(error.errors[0].message);
+        console.log(error);
+        // error.status = 400
+        res.json({error:error.toString()})
+        // next(error)
 
     }
 }
@@ -110,7 +118,7 @@ const listStudentExams = async (req,res)=>{
     let exams = await StudentExam.findAll({
         where: {
           studentId: student.id,
-          
+
         },
         include: { model: Exam, as: 'exam' }
       })
