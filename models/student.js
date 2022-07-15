@@ -13,9 +13,6 @@ module.exports = (sequelize, DataTypes) => {
       Student.belongsTo(models.User , {foreignKey: 'userId' , as : 'user'})
       Student.hasMany(models.Parent , {foreignKey: 'studentId' , as : 'parent'})
       Student.belongsTo(models.Class , {foreignKey: 'classId' , as : 'class'})
-      // Student.belongsToMany(models.Exam, { through: 'StudentExam'  , foreignKey:'studentId'}) ;
-      // Student.belongsTo(models.StudentExam, {foreignKey:'studentId' , as :'student'}); //manual many to many
-
 
     }
   }
