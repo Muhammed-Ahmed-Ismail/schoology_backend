@@ -26,7 +26,7 @@ const { use } = require('../routes/meeting');
      console.log(scores)
     for (let i = 0; i < emails.length; i++) {
         let user =  await User.findOne({ where: { email: emails[i] } })
-        if(user){
+        if(user != undefined){
             let student = await Student.findOne({ where: { userId: user.id } })
             console.log(student)
         if(student != undefined && student != null && scores[i] != null){

@@ -8,7 +8,7 @@ const startServer = async () => {
 	// await connectDB(...);
 	app.listen(PORT, async function () {
  		console.log(`listening on port ${PORT}!`);
-		//  await sequelize.sync({alter:true})
+		 // await sequelize.sync({alter:true})
 	});
      } catch (error) {
 	console.log(error)
