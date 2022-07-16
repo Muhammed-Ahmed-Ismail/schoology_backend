@@ -15,6 +15,8 @@ module.exports = (sequelize, DataTypes) => {
             User.hasOne(models.Student,{foreignKey:'userId' })
             User.hasOne(models.Teacher,{foreignKey:'userId' })
             User.hasOne(models.Parent,{foreignKey:'userId' })
+            User.hasMany(models.Message,{foreignKey:'senderId',as: 'sentmessage' })
+            User.hasMany(models.Message,{foreignKey:'receiverId',as:'receivedmessage' })
         }
     }
 
