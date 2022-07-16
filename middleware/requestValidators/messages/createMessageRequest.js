@@ -2,8 +2,8 @@ const Joi = require('joi')
 
 const createMessageSchema = Joi.object().keys({
     message: Joi.string().required(),
-    recieverId: Joi.alternatives().try(Joi.array(), Joi.number()).required(),
-    
+    // senderId: Joi.number().required(), not needed as its aquired from jwt
+    receiverId: Joi.number().required(),
 });
 
 const validateCreateMessageRequest = async (req, res, next) => {

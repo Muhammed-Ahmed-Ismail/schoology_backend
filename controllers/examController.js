@@ -111,6 +111,10 @@ const getMyChildExams = async (req, res) => {
     res.json(exams)
 }
 
+// const getStudentExamsByStudentId = async (student)=>{
+//
+// }
+
 
 const listStudentExams = async (req, res) => {
     let userId = req.user.id;
@@ -219,6 +223,33 @@ const updateExam = async (req, res) => {
     }
 
     return res.json(exam)
+}
+
+
+// ########################## helper methods ################################## //
+const getStudentExamsByStudentId = async (student)=>{
+    const classRoom = await student.getClass()
+    const exams = await classRoom.getExams({
+        where: {submitted: false},
+        include: [{
+            model: Course,
+            as: 'course',
+            attributes: ['name', 'id']
+        },
+            {
+                model: Teacher,
+                as:'teacher',
+                include:[{
+                    model:User,
+                    as:'user',
+                    attributes:['name']
+                }]
+            }
+        ],
+        attributes: ['name', 'id', 'date', 'link']
+    })
+
+    return exams
 }
 module.exports = {
     create,

@@ -119,48 +119,9 @@ const getMeetingByStudentId = async (studentId, date) => {
         let studentClass = await student.getClass()
         let meetings = null
         if (date) {
-            meetings = await studentClass.getMeetings({
-                where: {date}, include: [
-                    {
-                        model: Teacher,
-                        as: 'teacher',
-                        include: [{
-                            model: User,
-                            as: 'user',
-                            attributes: ['name']
-                        }],
-                        attributes: ['id']
-                    },
-                    {
-                        model: Course,
-                        as: 'course',
-                        attributes: ['name']
-                    },
-
-                ]
-            })
+            meetings = await getMeetingsByclassroom(studentClass,date)
         } else {
-            meetings = await studentClass.getMeetings({
-                include: [
-                    {
-                        model: Teacher,
-                        as: 'teacher',
-                        include: [{
-                            model: User,
-                            as: 'user',
-                            attributes: ['name']
-                        }],
-                        attributes: ['id']
-
-                    },
-                    {
-                        model: Course,
-                        as: 'course',
-                        attributes: ['name']
-                    },
-
-                ]
-            })
+            meetings = await getMeetingsByclassroom(studentClass)
         }
         return meetings
     } catch (e) {
@@ -175,12 +136,13 @@ const getMeetingByParentId = async (parentId, date) => {
         let studentClass = await student.getClass()
         let meetings = null
         if (date) {
-            meetings = await studentClass.getMeetings({where: {date}})
+            meetings = await getMeetingsByclassroom(studentClass,date)
         } else {
-            meetings = await studentClass.getMeetings()
+            meetings = await getMeetingsByclassroom(studentClass)
         }
         return meetings
     } catch (e) {
+        console.log(e)
         throw e;
     }
 }
@@ -196,6 +158,33 @@ const getAllMeetingsByStudentId = async (studentId) => {
 }
 const getAllMeetingsByParentId = async (parentId) => {
     let meetings = await getMeetingByParentId(parentId)
+    return meetings
+}
+
+const getMeetingsByclassroom = async (classroom,date)=>{
+    let queryParameters={
+        include: [
+            {
+                model: Teacher,
+                as: 'teacher',
+                include: [{
+                    model: User,
+                    as: 'user',
+                    attributes: ['name']
+                }],
+                attributes: ['id']
+
+            },
+            {
+                model: Course,
+                as: 'course',
+                attributes: ['name']
+            },
+
+        ]
+    }
+    if(date) queryParameters = {... queryParameters,where:{date}}
+    const meetings = await classroom.getMeetings(queryParameters)
     return meetings
 }
 module.exports = {
