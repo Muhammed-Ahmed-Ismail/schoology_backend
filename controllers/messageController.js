@@ -1,14 +1,14 @@
 let { Message } = require("../models")
 const { messages } = require("../middleware/requestValidators/Auth/signupStudent")
 
-const create = async (req, res) => {
+const createMessage = async (req, res) => {
 
-    let senderId = req.user.id // check ismail jwt
+    let senderId = req.user.id 
     console.log(req.user.id)
     try {
         let messagex = await Message.create({
             message: req.body.message,
-            senderId: senderId, // check
+            senderId: senderId, 
             recieverId: req.body.recieverId,
         })
         return res.json(messagex)
@@ -20,7 +20,7 @@ const create = async (req, res) => {
 
 const listBySenderAndReciever = async (req, res) => {
 
-    let senderId = req.user.id  // check ismail jwt ( how to get sender id from request)
+    let senderId = req.user.id 
 
     try {
         let messages = await Message.findAll({
@@ -39,4 +39,36 @@ const listBySenderAndReciever = async (req, res) => {
 
 }
 
-module.exports = { create , listBySenderAndReciever }
+const createAnnouncment = async (req, res) => {
+    let allRecords = []
+    let recievers = req.body.recieverId
+    for (let i = 0; i < recievers.length; i++) {
+        let recordToInsert = {
+            message: req.body.message,
+            senderId: req.user.id, 
+            recieverId: recievers[i],
+        }
+        allRecords.push(recordToInsert)
+    }
+    console.log(allRecords)
+    try {
+        let messagex = await Message.bulkCreate(
+            allRecords
+        )
+        console.log(messagex)
+        return res.send(messagex)
+    } catch (error) {
+        res.send(error)
+    }
+}
+
+const create = async (req, res) => {
+    let recievers = req.body.recieverId
+    if(recievers.length){
+        createAnnouncment(req,res)
+    }else{
+        createMessage(req,res)
+    }
+}
+
+module.exports = { create , listBySenderAndReciever}
