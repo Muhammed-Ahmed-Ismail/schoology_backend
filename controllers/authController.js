@@ -7,7 +7,7 @@ const {
   signupValidationSchema,
   loginValidationSchema,
 } = require("../schemas/authSchemas");
-const { logInTeacher ,logInStudent, logInParent} = require("../services/loginService");
+const { logInTeacher ,logInStudent, logInParent, logInAdmin} = require("../services/loginService");
 
 exports.signup = async (req, res) => {
   console.log(req.body)
@@ -93,6 +93,7 @@ exports.signup = async (req, res) => {
 exports.signupTeacher = async (req,res)=>{
 
 }
+
 exports.signin = async (req, res) => {
   try {
     // check if user exist in our database
@@ -114,6 +115,10 @@ exports.signin = async (req, res) => {
     else if (user.roleId === 3)
     {
        data = await logInParent(await user.getParent())
+    }
+    else if (user.roleId === 4)
+    {
+      data = await logInAdmin(user)
     }
 
     res.status(200).json(data);

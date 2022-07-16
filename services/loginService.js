@@ -14,7 +14,7 @@ const getjwtToken = (user)=>{
    const token =jwt.sign(data, PRIVAREKEY,{ algorithm: 'RS256' });
      console.log(token);
      return token
-    
+
 }
 
 const logInTeacher = async (teacher)=>{
@@ -64,8 +64,21 @@ const logInParent = async (parent)=>{
     return response
 }
 
+const logInAdmin = async (admin)=>{
+    const token = getjwtToken(admin)
+    const response = {
+        userId:admin.id,
+        userName:admin.name,
+        userType: "admin",
+        token
+    }
+    return response
+
+}
+
 module.exports = {
     logInTeacher,
     logInStudent,
-    logInParent
+    logInParent,
+    logInAdmin
 }
