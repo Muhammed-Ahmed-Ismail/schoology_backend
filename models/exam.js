@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Exam.belongsTo(models.Course , { foreignKey:'courseId' , as :'course'})
-      // Exam.belongsToMany(models.Student, { through: 'StudentExam' , foreignKey:'examId'}); //automatic many to many 
+      Exam.hasMany(models.StudentExam,{foreignKey:"examId"}); //automatic many to many
       // Exam.belongsTo(models.StudentExam, ); //manual many to many //{foreignKey:'examId' , as :'exam'} ##removed
       Exam.belongsTo(models.Class, {  foreignKey:'classId' , as:'class'});
       Exam.belongsTo(models.Teacher, {  foreignKey:'teacherId' , as:'teacher'});
@@ -28,7 +28,13 @@ module.exports = (sequelize, DataTypes) => {
     },
 
     courseId: DataTypes.INTEGER,
-    teacherId: DataTypes.INTEGER,
+    teacherId: {
+      type:DataTypes.INTEGER,
+      references:{
+        model:"teachers",
+        key:"id"
+      }
+    },
     classId: DataTypes.INTEGER
     //ClassId
     //StudentExamId

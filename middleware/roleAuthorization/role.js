@@ -25,5 +25,13 @@ const isParent = async (req, res, next) => {
     }
 }
 
+const isAdmin = async (req, res, next) => {
 
-module.exports = {isTeacher , isStudent ,isParent}
+    if(req.user.roleId === 4){
+        next()
+    }else{
+        return res.status(403).send('user is not a admin')
+    }
+}
+
+module.exports = {isTeacher , isStudent ,isParent, isAdmin}

@@ -50,8 +50,22 @@ const logInStudent = async (student)=>{
     return response
 
 }
+const logInParent = async (parent)=>{
+    const user = await parent.getUser()
+    const token = getjwtToken(user)
+    const student = await parent.getStudent()
+    const response = {
+        userId:parent.id,
+        userName:user.name,
+        userType: "parent",
+        studentId:student.id,
+        token
+    }
+    return response
+}
 
 module.exports = {
     logInTeacher,
-    logInStudent
+    logInStudent,
+    logInParent
 }
