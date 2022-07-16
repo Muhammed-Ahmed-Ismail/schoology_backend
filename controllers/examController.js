@@ -1,4 +1,3 @@
-
 const {getResFromApiService} = require("../services/getResFromApiService")
 
 const {
@@ -11,7 +10,7 @@ const {
 
 
 let {Exam, StudentExam, Student, User, Class, Course, Teacher} = require("../models")
-// const {User, Student, Role, Class, Meeting, Teacher} = require("../models/exam")
+
 
 const create = async (req, res) => {
     try {
@@ -32,7 +31,7 @@ const create = async (req, res) => {
 
 const list = async (req, res) => {
     try {
-        let exams = await Exam.findAll({where:{submitted:false}})
+        let exams = await Exam.findAll({where: {submitted: false}})
         return res.json(exams)
     } catch (error) {
         res.send(error)
@@ -103,7 +102,9 @@ const getStudentExams = async (req, res) => {
 }
 
 
-const getMyChildExams = async (req,res)=>{
+
+const getMyChildExams = async (req, res) => {
+
     const parent = await req.user.getParent()
     const student = await parent.getStudent()
     const exams = await getStudentExamsByStudentId(student)
@@ -132,15 +133,18 @@ const save = async (req, res) => {
     formID = parts[5]
     console.log(parts)
 
+
     let exam = await Exam.findOne({where: {link: link, submitted: false}});
-console.log('exam', exam)
+
     try {
         result = await getResFromApiService(formID);
-        statusx = await BulkSaveResultsToDB(result , exam.id);
+        statusx = await BulkSaveResultsToDB(result, exam.id);
         exam.submitted = true;
         await exam.save()
         res.send(statusx)
     } catch (error) {
+
+        res.send({"error": "Error occured"})
         console.log("error in examController");
         console.log(error.errors[0].message);
 
@@ -173,6 +177,7 @@ const deleteExam = async (req,res)=>{
 
 }
 
+
 const updateExam = async (req,res)=>{
     let exam = await Exam.findByPk(req.params.id)
     if(exam){
@@ -184,6 +189,35 @@ const updateExam = async (req,res)=>{
         exam.classId = req.body.classId,
         await exam.save()
     }else{exam = {"status":"Exam not found"}}
+
+
+const deleteExam = async (req, res) => {
+    const exam = await Exam.findByPk(req.params.id)
+    let status = {"status": "Exam not found"}
+    if (exam) {
+        let result = await exam.destroy()
+        if (result) {
+            status = {"status": "successfully deleted "}
+        }
+    }
+    return res.json(status)
+
+}
+
+const updateExam = async (req, res) => {
+    let exam = await Exam.findByPk(req.params.id)
+    if (exam) {
+        exam.name = req.body.name,
+            exam.link = req.body.link,
+            exam.date = req.body.date,
+            exam.courseId = req.body.courseId,
+            exam.teacherId = req.body.teacherId,
+            exam.classId = req.body.classId,
+            await exam.save()
+    } else {
+        exam = {"status": "Exam not found"}
+    }
+
     return res.json(exam)
 }
 module.exports = {

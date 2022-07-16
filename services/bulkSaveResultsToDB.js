@@ -23,6 +23,7 @@ const { use } = require('../routes/meeting');
         throw new Error("no submissions yet")
     }
      console.log(emails)
+     console.log(scores)
     for (let i = 0; i < emails.length; i++) {
         let user =  await User.findOne({ where: { email: emails[i] } })
         if(user != undefined){
