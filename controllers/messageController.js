@@ -1,7 +1,8 @@
-let {Message} = require("../models")
+let {Message, User,Class} = require("../models")
 const {messages} = require("../middleware/requestValidators/Auth/signupStudent")
-const {getMessagesInfoAsTeacher} = require("../services/messagesService");
+const {getMessagesInfoAsTeacher, getTeacherPossibleRecipients} = require("../services/messagesService");
 const {Op} = require("sequelize");
+const {singleMessageResource} = require("../dtos/messageDto");
 
 const create = async (req, res) => {
 
@@ -11,9 +12,9 @@ const create = async (req, res) => {
         let messagex = await Message.create({
             message: req.body.message,
             senderId: senderId, // check
-            recieverId: req.body.recieverId,
+            receiverId: req.body.receiverId,
         })
-        return res.json(messagex)
+        res.json(await singleMessageResource(messagex))
     } catch (error) {
         res.send(error)
     }
@@ -36,6 +37,12 @@ const listBySenderAndReciever = async (req, res) => {
             order: [
                 ['createdAt', 'ASC'],
             ],
+            include: [{
+                model: User,
+                as: 'sender',
+                attributes: ['name']
+
+            }]
         })
         console.log(messages)
         return res.json(messages)
@@ -56,10 +63,22 @@ const getMyReceivedMessages = async (req, res) => {
     return res.json(messages)
 }
 
+
+const listPossibleRecipients = async (req, res) => {
+    let recipients = []
+    if (req.user.roleId === 1) {
+        const teacher = await req.user.getTeacher()
+        recipients = await getTeacherPossibleRecipients(teacher)
+    }
+    res.json(recipients)
+}
+
+
 module.exports = {
     create,
     listBySenderAndReciever,
     getMySentMessages,
-    getMyReceivedMessages
+    getMyReceivedMessages,
+    listPossibleRecipients
 }
 
