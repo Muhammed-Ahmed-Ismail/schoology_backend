@@ -19,8 +19,9 @@ let storage = multer.diskStorage({
             name: classRoom.name+': '+file.originalname,
             classId: req.body.classId
         })
+        sendNotificationToClass(req.params.id, req.body.classId, 'a new file has been uploaded check it out')
         console.log('file name : ' + file.originalname);
-        cb(null, classRoom.name+': '+file.originalname);
+        cb(null, file.originalname);
     },
     //doesnt work
     onFileUploadData: (file, data, req, res) => {

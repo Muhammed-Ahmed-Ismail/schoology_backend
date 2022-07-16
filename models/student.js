@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       // Student.belongsTo(models.StudentExam, {foreignKey:'studentId' , as :'student'}); //manual many to many
 
 
+
     }
   }
   Student.init({

@@ -4,7 +4,7 @@ const {getMessagesInfoAsTeacher, getTeacherPossibleRecipients, getStudentPossibl
 const {Op} = require("sequelize");
 const {singleMessageResource} = require("../dtos/messageDto");
 
-const create = async (req, res) => {
+const createMessage = async (req, res) => {
 
     let senderId = req.user.id // check ismail jwt
     console.log(req.user.id)
@@ -12,7 +12,7 @@ const create = async (req, res) => {
         let messagex = await Message.create({
             message: req.body.message,
             senderId: senderId, // check
-            receiverId: req.body.receiverId,
+            recieverId: req.body.recieverId,
         })
         res.json(await singleMessageResource(messagex))
     } catch (error) {
@@ -86,11 +86,44 @@ const listPossibleRecipients = async (req, res) => {
 }
 
 
-module.exports = {
-    create,
+
+
+
+const createAnnouncment = async (req, res) => {
+    let allRecords = []
+    let recievers = req.body.recieverId
+    for (let i = 0; i < recievers.length; i++) {
+        let recordToInsert = {
+            message: req.body.message,
+            senderId: req.user.id,
+            recieverId: recievers[i],
+        }
+        allRecords.push(recordToInsert)
+    }
+    console.log(allRecords)
+    try {
+        let messagex = await Message.bulkCreate(
+            allRecords
+        )
+        console.log(messagex)
+        return res.send(messagex)
+    } catch (error) {
+        res.send(error)
+    }
+}
+
+const create = async (req, res) => {
+    let recievers = req.body.recieverId
+    if(recievers.length){
+        createAnnouncment(req,res)
+    }else{
+        createMessage(req,res)
+    }
+}
+
+
+module.exports = { create,
     listBySenderAndReciever,
     getMySentMessages,
     getMyReceivedMessages,
-    listPossibleRecipients
-}
-
+    listPossibleRecipients}

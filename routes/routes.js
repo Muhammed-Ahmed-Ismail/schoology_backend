@@ -7,6 +7,7 @@ const authRoutes = require("./authRoutes")
 const filesRoutes = require("./files")
 const classRoutes = require("./classRouter")
 const courseRoutes = require("./courseRouter")
+const NotificationRouter = require('./notificationsRouter')
 
 
 const gradesRoutes = require("./gradesRoutes")
@@ -23,7 +24,10 @@ const messageRouter = require("./messageRouter")
 const teacherRouter = require("./teacherRouter.js")
 router.use("/exam",examRouter)
 router.use("/message",messageRouter)
+
 router.use("/teacher",teacherRouter)
 router.use("/grades",gradesRoutes)
 
+
+router.use("/nots", NotificationRouter)
 module.exports = router

@@ -1,6 +1,7 @@
 const {google} = require('googleapis')
 
 const {User, Student, Role, Class, Meeting, Teacher, Parent, Course} = require("../models")
+const {sendNotificationToClass} = require('./Notifications')
 
 const GOOGLE_CLIENT_ID = "43384519615-haoarcj3935ckm6s0t0cfh77ed2gd72k.apps.googleusercontent.com"
 const GOOGLE_CLIENT_SECRET = "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"
@@ -74,6 +75,7 @@ const createMeetingService = async (data) => {
             period: data.period,
             date: data.date_time
         })
+        await sendNotificationToClass(data.teacherId, data.classId, 'a new meeting has been created');
         return meeting
     } catch (error) {
         return error
