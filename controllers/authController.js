@@ -11,13 +11,7 @@ const { logInTeacher, logInStudent } = require("../services/loginService");
 
 exports.signup = async (req, res) => {
   console.log(req.body)
-  // Save User to Database
   try {
-    // Validate user input
-    // const { error } = signupValidationSchema.validate(req.body);
-    // if (error) return res.status(400).send(error.details[0].message);
-
-    // // check if user exist in our database
     const isUserExists = await User.findOne({
       where: {
         [Op.or]: [
@@ -29,12 +23,8 @@ exports.signup = async (req, res) => {
     console.log(isUserExists)
     if (isUserExists) return res.status(400).send("User already exists");
 
-    // generate salt to hash password
     const salt = await bcrypt.genSalt(10);
-    // now we set user password to hashed password
     const encryptedPassword = await bcrypt.hash(req.body.password, salt);
-
-    // Create user in our database
     console.log(req.body)
 
     const user = new User({
@@ -87,11 +77,8 @@ exports.signupTeacher = async (req, res) => {
 
 exports.signin = async (req, res) => {
   try {
-    // check if user exist in our database
     const user = await User.findOne({ where: { phone: req.body.phone } });
     if (!user) return res.status(404).send("User not found");
-
-    // check user password with hashed password stored in the database
     const validPassword = await bcrypt.compare(req.body.password, user.password);
     if (!validPassword) return res.status(400).send("Invalid password");
     let data = {}
@@ -129,7 +116,7 @@ exports.deactivateUser = async (req, res) => {
         active: false,
       },
         { where: { id: user.id } });
-      return res.status(200).send({ message: "user is deactivated!" });
+      return res.status(200).send({ message: "successfully deactivated!" });
     }
     else return res.send({ message: "user aleady deactivated!" });
 
