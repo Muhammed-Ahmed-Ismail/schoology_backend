@@ -64,15 +64,34 @@ const getTeacherRecipientsResource = async (classRoom)=>{
             parentId:student.parent.user.id,
             className:classRoom.name
         }
-        console.log('data',data)
         studentsResources.push(data)
 
     }
-    console.log(studentsResources)
     return studentsResources
+}
+
+const getStudentParentsRecipientsResource = async (classRoom)=>{
+    const teachersResources =[]
+    const teachers = await classRoom.getTeachers({
+        include: [{
+            model: User,
+            as:'user',
+            attributes:['id','name']
+        }]
+    })
+
+    for (const teacher of teachers)
+    {
+        teachersResources.push({
+            teacherId:teacher.user.id,
+            teacherName:teacher.user.name,
+        })
+    }
+    return teachersResources
 }
 module.exports={
     getMessageInfoResourceForTeacher,
     getTeacherRecipientsResource,
+    getStudentParentsRecipientsResource,
     singleMessageResource
 }

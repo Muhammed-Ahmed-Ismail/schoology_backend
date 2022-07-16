@@ -1,5 +1,5 @@
 const {User, Teacher, Student, Parent, Message} = require("../models")
-const {getMessageInfoResourceForTeacher, getTeacherRecipientsResource} = require("../dtos/messageDto");
+const {getMessageInfoResourceForTeacher, getTeacherRecipientsResource, getStudentParentsRecipientsResource} = require("../dtos/messageDto");
 
 const getMessagesInfoAsTeacher = async (user) => {
     let messages = await user.getReceivedmessage({
@@ -21,14 +21,18 @@ const getTeacherPossibleRecipients = async (teacher) => {
     let students = []
     const classes = await teacher.getClasses()
     for (const classRoom of classes) {
-        console.log(classRoom.name)
-        let data =await getTeacherRecipientsResource(classRoom)
-
-        students= students.concat(data)
+        let data = await getTeacherRecipientsResource(classRoom)
+        students = students.concat(data)
     }
     return students
 }
+const getStudentPossibleRecipients = async (student) => {
+    const classRoom = await student.getClass()
+    let teachers = await getStudentParentsRecipientsResource(classRoom)
+    return teachers
+}
 module.exports = {
     getMessagesInfoAsTeacher,
-    getTeacherPossibleRecipients
+    getTeacherPossibleRecipients,
+    getStudentPossibleRecipients
 }

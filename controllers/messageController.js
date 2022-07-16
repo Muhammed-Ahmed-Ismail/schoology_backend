@@ -1,6 +1,6 @@
 let {Message, User,Class} = require("../models")
 const {messages} = require("../middleware/requestValidators/Auth/signupStudent")
-const {getMessagesInfoAsTeacher, getTeacherPossibleRecipients} = require("../services/messagesService");
+const {getMessagesInfoAsTeacher, getTeacherPossibleRecipients, getStudentPossibleRecipients} = require("../services/messagesService");
 const {Op} = require("sequelize");
 const {singleMessageResource} = require("../dtos/messageDto");
 
@@ -70,6 +70,18 @@ const listPossibleRecipients = async (req, res) => {
         const teacher = await req.user.getTeacher()
         recipients = await getTeacherPossibleRecipients(teacher)
     }
+    else if(req.user.roleId === 2 )
+    {
+        const student = await req.user.getStudent()
+        recipients = await  getStudentPossibleRecipients(student)
+    }
+    else if(req.user.roleId === 3 )
+    {
+        const parent = req.uer.getParent()
+        const student = parent.getStudent()
+        recipients = await getStudentPossibleRecipients(student)
+    }
+
     res.json(recipients)
 }
 
