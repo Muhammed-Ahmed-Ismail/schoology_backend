@@ -148,9 +148,14 @@ const save = async (req, res) => {
 
 
 const deleteExam = async (req, res) => {
-    const exam = await Exam.findByPk(req.params.id)
+    let examId = req.params.id
+    // const studentExam = await StudentExam.findAll({
+    //     where: {examId:examId}
+    // })
+    const exam = await Exam.findByPk(examId)
     let status = {"status": "Exam not found"}
-    if (exam) {
+    if (exam ) {//&& studentExam
+        // await studentExam.destroy()
         let result = await exam.destroy()
         if (result) {
             status = {"status": "successfully deleted "}
