@@ -132,17 +132,17 @@ const listStudentExams = async (req, res) => {
 
 }
 const save = async (req, res) => {
-    link = req.body.link //teacher sends link in post body
-    parts = link.split("/")
-    formID = parts[5]
+    let link = req.body.link //teacher sends link in post body
+    let parts = link.split("/")
+    let formID = parts[5]
     console.log(parts)
 
 
     let exam = await Exam.findOne({where: {link: link, submitted: false}});
 
     try {
-        result = await getResFromApiService(formID);
-        statusx = await BulkSaveResultsToDB(result, exam.id);
+        let result = await getResFromApiService(formID);
+        let statusx = await BulkSaveResultsToDB(result, exam.id);
         exam.submitted = true;
         await exam.save()
         res.send(statusx)
@@ -154,46 +154,6 @@ const save = async (req, res) => {
 
     }
 }
-// ########################## helper methods ################################## //
-const getStudentExamsByStudentId = async (student)=>{
-    const classRoom = await student.getClass()
-    const exams = await classRoom.getExams({
-        where: {submitted: false},
-        include: [{
-            model: Course,
-            as: 'course',
-            attributes: ['name', 'id']
-        }],
-        attributes: ['name', 'id', 'date', 'link']
-    })
-    return exams
-}
-
-
-const deleteExam = async (req,res)=>{
-    const exam = await Exam.findByPk(req.params.id)
-    let status ={"status":"Exam not found"}
-    if(exam){
-        let result = await exam.destroy()
-        if(result){status = {"status":"successfully deleted "}}
-    }
-    return res.json(status)
-
-}
-
-
-const updateExam = async (req,res)=>{
-    let exam = await Exam.findByPk(req.params.id)
-    if(exam){
-        exam.name = req.body.name,
-        exam.link = req.body.link,
-        exam.date = req.body.date,
-        exam.courseId = req.body.courseId,
-        exam.teacherId = req.body.teacherId,
-        exam.classId = req.body.classId,
-        await exam.save()
-    }else{exam = {"status":"Exam not found"}}
-
 
 const deleteExam = async (req, res) => {
     const exam = await Exam.findByPk(req.params.id)
@@ -251,6 +211,7 @@ const getStudentExamsByStudentId = async (student)=>{
 
     return exams
 }
+
 module.exports = {
     create,
     list,
