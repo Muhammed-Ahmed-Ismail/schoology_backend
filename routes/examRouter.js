@@ -15,7 +15,7 @@ router.get("/list/class/:id" , controller.listByclassId) // list all exams for o
 router.get("/list/scores/:id" , controller.listStudentExamByExamId) //lists students with scores for certain exam
 router.get("/list/teacher/:id" , controller.listByTeacherId) //lists students with teacher for certain exam
 router.get("/my-exams" ,isStudent , controller.listStudentExams) //lists all exams for certain student
-router.post("/save" , controller.save) // saves students score to the database given body -> { "link" : "google form url here" }
+router.post("/save" , isTeacher || isAdmin , controller.save) // saves students score to the database given body -> { "link" : "google form url here" }
 router.delete("/:id" , isAdmin, controller.deleteExam) // delete exam with id
 router.put("/:id" , isAdmin, validateExamRequest , controller.updateExam) // saves students score to the database given body -> { "link" : "google form url here" }
 
