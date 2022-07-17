@@ -18,6 +18,13 @@ module.exports = (sequelize, DataTypes) => {
             User.hasMany(models.Message,{foreignKey:'senderId',as: 'sentmessage' })
             User.hasMany(models.Message,{foreignKey:'receiverId',as:'receivedmessage' })
         }
+
+       async getNumberOfNewMessages()
+        {
+            let count = 0 ;
+            count = await this.countReceivedmessage({where:{read:false}})
+            return count
+        }
     }
 
     User.init({
