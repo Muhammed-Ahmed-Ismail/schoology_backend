@@ -67,17 +67,17 @@ exports.deleteClass = async (req, res) => {
 //get class students with their parents
 exports.getClassStudentsWithParents = async (req, res) => {
     let classId = req.params.id;
-    // try {
+    try {
         let classx = await Class.findByPk(classId);
         let students = await Student.findAll({
             where: {classId: classx.id},
             include: [{
-              model: Parent, // TO DO establish relation between user and parent
+              model: Parent,
               as: 'parent'
             }]});
         return res.status(200).send(students);
-    // }
-    // catch (error) {
-    //     return res.status(400).send(error);
-    // }
+    }
+    catch (error) {
+        return res.status(400).send(error);
+    }
 };

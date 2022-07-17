@@ -10,6 +10,10 @@ router.post("/signup/admin", authRequestValidator.validateSignupAdminRequest, co
 router.post("/signin", controller.signin);
 router.get("/signout", controller.signout);
 router.patch("/deactivate/:id", controller.deactivateUser);
+router.put("/update/student/:id", controller.updateUser);
+router.put("/update/teacher/:id", controller.updateUser);
+router.put("/update/parent/:id", controller.updateUser);
+router.get("/allUsers",controller.AllUsers);
 
 
 module.exports = router;

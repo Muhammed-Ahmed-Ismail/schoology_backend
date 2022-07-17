@@ -9,7 +9,9 @@ const filesPath = path.join(__dirname, '..', 'resources', 'static', 'uploads')
 const upload = async (req, res, next) => {
     // console.log('req222222',req)
     // console.log('req file',req.files.file)
+    console.log(req.file)
     try {
+        console.log("user",req.user)
         await uploadService(req, res);
         if (req.file === undefined){
             return res.status(400).send({message: 'bad request, no file received'})
@@ -90,6 +92,7 @@ const getMyChildFiles = async (req,res,next)=>{
     }
 }
 const download = (req, res) => {
+    console.log("doenload req",req.body)
     const fileName = req.params.name;
     res.download(path.join(filesPath, fileName), (err) => {
         if (err) {

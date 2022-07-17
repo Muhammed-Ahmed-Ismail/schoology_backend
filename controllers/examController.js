@@ -11,6 +11,7 @@ const {
 
 let {Exam, StudentExam, Student, User, Class, Course, Teacher} = require("../models")
 
+
 const create = async (req, res) => {
     try {
         let examx = await Exam.create({
@@ -101,12 +102,18 @@ const getStudentExams = async (req, res) => {
 }
 
 
+
 const getMyChildExams = async (req, res) => {
+
     const parent = await req.user.getParent()
     const student = await parent.getStudent()
     const exams = await getStudentExamsByStudentId(student)
     res.json(exams)
 }
+
+// const getStudentExamsByStudentId = async (student)=>{
+//
+// }
 
 
 const listStudentExams = async (req, res) => {
@@ -130,7 +137,8 @@ const save = async (req, res) => {
     formID = parts[5]
     console.log(parts)
 
-    let exam = await Exam.findOne({where: {link: link}});
+
+    let exam = await Exam.findOne({where: {link: link, submitted: false}});
 
     try {
         result = await getResFromApiService(formID);
@@ -139,12 +147,52 @@ const save = async (req, res) => {
         await exam.save()
         res.send(statusx)
     } catch (error) {
+
         res.send({"error": "Error occured"})
         console.log("error in examController");
         console.log(error.errors[0].message);
 
     }
 }
+// ########################## helper methods ################################## //
+const getStudentExamsByStudentId = async (student)=>{
+    const classRoom = await student.getClass()
+    const exams = await classRoom.getExams({
+        where: {submitted: false},
+        include: [{
+            model: Course,
+            as: 'course',
+            attributes: ['name', 'id']
+        }],
+        attributes: ['name', 'id', 'date', 'link']
+    })
+    return exams
+}
+
+
+const deleteExam = async (req,res)=>{
+    const exam = await Exam.findByPk(req.params.id)
+    let status ={"status":"Exam not found"}
+    if(exam){
+        let result = await exam.destroy()
+        if(result){status = {"status":"successfully deleted "}}
+    }
+    return res.json(status)
+
+}
+
+
+const updateExam = async (req,res)=>{
+    let exam = await Exam.findByPk(req.params.id)
+    if(exam){
+        exam.name = req.body.name,
+        exam.link = req.body.link,
+        exam.date = req.body.date,
+        exam.courseId = req.body.courseId,
+        exam.teacherId = req.body.teacherId,
+        exam.classId = req.body.classId,
+        await exam.save()
+    }else{exam = {"status":"Exam not found"}}
 
 
 const deleteExam = async (req, res) => {
@@ -173,7 +221,35 @@ const updateExam = async (req, res) => {
     } else {
         exam = {"status": "Exam not found"}
     }
+
     return res.json(exam)
+}
+
+
+// ########################## helper methods ################################## //
+const getStudentExamsByStudentId = async (student)=>{
+    const classRoom = await student.getClass()
+    const exams = await classRoom.getExams({
+        where: {submitted: false},
+        include: [{
+            model: Course,
+            as: 'course',
+            attributes: ['name', 'id']
+        },
+            {
+                model: Teacher,
+                as:'teacher',
+                include:[{
+                    model:User,
+                    as:'user',
+                    attributes:['name']
+                }]
+            }
+        ],
+        attributes: ['name', 'id', 'date', 'link']
+    })
+
+    return exams
 }
 module.exports = {
     create,
