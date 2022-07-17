@@ -50,8 +50,10 @@ const listBySenderAndReciever = async (req, res) => {
         })
         // console.log(messages)
         messages.forEach((message)=>{
-            message.read = true
-            message.save()
+            if(message.senderId != req.user.id) {
+                message.read = true
+                message.save()
+            }
         })
         return res.json(messages)
     } catch (error) {
@@ -114,7 +116,7 @@ const createAnnouncment = async (req, res) => {
 
 const create = async (req, res) => {
     let recievers = req.body.recieverId
-    if (recievers.length) {
+    if ((recievers)) {
         createAnnouncment(req, res)
     } else {
         createMessage(req, res)

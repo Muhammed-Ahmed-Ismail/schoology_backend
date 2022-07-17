@@ -54,7 +54,7 @@ const getAllMeetings = async (req, res, next) => {
             res.json(meetings)
         }
         if (req.query.role === "admin") {
-            let meetings = Meeting.findAll();
+            let meetings = await Meeting.findAll();
             res.json(meetings)
         }
 

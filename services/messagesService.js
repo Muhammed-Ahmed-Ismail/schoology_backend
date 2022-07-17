@@ -18,7 +18,6 @@ const getMessagesInfo = async (user) => {
     let messagesWithInfo = []
     let senders = new Set()
     if (user.roleId === 1) {
-
         for (let message of messages) {
             if (!senders.has(message.sender.id)) {
                 senders.add(message.sender.id)
@@ -30,7 +29,6 @@ const getMessagesInfo = async (user) => {
 
         for (let message of messages) {
             if (!senders.has(message.sender.id)) {
-
                 let messageInfo = await getMessagesInfoForStudentParent(message)
                 messagesWithInfo.push(messageInfo)
             }

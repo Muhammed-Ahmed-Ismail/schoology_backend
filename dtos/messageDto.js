@@ -1,4 +1,4 @@
-const {User, Parent, Class, Student} = require("../models");
+const {User, Parent, Class, Student,Course} = require("../models");
 
 
 const getMessageInfoResourceForTeacher = async (message) => {
@@ -90,13 +90,20 @@ const getStudentParentsRecipientsResource = async (classRoom) => {
             model: User,
             as: 'user',
             attributes: ['id', 'name']
-        }]
+        },
+            {
+                model: Course,
+                as:'course',
+                attributes: ['name']
+            }
+        ]
     })
 
     for (const teacher of teachers) {
         teachersResources.push({
             teacherId: teacher.user.id,
             teacherName: teacher.user.name,
+            course:teacher.course.name
         })
     }
     return teachersResources
