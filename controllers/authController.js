@@ -7,7 +7,7 @@ const {
   signupValidationSchema,
   loginValidationSchema,
 } = require("../schemas/authSchemas");
-const { logInTeacher ,logInStudent, logInParent} = require("../services/loginService");
+const { logInTeacher ,logInStudent, logInParent, logInAdmin} = require("../services/loginService");
 
 exports.signup = async (req, res) => {
   console.log(req.body)
@@ -18,8 +18,8 @@ exports.signup = async (req, res) => {
     // if (error) return res.status(400).send(error.details[0].message);
 
     // // check if user exist in our database
-    const isUserExists = await User.findOne({ 
-      where:{ 
+    const isUserExists = await User.findOne({
+      where:{
         [Op.or]: [
          {phone: req.body.phone},
           {email:req.body.email}
@@ -46,15 +46,6 @@ exports.signup = async (req, res) => {
     });
     await user.save();
 
-    if (req.body.roleId === 2) {
-      const student = await Student.create({
-        userId: user.id,
-        gender: req.body.gender,
-        birth_date: req.body.birth_date,
-        classId:req.body.classId
-      });
-      if(student) res.json({user,student})
-    }
     if (req.body.roleId === 1) {
       const teacher = await Teacher.create({
         userId: user.id,
@@ -67,6 +58,17 @@ exports.signup = async (req, res) => {
       if(teacher) res.json({user,teacher})
 
     }
+
+    if (req.body.roleId === 2) {
+      const student = await Student.create({
+        userId: user.id,
+        gender: req.body.gender,
+        birth_date: req.body.birth_date,
+        classId:req.body.classId
+      });
+      if(student) res.json({user,student})
+    }
+
     if (req.body.roleId === 3) {
       const parent = await Parent.create({
         userId: user.id,
@@ -74,7 +76,13 @@ exports.signup = async (req, res) => {
       });
       if(parent) res.json({user,parent})
     }
-    // if (user) return res.status(200).send(user);
+
+    if (req.body.roleId === 4) {
+      const admin = await User.create({
+        ...req.body
+      });
+      if(admin) res.json({user, admin})
+    }
 
   }
   catch (error) {
@@ -85,6 +93,7 @@ exports.signup = async (req, res) => {
 exports.signupTeacher = async (req,res)=>{
 
 }
+
 exports.signin = async (req, res) => {
   try {
     // check if user exist in our database
@@ -106,6 +115,10 @@ exports.signin = async (req, res) => {
     else if (user.roleId === 3)
     {
        data = await logInParent(await user.getParent())
+    }
+    else if (user.roleId === 4)
+    {
+      data = await logInAdmin(user)
     }
 
     res.status(200).json(data);
