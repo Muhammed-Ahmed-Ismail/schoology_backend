@@ -2,31 +2,32 @@ const jwt = require("jsonwebtoken");
 const teacherDto = require("../dtos/teacherDto")
 require("dotenv").config();
 const fs = require('fs')
-const PRIVAREKEY=fs.readFileSync(process.env.PRIVATEKEYPATH,'utf8')
-const getjwtToken = (user)=>{
+const PRIVAREKEY = fs.readFileSync(process.env.PRIVATEKEYPATH, 'utf8')
+const getjwtToken = (user) => {
     // console.log(jwtSecretKey);
     console.log('in webtoken');
     let data = {
-      time: Date(),
-      userId: user.id,
-      iat: Date.now()
+        time: Date(),
+        userId: user.id,
+        iat: Date.now()
     }
-   const token =jwt.sign(data, PRIVAREKEY,{ algorithm: 'RS256' });
-     console.log(token);
-     return token
-    
+    const token = jwt.sign(data, PRIVAREKEY, {algorithm: 'RS256'});
+    console.log(token);
+    return token
+
 }
 
-const logInTeacher = async (teacher)=>{
+const logInTeacher = async (teacher) => {
     const user = await teacher.getUser()
     const token = getjwtToken(user)
     const classes = await teacher.getClasses()
     const course = await teacher.getCourse()
     const response = {
-        userId:teacher.id,
-        userName:user.name,
+        userId: teacher.id,
+        userName: user.name,
         userType: "teacher",
-        courseId:teacher.courseId,
+        courseId: teacher.courseId,
+        personId: user.id,
         course,
         classes,
         token
@@ -35,30 +36,32 @@ const logInTeacher = async (teacher)=>{
 
 }
 
-const logInStudent = async (student)=>{
+const logInStudent = async (student) => {
     const user = await student.getUser()
     const token = getjwtToken(user)
-    const classRoom= await student.getClass()
+    const classRoom = await student.getClass()
     const response = {
-        userId:student.id,
-        userName:user.name,
+        userId: student.id,
+        userName: user.name,
+        personId: user.id,
         userType: "student",
-        classId:classRoom.id,
-        className:classRoom.name,
+        classId: classRoom.id,
+        className: classRoom.name,
         token
     }
     return response
 
 }
-const logInParent = async (parent)=>{
+const logInParent = async (parent) => {
     const user = await parent.getUser()
     const token = getjwtToken(user)
     const student = await parent.getStudent()
     const response = {
-        userId:parent.id,
-        userName:user.name,
+        userId: parent.id,
+        userName: user.name,
+        personId: user.id,
         userType: "parent",
-        studentId:student.id,
+        studentId: student.id,
         token
     }
     return response

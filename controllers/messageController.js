@@ -1,6 +1,10 @@
-let {Message, User,Class} = require("../models")
+let {Message, User, Class} = require("../models")
 const {messages} = require("../middleware/requestValidators/Auth/signupStudent")
-const {getMessagesInfoAsTeacher, getTeacherPossibleRecipients, getStudentPossibleRecipients} = require("../services/messagesService");
+const {
+    getMessagesInfo,
+    getTeacherPossibleRecipients,
+    getStudentPossibleRecipients
+} = require("../services/messagesService");
 const {Op} = require("sequelize");
 const {singleMessageResource} = require("../dtos/messageDto");
 
@@ -12,7 +16,7 @@ const createMessage = async (req, res) => {
         let messagex = await Message.create({
             message: req.body.message,
             senderId: senderId, // check
-            recieverId: req.body.recieverId,
+            receiverId: req.body.receiverId,
         })
         res.json(await singleMessageResource(messagex))
     } catch (error) {
@@ -44,7 +48,11 @@ const listBySenderAndReciever = async (req, res) => {
 
             }]
         })
-        console.log(messages)
+        // console.log(messages)
+        messages.forEach((message)=>{
+            message.read = true
+            message.save()
+        })
         return res.json(messages)
     } catch (error) {
         res.send('"status":"Something went wrong"')
@@ -58,8 +66,7 @@ const getMySentMessages = async (req, res) => {
 }
 const getMyReceivedMessages = async (req, res) => {
     let messages = []
-    if (req.user.roleId === 1)
-        messages = await getMessagesInfoAsTeacher(req.user)
+    messages = await getMessagesInfo(req.user)
     return res.json(messages)
 }
 
@@ -69,14 +76,10 @@ const listPossibleRecipients = async (req, res) => {
     if (req.user.roleId === 1) {
         const teacher = await req.user.getTeacher()
         recipients = await getTeacherPossibleRecipients(teacher)
-    }
-    else if(req.user.roleId === 2 )
-    {
+    } else if (req.user.roleId === 2) {
         const student = await req.user.getStudent()
-        recipients = await  getStudentPossibleRecipients(student)
-    }
-    else if(req.user.roleId === 3 )
-    {
+        recipients = await getStudentPossibleRecipients(student)
+    } else if (req.user.roleId === 3) {
         const parent = req.uer.getParent()
         const student = parent.getStudent()
         recipients = await getStudentPossibleRecipients(student)
@@ -84,9 +87,6 @@ const listPossibleRecipients = async (req, res) => {
 
     res.json(recipients)
 }
-
-
-
 
 
 const createAnnouncment = async (req, res) => {
@@ -114,16 +114,19 @@ const createAnnouncment = async (req, res) => {
 
 const create = async (req, res) => {
     let recievers = req.body.recieverId
-    if(recievers.length){
-        createAnnouncment(req,res)
-    }else{
-        createMessage(req,res)
+    if (recievers.length) {
+        createAnnouncment(req, res)
+    } else {
+        createMessage(req, res)
     }
 }
 
 
-module.exports = { create,
+module.exports = {
+    create,
     listBySenderAndReciever,
     getMySentMessages,
     getMyReceivedMessages,
-    listPossibleRecipients}
+    listPossibleRecipients,
+    createMessage
+}

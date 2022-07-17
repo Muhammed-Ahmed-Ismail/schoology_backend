@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
         static associate(models) {
             // define association here
             Teacher.belongsTo(models.User, {foreignKey: 'userId', as: 'user'})
-            Teacher.belongsTo(models.Course,{foreignKey:"courseId"})
+            Teacher.belongsTo(models.Course,{foreignKey:"courseId",as:'course'})
             Teacher.hasMany(models.Meeting, {foreignKey: 'teacherId'})
             Teacher.hasMany(models.Exam, {foreignKey: 'teacherId'})
             Teacher.hasMany(models.File, {foreignKey: 'uploaderId'})
