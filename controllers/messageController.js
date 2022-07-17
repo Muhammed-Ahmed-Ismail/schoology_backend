@@ -114,7 +114,7 @@ const createAnnouncment = async (req, res) => {
 
 const create = async (req, res) => {
     let recievers = req.body.recieverId
-    if(recievers.length){
+    if(Array.isArray(recievers)){
         createAnnouncment(req,res)
     }else{
         createMessage(req,res)

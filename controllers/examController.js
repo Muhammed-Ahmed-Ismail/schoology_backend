@@ -31,7 +31,27 @@ const create = async (req, res) => {
 
 const list = async (req, res) => {
     try {
-        let exams = await Exam.findAll({where: {submitted: false}})
+        
+        let exams = await Exam.findAll({where: {submitted: false},
+
+            include: [{
+                model: Class, as: 'class',
+                attributes: ['name']
+
+            },
+            {
+                model: Course, as: 'course',
+                attributes: ['name']
+            },
+            {
+                model: Teacher, as: 'teacher',
+                attributes: ['id'],
+                include:{
+                    model:User, as: 'user',
+                    attributes: ['name']
+                }
+            }
+        ]})
         return res.json(exams)
     } catch (error) {
         res.send(error)
@@ -124,8 +144,9 @@ const listStudentExams = async (req, res) => {
             studentId: student.id,
         },
         include: {
-            model: Exam, as: 'exam'
-
+            model: Exam, as: 'exam',
+            model: Class, as: 'class',
+            model: Course, as: 'course',
         }
     })
     return res.json(exams)
@@ -156,9 +177,14 @@ const save = async (req, res) => {
 }
 
 const deleteExam = async (req, res) => {
-    const exam = await Exam.findByPk(req.params.id)
+    let examId = req.params.id
+    // const studentExam = await StudentExam.findAll({
+    //     where: {examId:examId}
+    // })
+    const exam = await Exam.findByPk(examId)
     let status = {"status": "Exam not found"}
-    if (exam) {
+    if (exam ) {//&& studentExam
+        // await studentExam.destroy()
         let result = await exam.destroy()
         if (result) {
             status = {"status": "successfully deleted "}
