@@ -11,6 +11,7 @@ const {
 
 let {Exam, StudentExam, Student, User, Class, Course, Teacher} = require("../models")
 
+
 const create = async (req, res) => {
     try {
         let examx = await Exam.create({
@@ -121,12 +122,18 @@ const getStudentExams = async (req, res) => {
 }
 
 
+
 const getMyChildExams = async (req, res) => {
+
     const parent = await req.user.getParent()
     const student = await parent.getStudent()
     const exams = await getStudentExamsByStudentId(student)
     res.json(exams)
 }
+
+// const getStudentExamsByStudentId = async (student)=>{
+//
+// }
 
 
 const listStudentExams = async (req, res) => {
@@ -146,27 +153,28 @@ const listStudentExams = async (req, res) => {
 
 }
 const save = async (req, res) => {
-    link = req.body.link //teacher sends link in post body
-    parts = link.split("/")
-    formID = parts[5]
+    let link = req.body.link //teacher sends link in post body
+    let parts = link.split("/")
+    let formID = parts[5]
     console.log(parts)
 
-    let exam = await Exam.findOne({where: {link: link}});
+
+    let exam = await Exam.findOne({where: {link: link, submitted: false}});
 
     try {
-        result = await getResFromApiService(formID);
-        statusx = await BulkSaveResultsToDB(result, exam.id);
+        let result = await getResFromApiService(formID);
+        let statusx = await BulkSaveResultsToDB(result, exam.id);
         exam.submitted = true;
         await exam.save()
         res.send(statusx)
     } catch (error) {
+
         res.send({"error": "Error occured"})
         console.log("error in examController");
         console.log(error.errors[0].message);
 
     }
 }
-
 
 const deleteExam = async (req, res) => {
     let examId = req.params.id
@@ -199,8 +207,37 @@ const updateExam = async (req, res) => {
     } else {
         exam = {"status": "Exam not found"}
     }
+
     return res.json(exam)
 }
+
+
+// ########################## helper methods ################################## //
+const getStudentExamsByStudentId = async (student)=>{
+    const classRoom = await student.getClass()
+    const exams = await classRoom.getExams({
+        where: {submitted: false},
+        include: [{
+            model: Course,
+            as: 'course',
+            attributes: ['name', 'id']
+        },
+            {
+                model: Teacher,
+                as:'teacher',
+                include:[{
+                    model:User,
+                    as:'user',
+                    attributes:['name']
+                }]
+            }
+        ],
+        attributes: ['name', 'id', 'date', 'link']
+    })
+
+    return exams
+}
+
 module.exports = {
     create,
     list,

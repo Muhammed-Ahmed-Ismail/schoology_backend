@@ -3,7 +3,6 @@ const multer = require('multer');
 const path = require('path');
 const {File,Teacher,Class,User,Course} = require('../models')
 const {where} = require("sequelize");
-const {sendNotificationToClass} = require('./Notifications')
 
 const filesPath = path.join(__dirname, '..', 'resources', 'static', 'uploads')
 
@@ -11,11 +10,13 @@ let storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, filesPath);
     },
-    filename: (req, file, cb) => {
+    filename:  async (req, file, cb) => {
         console.log(req.body)
-        File.create({
-            uploaderId: req.params.id,
-            name: file.originalname,
+        let teacher =   await req.user.getTeacher()
+        let classRoom = await Class.findByPk(req.body.classId)
+        await File.create({
+            uploaderId: teacher.id,
+            name: classRoom.name+': '+file.originalname,
             classId: req.body.classId
         })
         sendNotificationToClass(req.params.id, req.body.classId, 'a new file has been uploaded check it out')

@@ -25,9 +25,11 @@ const teacherRouter = require("./teacherRouter.js")
 const announcmentRouter = require("./announcmentRouter.js")
 router.use("/exam",examRouter)
 router.use("/message",messageRouter)
+
 router.use("/teacher",teacherRouter)
 router.use("/grades",gradesRoutes)
 router.use("/announcment",announcmentRouter)
+
 
 router.use("/nots", NotificationRouter)
 module.exports = router
