@@ -1,5 +1,5 @@
 const {
-    create, listBySenderAndReciever,getMySentMessages,getMyReceivedMessages,listPossibleRecipients,createMessage
+    create, listBySenderAndReciever,getMySentMessages,getMyReceivedMessages,listPossibleRecipients,createMessage,getNewMessagesCount
 } = require("../controllers/messageController.js")
 const {validateCreateMessageRequest} = require("../middleware/requestValidators/messages/createMessageRequest")
 
@@ -13,6 +13,7 @@ router.get("/reciever/:id", listBySenderAndReciever) // get all messages between
 router.get("/my-sent-messages", getMySentMessages) // get all messages between sender (jwt) and reciever
 router.get("/my-received-messages", getMyReceivedMessages) // get all messages between sender (jwt) and reciever
 router.get("/my-message-recipients", listPossibleRecipients) // get all messages between sender (jwt) and reciever
+router.get("/my-new-messages-count", getNewMessagesCount) // get all messages between sender (jwt) and reciever
 module.exports = router
 
 

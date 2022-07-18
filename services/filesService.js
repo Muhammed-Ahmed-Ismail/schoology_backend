@@ -3,6 +3,7 @@ const multer = require('multer');
 const path = require('path');
 const {File,Teacher,Class,User,Course} = require('../models')
 const {where} = require("sequelize");
+const {sendNotificationToClass} = require("./Notifications");
 
 const filesPath = path.join(__dirname, '..', 'resources', 'static', 'uploads')
 

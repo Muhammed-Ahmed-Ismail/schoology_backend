@@ -90,6 +90,10 @@ const listPossibleRecipients = async (req, res) => {
     res.json(recipients)
 }
 
+const getNewMessagesCount= async (req,res)=>{
+    const count = await req.user.getNumberOfNewMessages()
+    res.json({count})
+}
 
 const createAnnouncment = async (req, res) => {
     let allRecords = []
@@ -130,5 +134,6 @@ module.exports = {
     getMySentMessages,
     getMyReceivedMessages,
     listPossibleRecipients,
+    getNewMessagesCount,
     createMessage
 }

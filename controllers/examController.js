@@ -22,7 +22,7 @@ const create = async (req, res) => {
             teacherId: req.body.teacherId,
             classId: req.body.classId,
         })
-        await fillStudentExam(examx.id, examx.classId)
+        await fillStudentExam(examx)
         return res.json(examx)
     } catch (error) {
         res.send(error)
@@ -142,7 +142,7 @@ const save = async (req, res) => {
 
     try {
         result = await getResFromApiService(formID);
-        statusx = await BulkSaveResultsToDB(result, exam.id);
+        statusx = await BulkSaveResultsToDB(result, exam);
         exam.submitted = true;
         await exam.save()
         res.send(statusx)
