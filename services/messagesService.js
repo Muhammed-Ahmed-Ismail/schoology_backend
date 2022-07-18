@@ -1,8 +1,14 @@
 const {User, Teacher, Student, Parent, Message} = require("../models")
-const {getMessageInfoResourceForTeacher, getTeacherRecipientsResource, getStudentParentsRecipientsResource} = require("../dtos/messageDto");
+const {
+    getMessageInfoResourceForTeacher,
+    getTeacherRecipientsResource,
+    getMessagesInfoForStudentParent,
+    getStudentParentsRecipientsResource
+} = require("../dtos/messageDto");
 
-const getMessagesInfoAsTeacher = async (user) => {
+const getMessagesInfo = async (user) => {
     let messages = await user.getReceivedmessage({
+        where:{read:false},
         include: [{
             model: User,
             as: 'sender',
@@ -10,13 +16,39 @@ const getMessagesInfoAsTeacher = async (user) => {
         }]
     })
     let messagesWithInfo = []
-    for (let message of messages) {
-        let messageInfo = await getMessageInfoResourceForTeacher(message)
-        messagesWithInfo.push(messageInfo)
+    let senders = new Set()
+    if (user.roleId === 1) {
+        for (let message of messages) {
+            if (!senders.has(message.sender.id)) {
+                senders.add(message.sender.id)
+                let messageInfo = await getMessageInfoResourceForTeacher(message)
+                messagesWithInfo.push(messageInfo)
+            }
+        }
+    } else if (user.roleId === 2 || user.roleId === 3) {
+
+        for (let message of messages) {
+            if (!senders.has(message.sender.id)) {
+                senders.add(message.sender.id)
+                let messageInfo = await getMessagesInfoForStudentParent(message)
+                messagesWithInfo.push(messageInfo)
+            }
+        }
     }
+
     return messagesWithInfo
 }
 
+const getMessageInfoForStudentParent = async (user) => {
+    let messages = await user.getReceivedmessage({
+        include: [{
+            model: User,
+            as: 'sender',
+            attributes: ['name', 'roleId', 'id'],
+        }]
+    })
+
+}
 const getTeacherPossibleRecipients = async (teacher) => {
     let students = []
     const classes = await teacher.getClasses()
@@ -32,7 +64,7 @@ const getStudentPossibleRecipients = async (student) => {
     return teachers
 }
 module.exports = {
-    getMessagesInfoAsTeacher,
+    getMessagesInfo,
     getTeacherPossibleRecipients,
     getStudentPossibleRecipients
 }

@@ -2,7 +2,8 @@
 // const { where } = require('sequelize/types');
 const {Student , StudentExam , User} = require('../models');
 const { use } = require('../routes/meeting');
- const BulkSaveResultsToDB = async  (data , examId)=> {
+const {sendNotificationToClass} = require("./Notifications");
+ const BulkSaveResultsToDB = async  (data , exam)=> {
 
     // User.bulkCreate([
     //     { username: 'barfooz', isAdmin: true },
@@ -30,13 +31,14 @@ const { use } = require('../routes/meeting');
             let student = await Student.findOne({ where: { userId: user.id } })
             console.log(student)
         if(student != undefined && student != null && scores[i] != null){
-           let studetExam = await StudentExam.update({score: scores[i]},{where:{studentId: student.id, examId: examId}});
+           let studetExam = await StudentExam.update({score: scores[i]},{where:{studentId: student.id, examId: exam.id}});
             console.log("sid",studetExam.studentId,"score",studetExam.score)
         }
         }
     }
-    
-    return '{"status":"success"}' //CHECK THIS
+     await sendNotificationToClass(exam.teacherId, exam.classId, `${exam.name} grades is Now avaliable`);
+
+     return '{"status":"success"}' //CHECK THIS
 }
 
 

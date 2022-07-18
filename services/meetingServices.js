@@ -75,7 +75,7 @@ const createMeetingService = async (data) => {
             period: data.period,
             date: data.date_time
         })
-        await sendNotificationToClass(data.teacherId, data.classId, 'a new meeting has been created');
+        await sendNotificationToClass(data.teacherId, data.classId, `${data.name} meeting has been created in ${data.date_time} at the ${data.period}th period`);
         return meeting
     } catch (error) {
         return error

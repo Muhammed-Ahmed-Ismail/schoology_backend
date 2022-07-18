@@ -22,7 +22,7 @@ const create = async (req, res) => {
             teacherId: req.body.teacherId,
             classId: req.body.classId,
         })
-        await fillStudentExam(examx.id, examx.classId)
+        await fillStudentExam(examx)
         return res.json(examx)
     } catch (error) {
         res.send(error)
@@ -31,7 +31,7 @@ const create = async (req, res) => {
 
 const list = async (req, res) => {
     try {
-        
+
         let exams = await Exam.findAll({where: {submitted: false},
 
             include: [{
@@ -162,8 +162,8 @@ const save = async (req, res) => {
     let exam = await Exam.findOne({where: {link: link, submitted: false}});
 
     try {
-        let result = await getResFromApiService(formID);
-        let statusx = await BulkSaveResultsToDB(result, exam.id);
+        result = await getResFromApiService(formID);
+        statusx = await BulkSaveResultsToDB(result, exam);
         exam.submitted = true;
         await exam.save()
         res.send(statusx)
@@ -175,16 +175,19 @@ const save = async (req, res) => {
 
     }
 }
+// ########################## helper methods ################################## //
+
+
+
+
+
+
+
 
 const deleteExam = async (req, res) => {
-    let examId = req.params.id
-    // const studentExam = await StudentExam.findAll({
-    //     where: {examId:examId}
-    // })
-    const exam = await Exam.findByPk(examId)
+    const exam = await Exam.findByPk(req.params.id)
     let status = {"status": "Exam not found"}
-    if (exam ) {//&& studentExam
-        // await studentExam.destroy()
+    if (exam) {
         let result = await exam.destroy()
         if (result) {
             status = {"status": "successfully deleted "}
