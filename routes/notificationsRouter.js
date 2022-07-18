@@ -6,6 +6,6 @@ const passport= require('passport')
 router.use(passport.authenticate('jwt', { session: false }))
 const {isTeacher , isStudent , isParent} = require('../middleware/roleAuthorization/role')
 
-router.get("/myNots/:id", isStudent || isParent || isTeacher, controller.getMyNotifications);
+router.get("/myNots/:id", isStudent, controller.getMyNotifications);
 
 module.exports = router

@@ -4,6 +4,7 @@ const Joi = require("joi");
 const signupParentValidationSchema = Joi.object({
     name: Joi.string().min(3).required(),
     phone: Joi.string().regex(/^\d{11}$/).required(),
+
     password: Joi.string().required(),
     confirmPassword: Joi.string().required().valid(Joi.ref('password')),
     roleId: Joi.number().required(),
