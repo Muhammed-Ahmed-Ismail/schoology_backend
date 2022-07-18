@@ -1,4 +1,4 @@
-let { Class , Student ,Parent} = require("../models")
+let { Class , Student ,Parent, Teacher} = require("../models")
 
 // Post a Class
 exports.createClass = async (req, res) => {
@@ -35,6 +35,16 @@ exports.findByPk = async (req, res) => {
     }
 };
 
+// Find teacher classes
+exports.getTeacherClasses = async (req, res) => {
+    try {
+        const teacher = await Teacher.findByPk(req.params.id)
+        const classes = await teacher.getClasses();
+        return res.status(200).json(classes)
+    }catch (e) {
+        return res.status(500).send(e);
+    }
+}
 
 // Update a Class
 exports.updateClass = async (req, res) => {

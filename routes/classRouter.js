@@ -12,5 +12,6 @@ router.post('/', isAdmin, controller.createClass);
 router.put('/:id', isAdmin, controller.updateClass)
 router.delete('/:id', isAdmin, controller.deleteClass)
 router.get('/list-students/:id', controller.getClassStudentsWithParents)
+router.get('/teacher-classes/:id', isAdmin, controller.getTeacherClasses)
 
 module.exports = router
