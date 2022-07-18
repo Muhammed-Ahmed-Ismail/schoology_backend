@@ -5,7 +5,7 @@ const {
     getMeetingByStudentId,
     getAllMeetingsByStudentId,
     updateMeetingService,
-    getAllMeetingsByParentId
+    getAllMeetingsByParentId,getMeetingByParentId
 } = require("../services/meetingServices")
 
 const { Meeting, Teacher, Class } = require("../models")
@@ -32,7 +32,7 @@ const getMyMeetings = async (req, res, next) => {
             res.json(meetings)
         } else if (req.query.role === "parent")
         {
-            let meetings = await getAllMeetingsByParentId(req.params.id, req.query.date)
+            let meetings = await getMeetingByParentId(req.params.id, req.query.date)
             res.json(meetings)
         }
             } catch (e) {
@@ -49,16 +49,16 @@ const getAllMeetings = async (req, res, next) => {
             let meetings = await getAllMeetingsByTeacherId(req.params.id)
             res.json(meetings)
         }
-        if (req.query.role === "student") {
+       else if (req.query.role === "student") {
             let meetings = await getAllMeetingsByStudentId(req.params.id)
             res.json(meetings)
         }
-        if (req.query.role === "admin") {
+        else if (req.query.role === "admin") {
             let meetings = await Meeting.findAll();
             res.json(meetings)
         }
 
-        if (req.query.role === "parent") {
+        else if (req.query.role === "parent") {
             let meetings = await getAllMeetingsByParentId(req.params.id)
             res.json(meetings)
         }

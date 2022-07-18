@@ -16,7 +16,7 @@ const createMessage = async (req, res) => {
         let messagex = await Message.create({
             message: req.body.message,
             senderId: senderId, // check
-            recieverId: req.body.recieverId,
+            receiverId: req.body.receiverId,
         })
         res.json(await singleMessageResource(messagex))
     } catch (error) {
