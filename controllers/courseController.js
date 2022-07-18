@@ -1,4 +1,4 @@
-let { Course } = require("../models")
+let { Course, User, Teacher } = require("../models")
 
 // Post a course
 exports.createCourse = async (req, res) => {
@@ -23,6 +23,17 @@ exports.getAll = async (req, res) => {
         return res.status(400).send(error);
     }
 };
+
+exports.getTeacherCourse = async (req, res) => {
+    try {
+        const user = await User.findByPk(req.params.id)
+        const teacher = await Teacher.findOne({where: {userId: user.id}})
+        const courses = await teacher.getCourse();
+        return res.status(200).json([courses])
+    }catch (e) {
+       return res.status(500).send(e);
+    }
+}
 
 // Find a course by Id
 exports.findByPk = async (req, res) => {
