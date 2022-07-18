@@ -14,6 +14,6 @@ router.put("/update/student/:id", controller.updateUser);
 router.put("/update/teacher/:id", controller.updateUser);
 router.put("/update/parent/:id", controller.updateUser);
 router.get("/allUsers",controller.AllUsers);
-
+router.get("/allTeachers", controller.AllTeachers)
 
 module.exports = router;

@@ -8,27 +8,23 @@ const filesRoutes = require("./files")
 const classRoutes = require("./classRouter")
 const courseRoutes = require("./courseRouter")
 const NotificationRouter = require('./notificationsRouter')
-
-
+const examRouter = require("./examRouter")
+const messageRouter = require("./messageRouter")
+const teacherRouter = require("./teacherRouter.js")
+const announcementRouter = require("./announcementRouter.js")
 const gradesRoutes = require("./gradesRoutes")
+
 router.use("/meeting",meetingRouter)
 router.use("/dptest",testdbRoutes)
 router.use("/auth",authRoutes)
 router.use("/files", filesRoutes)
 router.use("/class", classRoutes)
 router.use("/course", courseRoutes)
-
-
-const examRouter = require("./examRouter")
-const messageRouter = require("./messageRouter")
-const teacherRouter = require("./teacherRouter.js")
-const announcmentRouter = require("./announcmentRouter.js")
 router.use("/exam",examRouter)
 router.use("/message",messageRouter)
-
 router.use("/teacher",teacherRouter)
 router.use("/grades",gradesRoutes)
-router.use("/announcment",announcmentRouter)
+router.use("/announcement",announcementRouter)
 
 
 router.use("/nots", NotificationRouter)
