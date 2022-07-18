@@ -78,8 +78,21 @@ const logInParent = async (parent) => {
     return response
 }
 
+const logInAdmin = async (admin)=>{
+    const token = getjwtToken(admin)
+    const response = {
+        userId:admin.id,
+        userName:admin.name,
+        userType: "admin",
+        token
+    }
+    return response
+
+}
+
 module.exports = {
     logInTeacher,
     logInStudent,
-    logInParent
+    logInParent,
+    logInAdmin
 }

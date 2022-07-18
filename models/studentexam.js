@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       StudentExam.belongsTo(models.Student , { foreignKey:'studentId' , as :'student'})
-      StudentExam.belongsTo(models.Exam , { foreignKey:'examId' , as :'exam'})
+      StudentExam.belongsTo(models.Exam , { foreignKey:'examId' , as :'exam'}, { onDelete: 'cascade' })
     }
   }
   StudentExam.init({

@@ -31,7 +31,27 @@ const create = async (req, res) => {
 
 const list = async (req, res) => {
     try {
-        let exams = await Exam.findAll({where: {submitted: false}})
+
+        let exams = await Exam.findAll({where: {submitted: false},
+
+            include: [{
+                model: Class, as: 'class',
+                attributes: ['name']
+
+            },
+            {
+                model: Course, as: 'course',
+                attributes: ['name']
+            },
+            {
+                model: Teacher, as: 'teacher',
+                attributes: ['id'],
+                include:{
+                    model:User, as: 'user',
+                    attributes: ['name']
+                }
+            }
+        ]})
         return res.json(exams)
     } catch (error) {
         res.send(error)
@@ -124,17 +144,18 @@ const listStudentExams = async (req, res) => {
             studentId: student.id,
         },
         include: {
-            model: Exam, as: 'exam'
-
+            model: Exam, as: 'exam',
+            model: Class, as: 'class',
+            model: Course, as: 'course',
         }
     })
     return res.json(exams)
 
 }
 const save = async (req, res) => {
-    link = req.body.link //teacher sends link in post body
-    parts = link.split("/")
-    formID = parts[5]
+    let link = req.body.link //teacher sends link in post body
+    let parts = link.split("/")
+    let formID = parts[5]
     console.log(parts)
 
 
@@ -219,6 +240,7 @@ const getStudentExamsByStudentId = async (student)=>{
 
     return exams
 }
+
 module.exports = {
     create,
     list,

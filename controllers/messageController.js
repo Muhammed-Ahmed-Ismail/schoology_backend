@@ -16,7 +16,7 @@ const createMessage = async (req, res) => {
         let messagex = await Message.create({
             message: req.body.message,
             senderId: senderId, // check
-            receiverId: req.body.receiverId,
+            recieverId: req.body.recieverId,
         })
         res.json(await singleMessageResource(messagex))
     } catch (error) {
@@ -120,10 +120,10 @@ const createAnnouncment = async (req, res) => {
 
 const create = async (req, res) => {
     let recievers = req.body.recieverId
-    if ((recievers)) {
-        createAnnouncment(req, res)
-    } else {
-        createMessage(req, res)
+    if(Array.isArray(recievers)){
+        createAnnouncment(req,res)
+    }else{
+        createMessage(req,res)
     }
 }
 
