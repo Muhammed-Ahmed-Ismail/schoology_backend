@@ -1,7 +1,6 @@
 let express = require('express');
 let cors = require('cors')
 let app = express();
-const formData = require('express-form-data');
 
 
 const passport = require('passport')
