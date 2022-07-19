@@ -13,7 +13,10 @@ const getUserNotifications = async  (id) => {
                 include: {
                     association: 'sender', //leave it sender
                     attributes: ['name']
-                }
+                },
+                order: [
+                    ['createdAt', 'DESC'],
+                ],
             },
         );
         return nots;
