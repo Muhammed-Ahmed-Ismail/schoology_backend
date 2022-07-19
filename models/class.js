@@ -23,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
 
             return (count === 0)
         }
+
     }
 
     Class.init({

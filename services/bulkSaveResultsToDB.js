@@ -2,7 +2,7 @@
 // const { where } = require('sequelize/types');
 const {Student, StudentExam, User} = require('../models');
 const {use} = require('../routes/meeting');
-const {sendNotificationToClass} = require("./Notifications");
+const {sendNotificationsToStudentsAndParents} = require("./Notifications");
 const BulkSaveResultsToDB = async (data, exam) => {
 
     // User.bulkCreate([
@@ -45,7 +45,7 @@ const BulkSaveResultsToDB = async (data, exam) => {
             }
         }
     }
-    await sendNotificationToClass(exam.teacherId, exam.classId, `${exam.name} grades is Now avaliable`);
+    await sendNotificationsToStudentsAndParents(exam.teacherId, exam.classId, `${exam.name} grades are Now available`);
 
     return '{"status":"success"}' //CHECK THIS
 }

@@ -10,6 +10,7 @@ const {
 
 
 let {Exam, StudentExam, Student, User, Class, Course, Teacher} = require("../models")
+const {notifyUsersByExamUpdate, notifyUsersByExamDeletion} = require("../services/examService");
 
 
 const create = async (req, res) => {
@@ -193,6 +194,7 @@ const deleteExam = async (req, res) => {
         let result = await exam.destroy()
         if (result) {
             status = {"status": "successfully deleted "}
+            await notifyUsersByExamDeletion(exam,req.user.id)
         }
     }
     return res.json(status)
@@ -209,6 +211,7 @@ const updateExam = async (req, res) => {
             exam.teacherId = req.body.teacherId,
             exam.classId = req.body.classId,
             await exam.save()
+        await notifyUsersByExamUpdate(exam,req.user.id)
     } else {
         exam = {"status": "Exam not found"}
     }
