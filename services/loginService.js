@@ -20,7 +20,8 @@ const getjwtToken = (user) => {
 const logInTeacher = async (teacher) => {
     const user = await teacher.getUser()
     const token = getjwtToken(user)
-    const countOfNewMessages = await user.getNumberOfNewMessages()
+    const newMessagesCount = await user.getNumberOfNewMessages()
+    const newNotificationsCount = await user.getNumberOfNewNotifications()
     const classes = await teacher.getClasses()
     const course = await teacher.getCourse()
 
@@ -30,7 +31,8 @@ const logInTeacher = async (teacher) => {
         userType: "teacher",
         courseId: teacher.courseId,
         personId: user.id,
-        newMessagesCount:countOfNewMessages,
+        newMessagesCount,
+        newNotificationsCount,
         course,
         classes,
         token
@@ -43,7 +45,9 @@ const logInStudent = async (student) => {
     const user = await student.getUser()
     const token = getjwtToken(user)
     const classRoom = await student.getClass()
-    const countOfNewMessages = await user.getNumberOfNewMessages()
+    const newMessagesCount = await user.getNumberOfNewMessages()
+    const newNotificationsCount = await user.getNumberOfNewNotifications()
+
 
     const response = {
         userId: student.id,
@@ -52,8 +56,8 @@ const logInStudent = async (student) => {
         userType: "student",
         classId: classRoom.id,
         className: classRoom.name,
-        newMessagesCount:countOfNewMessages,
-
+        newMessagesCount,
+        newNotificationsCount,
         token
     }
     return response
@@ -63,7 +67,9 @@ const logInParent = async (parent) => {
     const user = await parent.getUser()
     const token = getjwtToken(user)
     const student = await parent.getStudent()
-    const countOfNewMessages = await user.getNumberOfNewMessages()
+    const newMessagesCount = await user.getNumberOfNewMessages()
+    const newNotificationsCount = await user.getNumberOfNewNotifications()
+
 
     const response = {
         userId: parent.id,
@@ -71,8 +77,8 @@ const logInParent = async (parent) => {
         personId: user.id,
         userType: "parent",
         studentId: student.id,
-        newMessagesCount:countOfNewMessages,
-
+        newMessagesCount,
+        newNotificationsCount,
         token
     }
     return response
