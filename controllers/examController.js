@@ -13,6 +13,7 @@ let {Exam, StudentExam, Student, User, Class, Course, Teacher} = require("../mod
 
 
 const create = async (req, res) => {
+    console.log(req)
     try {
         let examx = await Exam.create({
             name: req.body.name,
@@ -25,6 +26,7 @@ const create = async (req, res) => {
         await fillStudentExam(examx)
         return res.json(examx)
     } catch (error) {
+        console.log(error)
         res.send(error)
     }
 }
