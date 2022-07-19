@@ -19,6 +19,10 @@ const getUserNotifications = async (id) => {
                 ],
             },
         );
+        for(let notification of nots)
+        {
+           await notification.markRead()
+        }
         return nots;
     } catch (e) {
         throw e;
