@@ -1,4 +1,3 @@
-let {Exam, StudentExam, Student, User, Class, Course, Teacher} = require("../models")
 const {sendNotificationToClass} = require("./Notifications");
 
 const notifyUsersByExamUpdate = async (exam,adminId)=>{
