@@ -16,7 +16,7 @@ const createMessage = async (req, res) => {
         let messagex = await Message.create({
             message: req.body.message,
             senderId: senderId, // check
-            recieverId: req.body.recieverId,
+            receiverId: req.body.receiverId,
         })
         res.json(await singleMessageResource(messagex))
     } catch (error) {
@@ -82,8 +82,8 @@ const listPossibleRecipients = async (req, res) => {
         const student = await req.user.getStudent()
         recipients = await getStudentPossibleRecipients(student)
     } else if (req.user.roleId === 3) {
-        const parent = req.uer.getParent()
-        const student = parent.getStudent()
+        const parent = await req.user.getParent()
+        const student = await parent.getStudent()
         recipients = await getStudentPossibleRecipients(student)
     }
 

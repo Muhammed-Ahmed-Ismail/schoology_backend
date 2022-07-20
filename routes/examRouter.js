@@ -4,9 +4,10 @@ const express = require("express");
 const router = express.Router();
 const passport= require('passport')
 const {isTeacher , isStudent , isParent, isAdmin} = require('../middleware/roleAuthorization/role')
+const {canCreateExam} = require("../middleware/PermisionAuthorization/ExamPermisions");
 router.use(passport.authenticate('jwt', { session: false }))
 
-router.post("/create" , isTeacher || isAdmin , validateExamRequest , controller.create)
+router.post("/create" , canCreateExam , validateExamRequest , controller.create)
 router.get("/list" , controller.list)
 router.get("/my-exams" ,isStudent , controller.getStudentExams) //lists all exams for certain student
 router.get("/my-child-exams" ,isParent , controller.getMyChildExams) //lists all exams for certain student

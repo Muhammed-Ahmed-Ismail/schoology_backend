@@ -46,7 +46,7 @@ exports.signup = async (req, res) => {
     });
     await user.save();
 
-    if (req.body.roleId === 1) {
+    if ( parseInt( req.body.roleId) === 1) {
       const teacher = await Teacher.create({
         userId: user.id,
         courseId: req.body.courseId,
@@ -59,7 +59,7 @@ exports.signup = async (req, res) => {
 
     }
 
-    if (req.body.roleId === 2) {
+    if (parseInt( req.body.roleId) === 2) {
       const student = await Student.create({
         userId: user.id,
         gender: req.body.gender,
@@ -69,7 +69,7 @@ exports.signup = async (req, res) => {
       if(student) res.json({user,student})
     }
 
-    if (req.body.roleId === 3) {
+    if (parseInt( req.body.roleId) === 3) {
       const parent = await Parent.create({
         userId: user.id,
         studentId: req.body.studentId,
@@ -77,7 +77,7 @@ exports.signup = async (req, res) => {
       if(parent) res.json({user,parent})
     }
 
-    if (req.body.roleId === 4) {
+    if (parseInt( req.body.roleId) === 4) {
       const admin = await User.create({
         ...req.body
       });

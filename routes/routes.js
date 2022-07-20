@@ -25,7 +25,5 @@ router.use("/message",messageRouter)
 router.use("/teacher",teacherRouter)
 router.use("/grades",gradesRoutes)
 router.use("/announcement",announcementRouter)
-
-
 router.use("/nots", NotificationRouter)
 module.exports = router

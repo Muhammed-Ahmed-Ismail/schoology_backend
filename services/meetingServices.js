@@ -187,6 +187,16 @@ const getMeetingsByclassroom = async (classroom,date)=>{
     const meetings = await classroom.getMeetings(queryParameters)
     return meetings
 }
+
+const notifyUsersByMeetingUpdate = async (meeting,adminId)=>{
+    const classRoom = await meeting.getClass()
+    await sendNotificationToClass(adminId,classRoom.id,`${meeting.name}  meeting time has been changed check it`)
+}
+
+const notifyUsersByMeetingDeletion = async (meeting,adminId)=>{
+    const classRoom = await meeting.getClass()
+    await sendNotificationToClass(adminId,classRoom.id,`${meeting.name} meeting has been canceled`)
+}
 module.exports = {
     createMeetingService,
     getMeetingByTeacherId,
@@ -195,4 +205,6 @@ module.exports = {
     getAllMeetingsByStudentId,
     getMeetingByParentId,
     getAllMeetingsByParentId,
+    notifyUsersByMeetingUpdate,
+    notifyUsersByMeetingDeletion
 }

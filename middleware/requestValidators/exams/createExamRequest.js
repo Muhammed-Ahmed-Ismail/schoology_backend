@@ -7,9 +7,6 @@ const createExamSchema = Joi.object().keys({
     teacherId: Joi.number().required(),
     classId: Joi.number().required(),
     courseId: Joi.number().required(),
-
-    
-
 });
 
 const validateExamRequest = async (req, res, next) => {
@@ -18,8 +15,10 @@ const validateExamRequest = async (req, res, next) => {
         await createExamSchema.validateAsync(req.body, {
             abortEarly: false
         })
+        console.log('valid')
         next()
     } catch (error) {
+        console.log(error)
         error.status = 400
         next(error)
     }

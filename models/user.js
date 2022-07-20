@@ -17,12 +17,22 @@ module.exports = (sequelize, DataTypes) => {
             User.hasOne(models.Parent,{foreignKey:'userId' })
             User.hasMany(models.Message,{foreignKey:'senderId',as: 'sentmessage' })
             User.hasMany(models.Message,{foreignKey:'receiverId',as:'receivedmessage' })
+            User.hasMany(models.Notification,{foreignKey:'receiverId',as:'receivedNotification' })
+            User.hasMany(models.Notification,{foreignKey:'senderId',as:'sentNotification' })
         }
 
        async getNumberOfNewMessages()
         {
             let count = 0 ;
             count = await this.countReceivedmessage({where:{read:false}})
+            return count
+        }
+
+        async getNumberOfNewNotifications()
+        {
+            let count = 0 ;
+            count = await this.countReceivedNotification({where:{read:false}})
+            console.log(count)
             return count
         }
     }

@@ -14,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
       Notification.belongsTo(models.User, {foreignKey: 'sourceId', as: 'sender'});
       Notification.belongsTo(models.User, {foreignKey: 'receiverId', as: 'receiver'});
     }
+   async markRead(){
+      this.read = true
+      await this.save()
+    }
   }
   Notification.init({
     sourceId: {
@@ -27,7 +31,11 @@ module.exports = (sequelize, DataTypes) => {
     content: {
       type: DataTypes.STRING,
       allowNull: false
-    }
+    },
+    read: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   }, {
     sequelize,
     modelName: 'Notification',
