@@ -222,3 +222,12 @@ exports.AllTeachers = async (req, res) => {
     return res.status(500).json(error.message)
   }
 }
+
+exports.AllStudents = async (req, res) => {
+  try {
+    const students = await User.findAll({where: {roleId: 2}})
+    res.json(students)
+  }catch (error) {
+    return res.status(500).json(error.message)
+  }
+}
