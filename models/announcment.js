@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Announcment.init({
-    announcment: DataTypes.STRING,
+    announcment: DataTypes.TEXT,
     senderId: DataTypes.INTEGER,
     image: DataTypes.STRING,
   }, {

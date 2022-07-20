@@ -4,6 +4,7 @@ const addImageRequestSchema = Joi.object().keys({
     title: Joi.string().required(),
     link: Joi.string().required(),
     description: Joi.string().required(),
+    id:Joi.number()
 });
 const removeImageRequestSchema = Joi.object().keys({
     imageId: Joi.number().required(),
