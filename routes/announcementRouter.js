@@ -5,10 +5,12 @@ const  {validateCreateAnnouncmentRequest} = require("../middleware/requestValida
 const express = require("express");
 const router = express.Router();
 const passport= require('passport')
+const {getLastAnnouncement} = require("../controllers/announcmentController");
 
 router.use(passport.authenticate('jwt', { session: false }))
 router.post("/create" , validateCreateAnnouncmentRequest , create)
 router.get("/list" , list)
+router.get("/last" , getLastAnnouncement)
 module.exports = router
 
 
