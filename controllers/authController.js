@@ -13,9 +13,6 @@ exports.signup = async (req, res) => {
   console.log(req.body)
   // Save User to Database
   try {
-    // Validate user input
-    // const { error } = signupValidationSchema.validate(req.body);
-    // if (error) return res.status(400).send(error.details[0].message);
 
     // // check if user exist in our database
     const isUserExists = await User.findOne({
@@ -70,9 +67,11 @@ exports.signup = async (req, res) => {
     }
 
     if (parseInt( req.body.roleId) === 3) {
+      const student_user = await User.findByPk(req.body.studentId)
+      const student = await student_user.getStudent()
       const parent = await Parent.create({
         userId: user.id,
-        studentId: req.body.studentId,
+        studentId: student.id,
       });
       if(parent) res.json({user,parent})
     }
@@ -114,7 +113,10 @@ exports.signin = async (req, res) => {
     }
     else if (user.roleId === 3)
     {
-       data = await logInParent(await user.getParent())
+      console.log(req.body)
+      const parent = await user.getParent()
+      console.log(parent)
+       data = await logInParent(parent)
     }
     else if (user.roleId === 4)
     {
