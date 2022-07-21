@@ -45,6 +45,7 @@ const singleMessageResource = async (message) => {
     messageResource['receiverId'] = message.receiverId
     messageResource['message'] = message.message
     messageResource['sender'] = {name: sender.name}
+    messageResource['createdAt'] = message.createdAt
     return messageResource
 }
 
