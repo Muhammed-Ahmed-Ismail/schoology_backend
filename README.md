@@ -11,13 +11,13 @@ Backend Repo for Schoology project, find front end at [schoology_frontend](https
 
 
 ## 📝 Table of Contents
-- [About](#about)
-- [Getting Started](#getting_started)
-- [Usage](#usage)
-- [Built Using](#built_using)
-- [Authors](#authors)
+- [About](#-about)
+- [Getting Started](#-getting-started)
+- [Usage](#-usage)
+- [Built Using](#%EF%B8%8F-built-using)
+- [Authors](#%EF%B8%8F-authors)
 
-## 🧐 About <a name = "about"></a>
+## 🧐 About
 Due to the global trend of digitizing education and in the midst of emerging pandemics, a need has arisen for online education and schooling. <br/><br/>
 <strong>Goal</strong> <br/>
  - To simulate the real-school daily interaction between student and teacher in the educational process.
@@ -32,7 +32,7 @@ Due to the global trend of digitizing education and in the midst of emerging pan
     <b><a href="#top">↥ back to top</a></b>
 </div>
 
-## 🏁 Getting Started <a name = "getting_started"></a>
+## 🏁 Getting Started
 
 1) Clone the project
 
@@ -82,7 +82,7 @@ PUBLICKEYPATH = <project location>/utils/id_rsa_pub.pem
     <b><a href="#top">↥ back to top</a></b>
 </div>
 
-## 🎈 Usage <a name="usage"></a>
+## 🎈 Usage
 
 check [routes](./routes/routes.js)
 
@@ -90,7 +90,7 @@ check [routes](./routes/routes.js)
     <b><a href="#top">↥ back to top</a></b>
 </div>
 
-## ⛏️ Built Using <a name = "built_using"></a>
+## ⛏️ Built Using
 - [MySql](https://www.mysql.com/) - Database
 - [Express](https://expressjs.com/) - Server Framework
 - [NodeJs](https://nodejs.org/en/) - Server Environment
@@ -99,7 +99,7 @@ check [routes](./routes/routes.js)
     <b><a href="#top">↥ back to top</a></b>
 </div>
 
-## ✍️ Authors <a name = "authors"></a>
+## ✍️ Authors
 
 - [@Muhammed-Ahmed-Ismail](https://github.com/Muhammed-Ahmed-Ismail)
 - [@Adham-Ahmed](https://github.com/Adham-Ahmed)
