@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   GallaryImage.init({
-    link: DataTypes.STRING,
+    link: DataTypes.TEXT,
     title: DataTypes.STRING,
     description: DataTypes.TEXT
   }, {

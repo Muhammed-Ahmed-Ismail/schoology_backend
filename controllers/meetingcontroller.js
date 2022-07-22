@@ -112,4 +112,25 @@ const deleteMeeting = async (req, res) => {
     }
 };
 
-module.exports = {createMeeting, getMyMeetings, getAllMeetings, updateMeeting, deleteMeeting}
+const checkIsValidTime = async (req,res)=>{
+    console.log(req.query);
+    const data = req.query
+    data.classId = parseInt(data.classId)
+    data.period = parseInt(data.period)
+    data.teacherId = parseInt(data.teacherId)
+    const classroom = await Class.findByPk(data.classId)
+    const teacher = await Teacher.findByPk(data.teacherId)
+
+    if (! await classroom.isThatValidMeeting(data.date_time, data.period))
+
+        res.json({error:"That class has another meeting in the same time !!"})
+
+    else if (! await teacher.isThatValidMeeting(data.date_time, data.period)) 
+
+        res.json({error:"Teacher has another meeting in the same time !!"})
+
+      else  res.json({sucsess:"That time is availabel "}) 
+
+}
+
+module.exports = {createMeeting, getMyMeetings, getAllMeetings, updateMeeting, deleteMeeting,checkIsValidTime}

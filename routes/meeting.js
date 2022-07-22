@@ -1,4 +1,4 @@
-const {createMeeting,getMyMeetings, getAllMeetings, deleteMeeting, updateMeeting
+const {createMeeting,getMyMeetings, getAllMeetings, deleteMeeting, updateMeeting, checkIsValidTime
 } = require("../controllers/meetingcontroller")
 const  {validateCreateMeetingRequest} = require("../middleware/requestValidators/meetings/createMeetingRequest")
 const express = require("express");
@@ -13,5 +13,6 @@ router.get("/my-meetings/:id",getMyMeetings)
 router.get("/all-meetings/:id", getAllMeetings)
 router.put("/update/:id", isAdmin, updateMeeting)
 router.delete("/delete/:id", isAdmin, deleteMeeting)
+router.get("/is-valid-time",checkIsValidTime)
 
 module.exports = router
