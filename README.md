@@ -4,10 +4,9 @@
 
 </div>
 
-<h3>Schoology Backend</h3>
+# Schoology Backend
 
----
- 
+
 Backend Repo for Schoology project, find front end at [schoology_frontend](https://github.com/Mohamed-EmadEldin/skoology-LMS.git)
 
 
@@ -22,15 +21,16 @@ Backend Repo for Schoology project, find front end at [schoology_frontend](https
 Due to the global trend of digitizing education and in the midst of emerging pandemics, a need has arisen for online education and schooling. <br/><br/>
 <strong>Goal</strong> <br/>
  - To simulate the real-school daily interaction between student and teacher in the educational process.
-<br/>
+
  - To make the supervision of the child easier and more efficient .
-<br/>
+
  - To reduce the wasted days in the event of the need to work from home due to COVID high infection period or any other reason.
-<br/>
+
  - To make the process of administration easier and more efficient for the school.
 
-<p align="right">(<a href="#top">back to top</a>)</p>
-
+<div align="right">
+    <b><a href="#top">↥ back to top</a></b>
+</div>
 
 ## 🏁 Getting Started <a name = "getting_started"></a>
 
@@ -46,7 +46,7 @@ PUBLICKEYPATH = <project location>/utils/id_rsa_pub.pem
 
 ```
 3) make sure MySql is up and running and create database schoology
-``` CREATE DATABASE schoology ```
+``` CREATE DATABASE schoology; ```
 4) create config.json under config/ with the following with the appropriate connection string
 ```
 {
@@ -64,7 +64,9 @@ PUBLICKEYPATH = <project location>/utils/id_rsa_pub.pem
 6) for the first run only to set up the database in index.js uncomment ``` await sequelize.sync({alter:true}) ```
 7) run the backend ```node index.js``` or ```nodemon index.js``` for live monitoring on code changes
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+<div align="right">
+    <b><a href="#top">↥ back to top</a></b>
+</div>
 
 ### Prerequisites
 
@@ -76,15 +78,26 @@ PUBLICKEYPATH = <project location>/utils/id_rsa_pub.pem
 
 - optional [postman](https://www.postman.com) or similar to test routes
 
+<div align="right">
+    <b><a href="#top">↥ back to top</a></b>
+</div>
 
 ## 🎈 Usage <a name="usage"></a>
 
 check [routes](./routes/routes.js)
 
+<div align="right">
+    <b><a href="#top">↥ back to top</a></b>
+</div>
+
 ## ⛏️ Built Using <a name = "built_using"></a>
 - [MySql](https://www.mysql.com/) - Database
 - [Express](https://expressjs.com/) - Server Framework
 - [NodeJs](https://nodejs.org/en/) - Server Environment
+
+<div align="right">
+    <b><a href="#top">↥ back to top</a></b>
+</div>
 
 ## ✍️ Authors <a name = "authors"></a>
 
@@ -92,3 +105,7 @@ check [routes](./routes/routes.js)
 - [@Adham-Ahmed](https://github.com/Adham-Ahmed)
 - [@AmSaleh21](https://github.com/AmSaleh21)
 - [@radwa-mostafa-hassan](https://github.com/radwa-mostafa-hassan)
+
+<div align="right">
+    <b><a href="#top">↥ back to top</a></b>
+</div>
