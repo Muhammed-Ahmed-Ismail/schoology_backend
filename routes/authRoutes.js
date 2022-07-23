@@ -17,5 +17,6 @@ router.put("/update/parent/:id", controller.updateUser);
 router.get("/allUsers",controller.AllUsers);
 router.get("/allTeachers", controller.AllTeachers)
 router.get("/allStudents", controller.AllStudents)
+router.post("/reset-password", controller.resetPassword)
 
 module.exports = router;
