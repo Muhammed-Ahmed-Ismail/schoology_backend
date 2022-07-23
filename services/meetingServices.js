@@ -39,13 +39,7 @@ const generateMeetingLink = async (eventData, code) => {
 
 const createMeetingService = async (data) => {
 
-    const classroom = await Class.findByPk(data.classId)
-    const teacher = await Teacher.findByPk(data.teacherId)
-
-    if (!(await teacher.isThatValidMeeting(data.date_time, data.period) && await classroom.isThatValidMeeting(data.date_time, data.period))) {
-        console.log("from create getlink")
-        throw new Error("invalid meeting timing")
-    }
+  
 
     let eventData = {
         'summary': data.description,

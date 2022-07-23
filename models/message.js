@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Message.init({
-    message: DataTypes.STRING,
+    message: DataTypes.TEXT,
     senderId: DataTypes.INTEGER,
     receiverId: DataTypes.INTEGER,
     serial: DataTypes.STRING,

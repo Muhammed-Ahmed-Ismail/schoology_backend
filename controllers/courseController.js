@@ -26,8 +26,8 @@ exports.getAll = async (req, res) => {
 
 exports.getTeacherCourse = async (req, res) => {
     try {
-        const user = await User.findByPk(req.params.id)
-        const teacher = await Teacher.findOne({where: {userId: user.id}})
+        // const user = await User.findByPk(req.params.id)
+        const teacher = await Teacher.findByPk(req.params.id)
         const courses = await teacher.getCourse();
         return res.status(200).json([courses])
     }catch (e) {

@@ -38,8 +38,8 @@ exports.findByPk = async (req, res) => {
 // Find teacher classes
 exports.getTeacherClasses = async (req, res) => {
     try {
-        const user = await User.findByPk(req.params.id)
-        const teacher = await Teacher.findOne({where: {userId: user.id}})
+        // const user = await User.findByPk(req.params.id)
+        const teacher = await Teacher.findByPk(req.params.id)
         const classes = await teacher.getClasses();
         return res.status(200).json(classes)
     }catch (e) {
