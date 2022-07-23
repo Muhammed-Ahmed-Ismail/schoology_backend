@@ -95,7 +95,11 @@ exports.signupTeacher = async (req, res) => {
 exports.signin = async (req, res) => {
     try {
         // check if user exist in our database
-        const user = await User.findOne({where: {phone: req.body.phone}});
+        const user = await User.findOne(
+            {
+                where:
+                    {phone: req.body.phone, active: true}
+            });
         if (!user) return res.status(404).send("User not found");
 
         // check user password with hashed password stored in the database
@@ -136,13 +140,32 @@ exports.signout = async (req, res) => {
 exports.deactivateUser = async (req, res) => {
     try {
         const user = await User.findByPk(req.params.id);
+        console.log(req.params)
         if (user.active) {
             await User.update({
                     active: false,
                 },
                 {where: {id: user.id}});
+
             return res.status(200).send({message: "successfully deactivated!"});
         } else return res.send({message: "user aleady deactivated!"});
+
+    } catch (error) {
+        return res.status(500).json(error.message);
+    }
+};
+exports.activateUser = async (req, res) => {
+    try {
+        const user = await User.findByPk(req.params.id);
+        console.log(req.params)
+        if (!user.active) {
+            await User.update({
+                    active: true,
+                },
+                {where: {id: user.id}});
+
+            return res.status(200).send({message: "successfully activated!"});
+        } else return res.send({message: "user aleady activated!"});
 
     } catch (error) {
         return res.status(500).json(error.message);
@@ -208,10 +231,10 @@ exports.AllTeachers = async (req, res) => {
     try {
         const teachers = await Teacher.findAll({
             // where: {roleId: 1},
-            include:[{
-                model:User,
-                as:'user',
-               // attributes:['id']
+            include: [{
+                model: User,
+                as: 'user',
+                // attributes:['id']
             }]
         })
         res.json(teachers)
@@ -224,10 +247,9 @@ exports.AllStudents = async (req, res) => {
     try {
         const students = []
         const studentsUsers = await User.findAll({where: {roleId: 2}})
-        for (const studentUser of studentsUsers)
-        {
+        for (const studentUser of studentsUsers) {
             const student = await studentUser.getStudent()
-            if(! await student.getParent())
+            if (!await student.getParent())
                 students.push(studentUser)
         }
         res.json(students)
