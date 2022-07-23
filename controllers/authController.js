@@ -218,6 +218,23 @@ exports.updateUser = async (req, res) => {
     }
 };
 
+exports.resetPassword = async (req,res)=>{
+    const salt = await bcrypt.genSalt(10);
+    // now we set user password to hashed password
+    const encryptedPassword = await bcrypt.hash(req.body.password, salt);
+     const user =await User.update({password:encryptedPassword},{
+        where:{
+            id:req.body.id
+        }
+    })
+    if(user)
+    {
+        res.json({success:'user password updated'})
+    }
+    else {
+        res.json({error:'user password updating failed'})
+    }
+}
 exports.AllUsers = async (req, res) => {
     try {
         const users = await User.findAll();
