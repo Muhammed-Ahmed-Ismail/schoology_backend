@@ -17,6 +17,12 @@ const getMyNotifications = async (req, res, next) => {
     }
 }
 
+const getMyNewNotificationsCount = async (req,res)=>{
+    const count = await req.user.getNumberOfNewNotifications()
+    res.json({count})
+}
+
 module.exports = {
-    getMyNotifications
+    getMyNotifications,
+    getMyNewNotificationsCount
 }
