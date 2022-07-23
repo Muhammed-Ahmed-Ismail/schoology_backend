@@ -222,7 +222,14 @@ exports.AllTeachers = async (req, res) => {
 
 exports.AllStudents = async (req, res) => {
     try {
-        const students = await User.findAll({where: {roleId: 2}})
+        const students = []
+        const studentsUsers = await User.findAll({where: {roleId: 2}})
+        for (const studentUser of studentsUsers)
+        {
+            const student = await studentUser.getStudent()
+            if(! await student.getParent())
+                students.push(studentUser)
+        }
         res.json(students)
     } catch (error) {
         return res.status(500).json(error.message)
