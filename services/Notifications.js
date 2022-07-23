@@ -56,27 +56,31 @@ const createNotification = async (sender, receivers, content) => {
  */
 const sendNotificationToClass = async (sender, classId, content) => {
     console.log(classId)
-    try {
-        let students = await Student.findAll({
-                where: {classId: classId},
-                include: [{
-                    model: User,
-                    as: 'user',
-                    attributes: ['id']
-                }]
+    const teacher = await Teacher.findByPk(sender)
+    if(teacher) {
+        const teacherUser = await teacher.getUser()
+        try {
+            let students = await Student.findAll({
+                    where: {classId: classId},
+                    include: [{
+                        model: User,
+                        as: 'user',
+                        attributes: ['id']
+                    }]
+                }
+            );
+            console.log('send notification to class', classId);
+            if (students.length !== 0) {
+                for (let student of students) {
+                    await createNotification(teacherUser.id, student.user.id, content);
+                }
+                return {status: 201, message: "notifications created"};
+            } else {
+                return {status: 404, message: "class is empty"};
             }
-        );
-        console.log('send notification to class', classId);
-        if (students.length !== 0) {
-            for (let student of students) {
-                await createNotification(sender, student.user.id, content);
-            }
-            return {status: 201, message: "notifications created"};
-        } else {
-            return {status: 404, message: "class is empty"};
+        } catch (e) {
+            throw e;
         }
-    } catch (e) {
-        throw e;
     }
 }
 

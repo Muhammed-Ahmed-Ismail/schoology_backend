@@ -184,12 +184,12 @@ const getMeetingsByclassroom = async (classroom,date)=>{
 
 const notifyUsersByMeetingUpdate = async (meeting,adminId)=>{
     const classRoom = await meeting.getClass()
-    await sendNotificationToClass(adminId,classRoom.id,`${meeting.name}  meeting time has been changed check it`)
+    await sendNotificationToClass(meeting.teacherId,classRoom.id,`${meeting.name}  meeting time has been changed check it`)
 }
 
 const notifyUsersByMeetingDeletion = async (meeting,adminId)=>{
     const classRoom = await meeting.getClass()
-    await sendNotificationToClass(adminId,classRoom.id,`${meeting.name} meeting has been canceled`)
+    await sendNotificationToClass(meeting.teacherId,classRoom.id,`${meeting.name} meeting has been canceled`)
 }
 module.exports = {
     createMeetingService,
