@@ -38,16 +38,19 @@ Due to the global trend of digitizing education and in the midst of emerging pan
 
    ``` git clone https://github.com/Muhammed-Ahmed-Ismail/schoology_backend.git ```
 
-2) create .env file with the following
+2) Run genereateKeyPairs.js script to generate encription key pairs (public/privete)
+3) Run create admin script to assign an admin to the system
+4) create .env file with the following
 ```
+
 PRIVATEKEYPATH = <project location>/utils/id_rsa_priv.key
 
 PUBLICKEYPATH = <project location>/utils/id_rsa_pub.pem
 
 ```
-3) make sure MySql is up and running and create database schoology
+5) make sure MySql is up and running and create database schoology
 ``` CREATE DATABASE schoology; ```
-4) create config.json under config/ with the following with the appropriate connection string
+6) create config.json under config/ with the following with the appropriate connection string
 ```
 {
   "development": {
@@ -60,9 +63,9 @@ PUBLICKEYPATH = <project location>/utils/id_rsa_pub.pem
   },
 }
 ```
-5) run npm install ``` npm install ```
-6) for the first run only to set up the database in index.js uncomment ``` await sequelize.sync({alter:true}) ```
-7) run the backend ```node index.js``` or ```nodemon index.js``` for live monitoring on code changes
+7) run npm install ``` npm install ```
+8) for the first run only to set up the database in index.js uncomment ``` await sequelize.sync({alter:true}) ```
+9) run the backend ```node index.js``` or ```nodemon index.js``` for live monitoring on code changes
 
 <div align="right">
     <b><a href="#top">↥ back to top</a></b>
