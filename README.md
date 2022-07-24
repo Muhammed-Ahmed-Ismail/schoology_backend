@@ -64,8 +64,9 @@ PUBLICKEYPATH = <project location>/utils/id_rsa_pub.pem
 }
 ```
 7) run npm install ``` npm install ```
-8) for the first run only to set up the database in index.js uncomment ``` await sequelize.sync({alter:true}) ```
-9) run the backend ```node index.js``` or ```nodemon index.js``` for live monitoring on code changes
+8) Customize database connection string in config.json
+9) for the first run only to set up the database in index.js uncomment ``` await sequelize.sync({alter:true}) ```
+10) run the backend ```node index.js``` or ```nodemon index.js``` for live monitoring on code changes
 
 <div align="right">
     <b><a href="#top">↥ back to top</a></b>
