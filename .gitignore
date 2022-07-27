@@ -163,10 +163,7 @@ dist
 .svelte-kit
 
 # End of https://www.toptal.com/developers/gitignore/api/node,expressionengine
-.idea
-config
-
-/config/
+/config/config.json
 /.idea/
 
 resources/static/uploads/*
