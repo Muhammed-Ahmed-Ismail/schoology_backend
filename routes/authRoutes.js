@@ -11,12 +11,10 @@ router.post("/signin", controller.signin);
 router.get("/signout", controller.signout);
 router.patch("/deactivate/:id", controller.deactivateUser);
 router.patch("/activate/:id", controller.activateUser);
-router.put("/update/student/:id", controller.updateUser);
-router.put("/update/teacher/:id", controller.updateUser);
-router.put("/update/parent/:id", controller.updateUser);
-router.get("/allUsers",controller.AllUsers);
-router.get("/allTeachers", controller.AllTeachers)
-router.get("/allStudents", controller.AllStudents)
+router.put("/update/:id", controller.updateUser);
+router.get("/allUsers",controller.getAllUsers);
+router.get("/allTeachers", controller.getAllTeachers)
+router.get("/allStudents", controller.getAllStudentsWithoutParents)
 router.post("/reset-password", controller.resetPassword)
 
 module.exports = router;
