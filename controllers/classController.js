@@ -1,4 +1,4 @@
-let { Class , Student ,Parent, Teacher, User } = require("../models")
+let {Class, Student, Parent, Teacher, User} = require("../models")
 
 // Post a Class
 exports.createClass = async (req, res) => {
@@ -7,8 +7,7 @@ exports.createClass = async (req, res) => {
             name: req.body.name,
         });
         return res.status(201).json(ClassDetails);
-    }
-    catch (error) {
+    } catch (error) {
         return res.status(400).send(error);
     }
 }
@@ -17,20 +16,18 @@ exports.createClass = async (req, res) => {
 exports.getAll = async (req, res) => {
     try {
         const getClasses = await Class.findAll();
-        return res.status(201).json(getClasses);
-    }
-    catch (error) {
+        return res.status(200).json(getClasses);
+    } catch (error) {
         return res.status(400).send(error);
     }
 };
 
-// Find a Class by Id
+// Find a Class by id
 exports.findByPk = async (req, res) => {
     try {
         const getClass = await Class.findByPk(req.params.id);
-        return res.status(201).json(getClass);
-    }
-    catch (error) {
+        return res.status(200).json(getClass);
+    } catch (error) {
         return res.status(400).send(error);
     }
 };
@@ -38,11 +35,11 @@ exports.findByPk = async (req, res) => {
 // Find teacher classes
 exports.getTeacherClasses = async (req, res) => {
     try {
-        // const user = await User.findByPk(req.params.id)
-        const teacher = await Teacher.findByPk(req.params.id)
+        // const user = await User.findByPk(req.params.id);
+        const teacher = await Teacher.findByPk(req.params.id);
         const classes = await teacher.getClasses();
-        return res.status(200).json(classes)
-    }catch (e) {
+        return res.status(200).json(classes);
+    } catch (e) {
         return res.status(500).send(e);
     }
 }
@@ -52,11 +49,9 @@ exports.updateClass = async (req, res) => {
     try {
         const updatedClass = await Class.update({
             name: req.body.name,
-        },
-            { where: { id: req.params.id } });
-        return res.status(201).json(updatedClass);
-    }
-    catch (error) {
+        }, {where: {id: req.params.id}});
+        return res.status(200).json(updatedClass);
+    } catch (error) {
         return res.status(400).send(error);
     }
 };
@@ -66,11 +61,10 @@ exports.deleteClass = async (req, res) => {
     const id = req.params.id;
     try {
         const deletedClass = await Class.destroy({
-            where: { id: id },
+            where: {id: id},
         });
-        return res.status(201).json(deletedClass);
-    }
-    catch (error) {
+        return res.status(200).json(deletedClass);
+    } catch (error) {
         return res.status(400).send(error);
     }
 };
@@ -79,16 +73,16 @@ exports.deleteClass = async (req, res) => {
 exports.getClassStudentsWithParents = async (req, res) => {
     let classId = req.params.id;
     try {
-        let classx = await Class.findByPk(classId);
+        let _class = await Class.findByPk(classId);
         let students = await Student.findAll({
-            where: {classId: classx.id},
+            where: {classId: _class.id},
             include: [{
-              model: Parent,
-              as: 'parent'
-            }]});
+                model: Parent,
+                as: 'parent'
+            }]
+        });
         return res.status(200).send(students);
-    }
-    catch (error) {
+    } catch (error) {
         return res.status(400).send(error);
     }
 };
