@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 
 const meetingRouter = require("./meeting")
-const testdbRoutes = require("./testdb")
 const authRoutes = require("./authRoutes")
 const filesRoutes = require("./files")
 const classRoutes = require("./classRouter")
@@ -14,8 +13,8 @@ const teacherRouter = require("./teacherRouter.js")
 const announcementRouter = require("./announcementRouter.js")
 const gradesRoutes = require("./gradesRoutes")
 const gallaryRoutes = require("./gallaryRoutes")
+
 router.use("/meeting",meetingRouter)
-router.use("/dptest",testdbRoutes)
 router.use("/auth",authRoutes)
 router.use("/files", filesRoutes)
 router.use("/class", classRoutes)
