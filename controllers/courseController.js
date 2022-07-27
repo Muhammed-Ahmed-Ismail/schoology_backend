@@ -1,4 +1,4 @@
-let { Course, User, Teacher } = require("../models")
+let {Course, Teacher} = require("../models")
 
 // Post a course
 exports.createCourse = async (req, res) => {
@@ -7,8 +7,7 @@ exports.createCourse = async (req, res) => {
             name: req.body.name,
         });
         return res.status(201).json(courseDetails);
-    }
-    catch (error) {
+    } catch (error) {
         return res.status(400).send(error);
     }
 }
@@ -17,21 +16,19 @@ exports.createCourse = async (req, res) => {
 exports.getAll = async (req, res) => {
     try {
         const getCourses = await Course.findAll();
-        return res.status(201).json(getCourses);
-    }
-    catch (error) {
+        return res.status(200).json([...getCourses]);
+    } catch (error) {
         return res.status(400).send(error);
     }
 };
 
 exports.getTeacherCourse = async (req, res) => {
     try {
-        // const user = await User.findByPk(req.params.id)
         const teacher = await Teacher.findByPk(req.params.id)
         const courses = await teacher.getCourse();
-        return res.status(200).json([courses])
-    }catch (e) {
-       return res.status(500).send(e);
+        return res.status(200).json([...courses]);
+    } catch (e) {
+        return res.status(500).send(e);
     }
 }
 
@@ -39,9 +36,8 @@ exports.getTeacherCourse = async (req, res) => {
 exports.findByPk = async (req, res) => {
     try {
         const course = await Course.findByPk(req.params.id);
-        return res.status(201).json(course);
-    }
-    catch (error) {
+        return res.status(200).json([...course]);
+    } catch (error) {
         return res.status(400).send(error);
     }
 };
@@ -50,12 +46,11 @@ exports.findByPk = async (req, res) => {
 exports.updateCourse = async (req, res) => {
     try {
         const updatedCourse = await Course.update({
-            name: req.body.name,
-        },
-        { where: { id: req.params.id } });
-        return res.status(201).json(updatedCourse);
-    }
-    catch (error) {
+                name: req.body.name,
+            },
+            {where: {id: req.params.id}});
+        return res.status(200).json(updatedCourse);
+    } catch (error) {
         return res.status(400).send(error);
     }
 };
@@ -65,11 +60,10 @@ exports.deleteCourse = async (req, res) => {
     const id = req.params.id;
     try {
         const deletedCourse = await Course.destroy({
-            where: { id: id },
+            where: {id: id},
         });
-        return res.status(201).json(deletedCourse);
-    }
-    catch (error) {
+        return res.status(200).json(deletedCourse);
+    } catch (error) {
         return res.status(400).send(error);
     }
 };
