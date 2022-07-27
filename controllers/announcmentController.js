@@ -1,31 +1,28 @@
-let {Announcment} = require("../models")
-const {messages} = require("../middleware/requestValidators/Auth/signupStudent")
+let {announcement: Announcements} = require("../models");
 
 const create = async (req, res) => {
-
-    let senderId = req.user.id
-    console.log(req.user.id)
+    let senderId = req.user.id;
+    console.log(req.user.id);
     try {
-        let announcment = await Announcment.create({
-            announcment: req.body.announcment,
+        let announcement = await Announcements.create({
+            announcement: req.body.announcement,
             image: req.body.image,
             senderId: senderId,
         })
-        return res.json(announcment)
+        return res.json(announcement)
     } catch (error) {
         res.send(error)
     }
 }
 
-
 const list = async (req, res) => {
     try {
-        let announcments = await Announcment.findAll({
+        let announcements = await Announcements.findAll({
             order: [
                 ['createdAt', 'ASC'],
             ],
         })
-        return res.json(announcments)
+        return res.json(announcements)
     } catch (error) {
         res.send('"status":"Something went wrong"')
     }
@@ -34,7 +31,7 @@ const list = async (req, res) => {
 
 const getLastAnnouncement = async (req, res) => {
     try {
-        const announcement = await Announcment.findAll({
+        const announcement = await Announcements.findAll({
             order: [
                 ['createdAt', 'DESC'],
             ],
