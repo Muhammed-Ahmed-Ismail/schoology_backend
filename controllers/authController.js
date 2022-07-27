@@ -272,7 +272,7 @@ exports.resetPassword = async (req, res) => {
 exports.getAllUsers = async (req, res) => {
     try {
         const users = await User.findAll();
-        res.status(200).json(users);
+        res.status(200).json([...users]);
     } catch (error) {
         return res.status(500).json(error.message);
     }
@@ -288,7 +288,7 @@ exports.getAllTeachers = async (req, res) => {
             }],
 
         })
-        return res.status(200).json(teachers)
+        return res.status(200).json([...teachers]);
     } catch (error) {
         return res.status(500).json(error.message)
     }
@@ -303,7 +303,7 @@ exports.getAllStudents = async (req, res) => {
                 attributes: ['name', 'phone', 'email']
             }]
         });
-        return res.status(200).json(students)
+        return res.status(200).json([...students]);
     }catch (e) {
 
     }
@@ -319,7 +319,7 @@ exports.getAllStudentsWithoutParents = async (req, res) => {
                 students.push(studentUser)
             }
         }
-        return res.status(200).json(students)
+        return res.status(200).json([...students])
     } catch (error) {
         return res.status(500).json(error.message)
     }
