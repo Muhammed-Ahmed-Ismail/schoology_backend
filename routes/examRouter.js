@@ -11,8 +11,8 @@ router.post("/create" , canCreateExam , validateExamRequest , controller.create)
 router.get("/list" , controller.list)
 router.get("/my-exams" ,isStudent , controller.getStudentExams) //lists all exams for certain student
 router.get("/my-child-exams" ,isParent , controller.getMyChildExams) //lists all exams for certain student
-router.get("/list/course/:id" , controller.listBycourseId) //list all exams for one course
-router.get("/list/class/:id" , controller.listByclassId) // list all exams for one class
+router.get("/list/course/:id" , controller.listExamsByCourseId) //list all exams for one course
+router.get("/list/class/:id" , controller.listExamsByClassId) // list all exams for one class
 router.get("/list/scores/:id" , controller.listStudentExamByExamId) //lists students with scores for certain exam
 router.get("/list/teacher/:id" , controller.listByTeacherId) //lists students with teacher for certain exam
 router.get("/my-exams" ,isStudent , controller.listStudentExams) //lists all exams for certain student
