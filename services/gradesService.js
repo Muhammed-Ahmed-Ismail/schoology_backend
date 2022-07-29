@@ -1,16 +1,17 @@
-const {Exam, StudentExam, Student, User, Class, Course, Teacher} = require("../models")
+const {Exam, StudentExam, Course} = require("../models");
 
 const getGradesStatistics = async (submittedExams) => {
-    let data = []
+    let data = [];
     for (let exam of submittedExams) {
-        let count = await exam.countStudentExams()
-        let max = await StudentExam.max('score', {where: {examId: exam.id}})
-        let min = await StudentExam.min('score', {where: {examId: exam.id}})
-        data.push({exam, count, max, min})
+        let count = await exam.countStudentExams();
+        let max = await StudentExam.max('score', {where: {examId: exam.id}});
+        let min = await StudentExam.min('score', {where: {examId: exam.id}});
+        data.push({exam, count, max, min});
     }
-    return data
+    return data;
 }
-const getStudentGradesByStudentId = async (student)=>{
+
+const getStudentGradesByStudentId = async (student) => {
     const grades = await student.getStudentExams({
         include: [{
             model: Exam,
@@ -23,8 +24,9 @@ const getStudentGradesByStudentId = async (student)=>{
             }]
         }]
     })
-    return grades
+    return grades;
 }
+
 module.exports = {
     getGradesStatistics,
     getStudentGradesByStudentId
