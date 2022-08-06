@@ -7,20 +7,18 @@ const {Notification, Student, Teacher, User} = require('../models')
  */
 const getUserNotifications = async (id) => {
     try {
-        let nots = await Notification.findAll(
-            {
-                where: {receiverId: id},
-                include: {
-                    association: 'sender', //leave it sender
-                    attributes: ['name']
-                },
-                order: [
-                    ['createdAt', 'DESC'],
-                ],
+        let nots = await Notification.findAll({
+            where: {receiverId: id},
+            include: {
+                association: 'sender',
+                attributes: ['name']
             },
-        );
+            order: [
+                ['createdAt', 'DESC'],
+            ],
+        });
         for (let notification of nots) {
-            await notification.markRead()
+            await notification.markRead();
         }
         return nots;
     } catch (e) {
@@ -55,20 +53,19 @@ const createNotification = async (sender, receivers, content) => {
  * @returns {Promise<{message: string, status: number}>}
  */
 const sendNotificationToClass = async (sender, classId, content) => {
-    const teacher = await Teacher.findByPk(sender)
-    if(teacher) {
-        const teacherUser = await teacher.getUser()
+    const teacher = await Teacher.findByPk(sender);
+    if (teacher) {
+        const teacherUser = await teacher.getUser();
         try {
             let students = await Student.findAll({
-                    where: {classId: classId},
-                    include: [{
-                        model: User,
-                        as: 'user',
-                        attributes: ['id']
-                    }]
-                }
-            );
-            console.log('send notification to class', classId);
+                where: {classId: classId},
+                include: [{
+                    model: User,
+                    as: 'user',
+                    attributes: ['id']
+                }]
+            });
+            console.log('send notification to class', classId)
             if (students.length !== 0) {
                 for (let student of students) {
                     await createNotification(teacherUser.id, student.user.id, content);
@@ -84,9 +81,9 @@ const sendNotificationToClass = async (sender, classId, content) => {
 }
 
 const sendNotificationsToStudentsAndParents = async (sender, classId, content) => {
-    const teacher = await Teacher.findByPk(sender)
-    if(teacher) {
-        const teacherUser = await teacher.getUser()
+    const teacher = await Teacher.findByPk(sender);
+    if (teacher) {
+        const teacherUser = await teacher.getUser();
         try {
             let students = await Student.findAll({
                     where: {classId: classId},
@@ -95,9 +92,8 @@ const sendNotificationsToStudentsAndParents = async (sender, classId, content) =
                         as: 'user',
                         attributes: ['id']
                     }]
-                }
-            );
-            console.log('send notification to class', classId);
+            });
+            console.log('send notification to class', classId)
             if (students.length !== 0) {
                 for (let student of students) {
                     let parent = await student.getParent({
@@ -106,9 +102,9 @@ const sendNotificationsToStudentsAndParents = async (sender, classId, content) =
                             as: 'user',
                             attributes: ['id']
                         }]
-                    })
+                    });
                     await createNotification(teacherUser.id, student.user.id, content);
-                    await createNotification(teacherUser.id,  parent.user.id, content)
+                    await createNotification(teacherUser.id, parent.user.id, content);
                 }
                 return {status: 201, message: "notifications created"};
             } else {

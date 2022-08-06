@@ -1,5 +1,5 @@
 const {Student, StudentExam, User} = require('../../models');
-const {sendNotificationsToStudentsAndParents} = require("../Notifications");
+const {sendNotificationsToStudentsAndParents} = require("../NotificationsService");
 const bulkSaveExamResultsToDB = async (data, exam) => {
     console.log(data)
     let emails = []

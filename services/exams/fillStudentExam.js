@@ -1,5 +1,5 @@
 const {Student, StudentExam, User} = require('../../models');
-const {sendNotificationToClass} = require("../Notifications");
+const {sendNotificationToClass} = require("../NotificationsService");
 
 const fillStudentExam = async (exam) => {
     let studentsInClass = await Student.findAll({

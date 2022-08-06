@@ -2,7 +2,7 @@ const util = require('util');
 const multer = require('multer');
 const path = require('path');
 const {File, Teacher, Class, User, Course} = require('../models');
-const {sendNotificationToClass} = require("./Notifications");
+const {sendNotificationToClass} = require("./NotificationsService");
 
 const filesPath = path.join(__dirname, '..', 'resources', 'static', 'uploads');
 

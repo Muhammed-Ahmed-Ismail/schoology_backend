@@ -1,7 +1,7 @@
 const {google} = require('googleapis');
 
 const {User, Student, Class, Meeting, Teacher, Parent, Course} = require("../models");
-const {sendNotificationToClass} = require('./Notifications');
+const {sendNotificationToClass} = require('./NotificationsService');
 
 const GOOGLE_CLIENT_ID = process.env.MEET_GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.MEET_GOOGLE_CLIENT_SECRET;

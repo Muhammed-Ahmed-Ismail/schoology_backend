@@ -1,4 +1,4 @@
-const {getUserNotifications} = require('../services/Notifications')
+const {getUserNotifications} = require('../services/NotificationsService')
 
 /**
  * get user notification controller
@@ -11,13 +11,13 @@ const getMyNotifications = async (req, res, next) => {
     try {
         let nots = await getUserNotifications(req.params.id);
         res.json(nots);
-    }catch (e) {
+    } catch (e) {
         e.status = 500;
         next(e);
     }
 }
 
-const getMyNewNotificationsCount = async (req,res)=>{
+const getMyNewNotificationsCount = async (req, res) => {
     const count = await req.user.getNumberOfNewNotifications()
     res.json({count})
 }

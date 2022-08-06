@@ -1,4 +1,4 @@
-const {sendNotificationToClass} = require("../Notifications");
+const {sendNotificationToClass} = require("../NotificationsService");
 
 const notifyUsersByExamUpdate = async (exam, adminId) => {
     const classRoom = await exam.getClass();
