@@ -1,15 +1,13 @@
 const Joi = require('joi')
 
-const createAnnouncmentSchema = Joi.object().keys({
-    announcment: Joi.string().required(),
+const createAnnouncementSchema = Joi.object().keys({
+    announcement: Joi.string().required(),
     image: Joi.string(),
-    
 });
 
-const validateCreateAnnouncmentRequest = async (req, res, next) => {
-
+const validateCreateAnnouncementRequest = async (req, res, next) => {
     try {
-        await createAnnouncmentSchema.validateAsync(req.body, {
+        await createAnnouncementSchema.validateAsync(req.body, {
             abortEarly: false
         })
         next()
@@ -20,4 +18,4 @@ const validateCreateAnnouncmentRequest = async (req, res, next) => {
 }
 
 
-module.exports = {validateCreateAnnouncmentRequest}
+module.exports = {validateCreateAnnouncementRequest}
