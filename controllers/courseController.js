@@ -26,7 +26,7 @@ exports.getTeacherCourse = async (req, res) => {
     try {
         const teacher = await Teacher.findByPk(req.params.id)
         const courses = await teacher.getCourse();
-        return res.status(200).json([...courses]);
+        return res.status(200).json([courses]);
     } catch (e) {
         return res.status(500).send(e);
     }
@@ -36,9 +36,9 @@ exports.getTeacherCourse = async (req, res) => {
 exports.findByPk = async (req, res) => {
     try {
         const course = await Course.findByPk(req.params.id);
-        return res.status(200).json([...course]);
+        return res.status(200).json([course]);
     } catch (error) {
-        return res.status(400).send(error);
+        return res.status(500).send(error);
     }
 };
 
