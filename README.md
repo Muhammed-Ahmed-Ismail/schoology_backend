@@ -37,17 +37,23 @@ Due to the global trend of digitizing education and in the midst of emerging pan
 1) Clone the project
 
    ``` git clone https://github.com/Muhammed-Ahmed-Ismail/schoology_backend.git ```
-
-2) create .env file with the following
+2) get google api keys for meetings / calendar
+3) create .env file with the following
 ```
 PRIVATEKEYPATH = <project location>/utils/id_rsa_priv.key
 
 PUBLICKEYPATH = <project location>/utils/id_rsa_pub.pem
 
+AUTH_REDIRECT_URI = <front end url>
+
+MEET_GOOGLE_CLIENT_ID = <your client id>
+
+MEET_GOOGLE_CLIENT_SECRET = <your client secret>
+
 ```
-3) make sure MySql is up and running and create database schoology
+4) make sure MySql is up and running and create database schoology
 ``` CREATE DATABASE schoology; ```
-4) create config.json under config/ with the following with the appropriate connection string
+5) create config.json under config/ with the following with the appropriate connection string
 ```
 {
   "development": {
@@ -60,9 +66,9 @@ PUBLICKEYPATH = <project location>/utils/id_rsa_pub.pem
   },
 }
 ```
-5) run npm install ``` npm install ```
-6) for the first run only to set up the database in index.js uncomment ``` await sequelize.sync({alter:true}) ```
-7) run the backend ```node index.js``` or ```nodemon index.js``` for live monitoring on code changes
+6) run npm install ``` npm install ```
+7) for the first run only to set up the database in index.js uncomment ``` await sequelize.sync({alter:true}) ```
+8) run the backend ```node index.js``` or ```nodemon index.js``` for live monitoring on code changes
 
 <div align="right">
     <b><a href="#top">↥ back to top</a></b>

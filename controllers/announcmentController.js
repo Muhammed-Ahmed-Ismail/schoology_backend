@@ -1,48 +1,30 @@
-let {Announcment} = require("../models")
-const {messages} = require("../middleware/requestValidators/Auth/signupStudent")
+const {createAnnouncement, listAll, getLast} = require('../services/announcementService')
 
 const create = async (req, res) => {
-
-    let senderId = req.user.id
-    console.log(req.user.id)
     try {
-        let announcment = await Announcment.create({
-            announcment: req.body.announcment,
-            image: req.body.image,
-            senderId: senderId,
-        })
-        return res.json(announcment)
+        let announcement = await createAnnouncement(req);
+        return res.status(201).json(announcement);
     } catch (error) {
-        res.send(error)
+        res.status(500).send(error);
     }
 }
 
-
 const list = async (req, res) => {
     try {
-        let announcments = await Announcment.findAll({
-            order: [
-                ['createdAt', 'ASC'],
-            ],
-        })
-        return res.json(announcments)
+        let announcements = await listAll();
+        return res.json(announcements)
     } catch (error) {
         res.send('"status":"Something went wrong"')
     }
-
 }
 
 const getLastAnnouncement = async (req, res) => {
     try {
-        const announcement = await Announcment.findAll({
-            order: [
-                ['createdAt', 'DESC'],
-            ],
-            limit: 1,
-        })
-        res.json(announcement)
+        const announcement = await getLast();
+        res.status(200).json(announcement);
     } catch (error) {
         res.send('"status":"Something went wrong"')
     }
 }
+
 module.exports = {create, list, getLastAnnouncement}

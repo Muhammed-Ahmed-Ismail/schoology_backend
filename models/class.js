@@ -14,14 +14,13 @@ module.exports = (sequelize, DataTypes) => {
             Class.hasMany(models.Meeting, {foreignKey: "classId"})
             Class.hasMany(models.Exam, {foreignKey: "classId"})
             Class.hasMany(models.File, {foreignKey: "classId"})
-            Class.hasMany(models.Student, {foreignKey: "classId",as:'students'})
-            Class.belongsToMany(models.Teacher,{through:"teachers_classes"})
+            Class.hasMany(models.Student, {foreignKey: "classId", as: 'students'})
+            Class.belongsToMany(models.Teacher, {through: "teachers_classes"})
         }
 
         async isThatValidMeeting(date, period) {
-            let count = await this.countMeetings({ where: { date, period } })
-
-            return (count === 0)
+            let count = await this.countMeetings({where: {date, period}});
+            return (count === 0);
         }
 
     }

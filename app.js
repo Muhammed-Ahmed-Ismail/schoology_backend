@@ -1,28 +1,19 @@
 let express = require('express');
-let cors = require('cors')
 let app = express();
+let cors = require('cors');
 
+const passport = require('passport');
+require('./config/passport')(passport);
 
-const passport = require('passport')
-require('./config/passport')(passport)
+const routes = require("./routes/routes");
+const errorHandler = require("./middleware/errorHandlers/errorHandler");
 
-
-
-//***********Routes Import*************************//
-// const meetingRouter = require("./routes/meeting")
-// const testdbRoutes = require("./routes/testdb")
-const routes = require("./routes/routes")
-const errorHandeler = require("./middleware/errorHandelers/errorHandeler")
-// app.use(formData.parse())
-app.use(passport.initialize());
+app.use(passport.initialize({}));
 app.use(cors({
     origin: '*'
-}))
-
+}));
 app.use(express.json());
-app.use("/",routes)
-app.use(errorHandeler)
-// app.use("/dptest",testdbRoutes)
-
+app.use("/",routes);
+app.use(errorHandler);
 
 module.exports = app;

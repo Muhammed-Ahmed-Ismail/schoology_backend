@@ -1,5 +1,4 @@
-const {User, Parent, Class, Student,Course} = require("../models");
-
+const {User, Parent, Course} = require("../models");
 
 const getMessageInfoResourceForTeacher = async (message) => {
     let messageInfo = {
@@ -7,20 +6,20 @@ const getMessageInfoResourceForTeacher = async (message) => {
         senderId: message.sender.id,
         date: message.createdAt,
     }
-    const sender = await message.getSender()
+    const sender = await message.getSender();
     if (message.sender.roleId === 2) {
-        let student = await sender.getStudent()
-        let classRoom = await student.getClass()
-        messageInfo['class'] = classRoom.name
-        messageInfo['senderType'] = 'student'
+        let student = await sender.getStudent();
+        let classRoom = await student.getClass();
+        messageInfo['class'] = classRoom.name;
+        messageInfo['senderType'] = 'student';
     } else if (message.sender.roleId === 3) {
-        let parent = await sender.getParent()
-        let student = await parent.getStudent()
-        let classRoom = await student.getClass()
-        messageInfo['class'] = classRoom.name
-        messageInfo['senderType'] = 'parent'
+        let parent = await sender.getParent();
+        let student = await parent.getStudent();
+        let classRoom = await student.getClass();
+        messageInfo['class'] = classRoom.name;
+        messageInfo['senderType'] = 'parent';
     }
-    return messageInfo
+    return messageInfo;
 }
 
 const getMessagesInfoForStudentParent = async (message) => {
@@ -28,30 +27,27 @@ const getMessagesInfoForStudentParent = async (message) => {
         senderName: message.sender.name,
         senderId: message.sender.id,
         date: message.createdAt,
-
     }
-    const sender = await message.getSender()
-    const teacher = await sender.getTeacher()
-    console.log(teacher)
-    const course = await teacher.getCourse()
-    messageInfo['course'] = course.name
-    return messageInfo
+    const sender = await message.getSender();
+    const teacher = await sender.getTeacher();
+    const course = await teacher.getCourse();
+    messageInfo['course'] = course.name;
+    return messageInfo;
 }
 
 const singleMessageResource = async (message) => {
     let messageResource = {}
-    let sender = await message.getSender()
-    messageResource['senderId'] = message.senderId
-    messageResource['receiverId'] = message.receiverId
-    messageResource['message'] = message.message
-    messageResource['sender'] = {name: sender.name}
-    messageResource['createdAt'] = message.createdAt
-    return messageResource
+    let sender = await message.getSender();
+    messageResource['senderId'] = message.senderId;
+    messageResource['receiverId'] = message.receiverId;
+    messageResource['message'] = message.message;
+    messageResource['sender'] = {name: sender.name};
+    messageResource['createdAt'] = message.createdAt;
+    return messageResource;
 }
 
 const getTeacherRecipientsResource = async (classRoom) => {
-    // console.log('class',classRoom)
-    const studentsResources = []
+    const studentsResources = [];
     let students = await classRoom.getStudents({
         include: [{
             model: User,
@@ -65,10 +61,8 @@ const getTeacherRecipientsResource = async (classRoom) => {
                 as: 'user',
                 attributes: ['id', 'name']
             }],
-
-        }
-        ],
-    })
+        }],
+    });
 
     for (const student of students) {
         let data = {
@@ -78,37 +72,35 @@ const getTeacherRecipientsResource = async (classRoom) => {
             parentId: student.parent.user.id,
             className: classRoom.name
         }
-        studentsResources.push(data)
-
+        studentsResources.push(data);
     }
-    return studentsResources
+    return studentsResources;
 }
 
 const getStudentParentsRecipientsResource = async (classRoom) => {
-    const teachersResources = []
+    const teachersResources = [];
     const teachers = await classRoom.getTeachers({
         include: [{
             model: User,
             as: 'user',
             attributes: ['id', 'name']
-        },
-            {
+        }, {
                 model: Course,
-                as:'course',
+                as: 'course',
                 attributes: ['name']
-            }
-        ]
-    })
+        }]
+    });
 
     for (const teacher of teachers) {
         teachersResources.push({
             teacherId: teacher.user.id,
             teacherName: teacher.user.name,
-            course:teacher.course.name
+            course: teacher.course.name
         })
     }
-    return teachersResources
+    return teachersResources;
 }
+
 module.exports = {
     getMessageInfoResourceForTeacher,
     getTeacherRecipientsResource,

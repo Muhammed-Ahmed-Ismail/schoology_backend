@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 
 const meetingRouter = require("./meeting")
-const testdbRoutes = require("./testdb")
 const authRoutes = require("./authRoutes")
 const filesRoutes = require("./files")
 const classRoutes = require("./classRouter")
@@ -13,9 +12,9 @@ const messageRouter = require("./messageRouter")
 const teacherRouter = require("./teacherRouter.js")
 const announcementRouter = require("./announcementRouter.js")
 const gradesRoutes = require("./gradesRoutes")
-const gallaryRoutes = require("./gallaryRoutes")
+const galleryRoutes = require("./galleryRoutes")
+
 router.use("/meeting",meetingRouter)
-router.use("/dptest",testdbRoutes)
 router.use("/auth",authRoutes)
 router.use("/files", filesRoutes)
 router.use("/class", classRoutes)
@@ -26,5 +25,5 @@ router.use("/teacher",teacherRouter)
 router.use("/grades",gradesRoutes)
 router.use("/announcement",announcementRouter)
 router.use("/nots", NotificationRouter)
-router.use("/gallary", gallaryRoutes)
+router.use("/gallery", galleryRoutes)
 module.exports = router

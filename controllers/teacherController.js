@@ -1,28 +1,12 @@
-let { Teacher , Class ,User , Student , teachers_classes} = require("../models")
+const {listStudentTeachersService} = require("../services/teacherService");
 
 const listStudentTeachers = async (req, res) => {
-
-
-
     try {
-        let studentUserId = req.user.id
-        let student = await Student.findOne({ where :{ userId : studentUserId}})
-        let classx = await student.getClass()
-        let teachers = await classx.getTeachers()
-        for (let teacher of teachers) {
-            let user =  await User.findOne({ where: { id: teacher.userId }})
-            teacher.dataValues.name = user.name
-            teacher.dataValues.email = user.email
-        }
-        console.log(teachers);
-        res.send(teachers)
-    } 
-
-    catch (error) {
-        res.send('"status":"Something went wrong"')
+        let teachers = await listStudentTeachersService(req.user.id)
+        res.status(200).json(teachers);
+    } catch (error) {
+        res.status(500).json({status: "Something went wrong"});
     }
-
 }
 
-module.exports = { listStudentTeachers }
-// listStudentTeachers()
+module.exports = {listStudentTeachers}
